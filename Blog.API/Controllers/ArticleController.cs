@@ -32,7 +32,7 @@ namespace Blog.API.Controllers
         [HttpGet]
         public ActionResult<List<Dictionary<Article, List<Comment>>>> GetAll()
         {
-            if ((_blogContext.Articles == null) || (_blogContext.Articles.Count() == 0))
+            if (_blogContext.Articles == null || _blogContext.Articles.Count() == 0)
                 return NotFound();
 
             var List = new List<Dictionary<Article, List<Comment>>> { };

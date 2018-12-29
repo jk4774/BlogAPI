@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Blog.UI.Pages
+namespace Blog.UI.Pages.Comment
 {
-    public class PrivacyModel : PageModel
+    public class AddCommentModel : PageModel
     {
         public void OnGet()
         {
+
         }
     }
 }

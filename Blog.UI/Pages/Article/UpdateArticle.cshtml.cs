@@ -4,16 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Blog.API.Models;
-using Blog.API.Controllers;
 
-namespace Blog.UI.Pages
+namespace Blog.UI.Pages.Article
 {
-    public class IndexModel : PageModel
+    public class UpdateArticleModel : PageModel
     {
         public void OnGet()
         {
-            //API.Models.User user = new API.Models.User() { };
 
         }
     }

@@ -7,7 +7,7 @@ using Blog.API.Services;
 
 namespace Blog.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
