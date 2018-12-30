@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Blog.API.Models;
 using System.Linq;
 using DevOne.Security.Cryptography.BCrypt;
@@ -7,7 +8,7 @@ using Blog.API.Services;
 
 namespace Blog.API.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
@@ -67,7 +68,7 @@ namespace Blog.API.Controllers
             if (user == null)
                 return NotFound();
 
-            if (new[] { user.Name, user.Email, user.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
+            if (new[] { user.Name, user.Password, user.Email }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
             foreach (var User in _blogContext.Users)
@@ -75,7 +76,7 @@ namespace Blog.API.Controllers
                     return NotFound();
 
             var encryptedPassword = BCryptHelper.HashPassword(user.Password, BCryptHelper.GenerateSalt(12));
-            var newUser = new User() { Id = user.Id, Name = user.Name, Email = user.Email, Password = encryptedPassword, Token = "" };
+            var newUser = new User() { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email, Token = "" };
 
             _blogContext.Users.Add(newUser);
             _blogContext.SaveChanges();

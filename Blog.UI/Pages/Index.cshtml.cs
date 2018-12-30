@@ -13,7 +13,6 @@ namespace Blog.UI.Pages
     {
         public void OnGet()
         {
-            //API.Models.User user = new API.Models.User() { };
 
         }
     }
