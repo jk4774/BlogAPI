@@ -37,7 +37,7 @@ namespace Blog.Tests
         }
 
         [Fact]
-        public void POST_Login_UserLoginIsNull_NotFound()
+        public void POST_Login_UserIsNull_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
@@ -50,80 +50,80 @@ namespace Blog.Tests
         }
 
         [Fact]
-        public void POST_Login_UserLoginNameIsWhiteSpace_NotFound()
+        public void POST_Login_UserNameIsWhiteSpace_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Login(new UserLogin { Name = " ", Password = "pass" });
+            var User = UserController.Login(new User { Name = " ", Password = "pass" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User.Result);
         }
 
         [Fact]
-        public void POST_Login_UserLoginPasswordIsWhiteSpace_NotFound()
+        public void POST_Login_UserPasswordIsWhiteSpace_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Login(new UserLogin { Name = "asdf", Password = " " });
+            var User = UserController.Login(new User { Name = "asdf", Password = " " });
 
             // Assert
             Assert.IsType<NotFoundResult>(User.Result);
         }
 
         [Fact]
-        public void POST_Login_BothUserLoginNameAndPasswordAreWhiteSpace_NotFound()
+        public void POST_Login_BothUserNameAndPasswordAreWhiteSpace_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Login(new UserLogin { Name = "", Password = " " });
+            var User = UserController.Login(new User { Name = "", Password = " " });
 
             // Assert
             Assert.IsType<NotFoundResult>(User.Result);
         }
 
         [Fact]
-        public void POST_Login_UserLoginWithWrongName_NotFound()
+        public void POST_Login_UserWithWrongName_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Login(new UserLogin { Name = "INCORRENTUSERNAME154543", Password = "pass1" });
+            var User = UserController.Login(new User { Name = "INCORRENTUSERNAME154543", Password = "pass1" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User.Result);
         }
 
         [Fact]
-        public void POST_Login_UserLoginWithCorrectNameAndWrongPassword_NotFound()
+        public void POST_Login_UserWithCorrectNameAndWrongPassword_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
             UserController.Register(new User { Id = 997, Name = "Tom", Password = "pass1", Email = "email@email.com", Token = "" });
-            var User = UserController.Login(new UserLogin { Name = "Tom", Password = "pass2" });
+            var User = UserController.Login(new User { Name = "Tom", Password = "pass2" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User.Result);
         }
 
         [Fact]
-        public void POST_Login_UserLoginWithCorrectBothNameAndPassword_NoContent()
+        public void POST_Login_UserWithCorrectBothNameAndPassword_NoContent()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
             UserController.Register(new User { Id = 998, Name = "Thomas", Password = "pass1", Email = "email77@email77.com", Token = "" });
-            var User = UserController.Login(new UserLogin { Name = "Thomas", Password = "pass1" });
+            var User = UserController.Login(new User { Name = "Thomas", Password = "pass1" });
 
             // Assert
             Assert.IsType<ActionResult<User>>(User);

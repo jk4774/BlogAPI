@@ -26,20 +26,20 @@ namespace Blog.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public ActionResult<User> Login([FromBody] UserLogin userLogin)
+        public ActionResult<User> Login([FromForm] User user)
         {
-            return _userController.Login(userLogin);
+            return _userController.Login(user);
         }
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        public IActionResult Register([FromBody] User user)
+        public IActionResult Register([FromForm] User user)
         {
             return _userController.Register(user);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] User updatedUser)
+        public IActionResult Update(int id, [FromForm] User updatedUser)
         {
             return _userController.Update(id, updatedUser);
         }

@@ -31,13 +31,13 @@ namespace Blog.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Comment comment)
+        public IActionResult Create([FromForm] Comment comment)
         {
             return _commentController.Create(comment);
         }
 
         [HttpPost("{id}")]
-        public IActionResult Update(int id, [FromBody] Comment updatedComment)
+        public IActionResult Update(int id, [FromForm] Comment updatedComment)
         {
             return _commentController.Update(id, updatedComment);
         }

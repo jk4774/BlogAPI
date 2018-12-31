@@ -49,6 +49,7 @@ namespace Blog.UI
                 };
             });
 
+            // Apply your own database
             services.AddDbContext<BlogContext>(opt => opt.UseInMemoryDatabase("BlogDb"));
             services.AddScoped<UserService>();
         }

@@ -32,13 +32,13 @@ namespace Blog.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Article article)
+        public IActionResult Create([FromForm] Article article)
         {
             return _articleController.Create(article);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Article updatedArticle)
+        public IActionResult Update(int id, [FromForm] Article updatedArticle)
         {
             return _articleController.Update(id, updatedArticle);
         }

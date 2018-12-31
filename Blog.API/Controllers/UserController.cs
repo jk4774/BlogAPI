@@ -43,22 +43,22 @@ namespace Blog.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public ActionResult<User> Login([FromBody] UserLogin userLogin)
+        public ActionResult<User> Login([FromBody] User user)
         {
-            if (userLogin == null)
-                return NotFound();
-
-            if (new[] { userLogin.Name, userLogin.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
-                return NotFound();
-
-            var user = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == userLogin.Name.ToLower());
             if (user == null)
                 return NotFound();
 
-            if (!BCryptHelper.CheckPassword(userLogin.Password, user.Password))
+            if (new[] { user.Name, user.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
-            return _userService.Authenticate(user);
+            var userFromDataBase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
+            if (userFromDataBase == null)
+                return NotFound();
+
+            if (!BCryptHelper.CheckPassword(user.Password, userFromDataBase.Password))
+                return NotFound();
+
+            return _userService.Authenticate(userFromDataBase);
         }
 
         [AllowAnonymous]
