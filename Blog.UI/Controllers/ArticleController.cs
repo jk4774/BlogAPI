@@ -9,7 +9,7 @@ namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ArticleController : Controller
     {
         private readonly APIController.ArticleController _articleController;

@@ -26,7 +26,10 @@ namespace Blog.API.Services
             {
                 Subject = new ClaimsIdentity(new Claim[] { new Claim (ClaimTypes.Name, user.Id.ToString()) }),
                 Expires = DateTime.Now.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = "Issuer",
+                Audience = "Audience",
+                NotBefore = DateTime.Now
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

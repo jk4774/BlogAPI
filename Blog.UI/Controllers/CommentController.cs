@@ -8,7 +8,7 @@ namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class CommentController : Controller
     {
         private readonly APIController.CommentController _commentController;

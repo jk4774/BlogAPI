@@ -4,7 +4,6 @@ using Blog.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,13 +23,10 @@ namespace Blog.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            services.AddMvc();
-
             var appSettingsSection = Configuration.GetSection("Settings");
-            services.Configure<Settings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<Settings>();
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
+            services.Configure<Settings>(appSettingsSection);
 
             services.AddAuthentication(x =>
             {
@@ -38,19 +34,20 @@ namespace Blog.API
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidAudience = "Audience",
+                    ValidIssuer = "Issuer",
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ClockSkew = System.TimeSpan.FromMinutes(0)
                 };
             });
 
             services.AddDbContext<BlogContext>(opt => opt.UseInMemoryDatabase("BlogDb"));
             services.AddScoped<UserService>();
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -60,15 +57,8 @@ namespace Blog.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-
             app.UseAuthentication();
             app.UseMvc();
-
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
         }
     }
 }
