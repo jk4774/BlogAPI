@@ -5,12 +5,13 @@ using System.Linq;
 using DevOne.Security.Cryptography.BCrypt;
 using Microsoft.AspNetCore.Authorization;
 using Blog.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Blog.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
         private readonly BlogContext _blogContext;
