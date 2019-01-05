@@ -28,20 +28,16 @@ namespace Blog.API
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
             services.Configure<Settings>(appSettingsSection);
 
-            services.AddAuthentication(x =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidAudience = "Audience",
-                    ValidIssuer = "Issuer",
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ClockSkew = System.TimeSpan.FromMinutes(0)
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                 };
             });
 

@@ -4,7 +4,6 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace Blog.Tests
 {
     public class UserControllerTests
@@ -29,7 +28,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 1, Name = "name1", Password = "pass1", Email = "test@test.com", Token = "" });
+            UserController.Register(new User { Id = 1, Name = "name1", Password = "pass1", Email = "test@test.com" });
             var User = UserController.GetById(1);
 
             // Assert
@@ -108,7 +107,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 997, Name = "Tom", Password = "pass1", Email = "email@email.com", Token = "" });
+            UserController.Register(new User { Id = 997, Name = "Tom", Password = "pass1", Email = "email@email.com" });
             var User = UserController.Login(new User { Name = "Tom", Password = "pass2" });
 
             // Assert
@@ -122,7 +121,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 998, Name = "Thomas", Password = "pass1", Email = "email77@email77.com", Token = "" });
+            UserController.Register(new User { Id = 998, Name = "Thomas", Password = "pass1", Email = "email77@email77.com" });
             var User = UserController.Login(new User { Name = "Thomas", Password = "pass1" });
 
             // Assert
@@ -149,7 +148,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Register(new User { Id = 1, Name = " ", Password = "PASS!@#", Email = "test!@#4art.com", Token = "" });
+            var User = UserController.Register(new User { Id = 1, Name = " ", Password = "PASS!@#", Email = "test!@#4art.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -162,7 +161,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Register(new User { Id = 1, Name = "awer", Password = " ", Email = "test!@#4art.com", Token = "" });
+            var User = UserController.Register(new User { Id = 1, Name = "awer", Password = " ", Email = "test!@#4art.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -175,7 +174,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Register(new User { Id = 1, Name = "aefaw", Password = "PASS!@#", Email = "  ", Token = "" });
+            var User = UserController.Register(new User { Id = 1, Name = "aefaw", Password = "PASS!@#", Email = "" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -188,7 +187,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Register(new User { Id = 1, Name = " ", Password = " ", Email = "  ", Token = "" });
+            var User = UserController.Register(new User { Id = 1, Name = " ", Password = " ", Email = "" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -201,7 +200,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Register(new User { Id = 2, Name = "name000", Password = "pass1", Email = "test@test7.com", Token = "" });
+            var User = UserController.Register(new User { Id = 2, Name = "name000", Password = "pass1", Email = "test@test7.com" });
 
             // Assert
             Assert.IsType<NoContentResult>(User);
@@ -214,8 +213,8 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 6, Name = "user6", Password = "pass1", Email = "test@tesT00.com", Token = "" });
-            var User = UserController.Register(new User { Id = 7, Name = "user7", Password = "pass1", Email = "test@test00.com", Token = "" });
+            UserController.Register(new User { Id = 6, Name = "user6", Password = "pass1", Email = "test@tesT00.com" });
+            var User = UserController.Register(new User { Id = 7, Name = "user7", Password = "pass1", Email = "test@test00.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -228,8 +227,8 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 8, Name = "user8", Password = "pass1", Email = "test@test77.com", Token = "" });
-            var User = UserController.Register(new User { Id = 9, Name = "useR8", Password = "pass1", Email = "test@test78.com", Token = "" });
+            UserController.Register(new User { Id = 8, Name = "user8", Password = "pass1", Email = "test@test77.com" });
+            var User = UserController.Register(new User { Id = 9, Name = "useR8", Password = "pass1", Email = "test@test78.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -255,7 +254,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = "", Password = "pass", Email = "asdf@aer", Token = "" });
+            var User = UserController.Update(1, new User { Id = 1, Name = "", Password = "pass", Email = "asdf@aer" });
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
@@ -268,7 +267,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = "asdew", Password = " ", Email = "asdf@aer", Token = "" });
+            var User = UserController.Update(1, new User { Id = 1, Name = "asdew", Password = " ", Email = "asdf@aer" });
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
@@ -281,7 +280,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = "zxcvasdf", Password = "pass", Email = " ", Token = "" });
+            var User = UserController.Update(1, new User { Id = 1, Name = "zxcvasdf", Password = "pass", Email = " " });
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
@@ -294,7 +293,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = " ", Password = " ", Email = " ", Token = "" });
+            var User = UserController.Update(1, new User { Id = 1, Name = " ", Password = " ", Email = " " });
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
@@ -307,8 +306,8 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 3, Name = "name554", Password = "pass1", Email = "test@test3333.com", Token = "" });
-            var User = UserController.Update(3, new User { Id = 3, Name = "name33", Password = "pass2", Email = "test@test33.com", Token = "" });
+            UserController.Register(new User { Id = 3, Name = "name554", Password = "pass1", Email = "test@test3333.com" });
+            var User = UserController.Update(3, new User { Id = 3, Name = "name33", Password = "pass2", Email = "test@test33.com" });
 
             // Assert
             Assert.IsType<NoContentResult>(User);
@@ -321,7 +320,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(77, new User { Id = 77, Name = "name", Password = "pass", Email = "test@test.com", Token = "" });
+            var User = UserController.Update(77, new User { Id = 77, Name = "name", Password = "pass", Email = "test@test.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -335,7 +334,7 @@ namespace Blog.Tests
 
             // Act
             UserController.DeleteUsers();
-            UserController.Register(new User { Id = 4, Name = "name5", Password = "pass5", Email = "test@test.com", Token = "" });
+            UserController.Register(new User { Id = 4, Name = "name5", Password = "pass5", Email = "test@test.com" });
             var User = UserController.Delete(4);
 
             // Assert

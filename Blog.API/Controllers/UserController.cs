@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Blog.API.Models;
 using System.Linq;
 using DevOne.Security.Cryptography.BCrypt;
@@ -39,7 +38,7 @@ namespace Blog.API.Controllers
             var user = _blogContext.Users.Find(id);
             if (user == null)
                 return NotFound();
-            return user;
+            return new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email };
         }
 
         [AllowAnonymous]
@@ -77,7 +76,7 @@ namespace Blog.API.Controllers
                     return NotFound();
 
             var encryptedPassword = BCryptHelper.HashPassword(user.Password, BCryptHelper.GenerateSalt(12));
-            var newUser = new User() { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email, Token = "" };
+            var newUser = new User() { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email };
 
             _blogContext.Users.Add(newUser);
             _blogContext.SaveChanges();
