@@ -18,6 +18,9 @@ namespace Blog.UI.Controllers
             _userController = new APIController.UserController(blogContext, userService);
         }
 
+        [HttpGet("Login")]
+        public IActionResult asdf() => Ok();
+
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {

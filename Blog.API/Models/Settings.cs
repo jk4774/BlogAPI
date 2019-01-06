@@ -1,4 +1,4 @@
-﻿namespace Blog.API.Helpers
+﻿namespace Blog.API.Models
 {
     public class Settings
     {

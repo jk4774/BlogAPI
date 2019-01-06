@@ -9,7 +9,7 @@ using Blog.API.Controllers;
 
 namespace Blog.UI.Pages.User
 {
-    public class UpdateUserModel : PageModel
+    public class GetUserModel : PageModel
     {
         public void OnGet()
         {

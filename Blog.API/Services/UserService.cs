@@ -1,10 +1,8 @@
-﻿using Blog.API.Helpers;
-using Blog.API.Models;
+﻿using Blog.API.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 
@@ -29,13 +27,7 @@ namespace Blog.API.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature)
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenHandler.WriteToken(securityToken));
-            }
-
-            return new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email };
+            return new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email, Token = tokenHandler.WriteToken(securityToken) };
         }
     }
 }
