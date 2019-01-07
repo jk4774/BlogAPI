@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Reference Include="Blog.API">
-      <HintPath>..\Blog.API\bin\Debug\netcoreapp2.1\Blog.API.dll</HintPath>
+      <HintPath>Dlls\Blog.API.dll</HintPath>
     </Reference>
   </ItemGroup>
 

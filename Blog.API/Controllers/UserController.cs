@@ -32,6 +32,7 @@ namespace Blog.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
@@ -51,13 +52,15 @@ namespace Blog.API.Controllers
             if (new[] { user.Name, user.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
-            var userFromDataBase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
-            if (userFromDataBase == null)
+            var userFromDatabase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
+            if (userFromDatabase == null)
                 return NotFound();
 
-            if (!BCryptHelper.CheckPassword(user.Password, userFromDataBase.Password))
+            if (!BCryptHelper.CheckPassword(user.Password, userFromDatabase.Password))
                 return NotFound();
-            return _userService.Authenticate(userFromDataBase);
+            return _userService.Authenticate(userFromDatabase);
+            //var loggedUser = _userService.Authenticate(userFromDatabase);
+            //return RedirectToAction("GetUser", new { id = loggedUser.Id }, loggedUser);
         }
 
         [AllowAnonymous]

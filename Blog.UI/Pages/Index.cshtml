@@ -1,8 +1,6 @@
 ﻿@page
 @model Blog.API.Models.User;
-@{
-    //ViewData["Title"] = "Blog";
-}
+@{}
 
 <div class="row">
     <div class='col-md-6'>
@@ -12,7 +10,7 @@
             <span asp-validation-for="Name" class="text-danger"></span>
             <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />
             <span asp-validation-for="Password" class="text-danger"></span>
-            <input class="normal-margin btn btn-primary" type="submit" value="Login" />
+            <input class="normal-margin btn btn-primary" id="loginForm" type="submit" value="Login" />
         </form>
     </div>
     <div class='col-md-6'>
