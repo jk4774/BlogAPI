@@ -17,4 +17,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dlls\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blog.API\Blog.API.csproj" />
+  </ItemGroup>
+
 </Project>

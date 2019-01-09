@@ -32,8 +32,7 @@ namespace Blog.API.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpGet("{id}", Name = "GetUser")]
+        [HttpGet("{id}", Name = "GetUser" )]
         public ActionResult<User> GetById(int id)
         {
             var user = _blogContext.Users.Find(id);
@@ -58,9 +57,8 @@ namespace Blog.API.Controllers
 
             if (!BCryptHelper.CheckPassword(user.Password, userFromDatabase.Password))
                 return NotFound();
-            return _userService.Authenticate(userFromDatabase);
-            //var loggedUser = _userService.Authenticate(userFromDatabase);
-            //return RedirectToAction("GetUser", new { id = loggedUser.Id }, loggedUser);
+
+            return _userService.Authenticate(userFromDatabase); 
         }
 
         [AllowAnonymous]

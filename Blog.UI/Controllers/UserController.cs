@@ -2,6 +2,7 @@
 using Blog.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -18,9 +19,6 @@ namespace Blog.UI.Controllers
             _userController = new APIController.UserController(blogContext, userService);
         }
 
-        [HttpGet("Login")]
-        public IActionResult asdf() => Ok();
-
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
@@ -31,7 +29,14 @@ namespace Blog.UI.Controllers
         [HttpPost("Login")]
         public ActionResult<User> Login([FromForm] User user)
         {
-            return _userController.Login(user);
+            var bearerAuthentication = new AuthenticationHeaderValue("Bearer", _userController.Login(user).Value.Token);
+            using (var client = new System.Net.Http.HttpClient())
+            {
+                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + bearerAuthentication);
+               // client.DefaultRequestHeaders.Authorization = bearerAuthentication;
+            }
+            return Ok();
+            //return _userController.Login(user);
         }
 
         [AllowAnonymous]
