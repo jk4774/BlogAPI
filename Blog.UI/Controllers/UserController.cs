@@ -29,14 +29,16 @@ namespace Blog.UI.Controllers
         [HttpPost("Login")]
         public ActionResult<User> Login([FromForm] User user)
         {
-            var bearerAuthentication = new AuthenticationHeaderValue("Bearer", _userController.Login(user).Value.Token);
+            var userControllerLogin = _userController.Login(user);
+            var newUser = userControllerLogin.Value;
+            var status = userControllerLogin.Result;
+            if (status != null && status.GetType() == typeof(NotFoundResult))
+                return NotFound();
             using (var client = new System.Net.Http.HttpClient())
             {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + bearerAuthentication);
-               // client.DefaultRequestHeaders.Authorization = bearerAuthentication;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newUser.Token);
             }
-            return Ok();
-            //return _userController.Login(user);
+            return Ok(s);
         }
 
         [AllowAnonymous]
