@@ -1,10 +1,12 @@
 ﻿@page
 @model Blog.API.Models.User;
-@{
-    //ViewData["Title"] = "GetUser";
-}
+@{}
 
 <script>
-    var r = document.getElementById("");
-    r.addEventListener("click", () => { });
+    var r = prompt("PUT  TOKEN HERE");
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "/user/login", true);
+    xhr.setRequestHeader("Authentication", "Bearer " + r );
+    xhr.send();
+    console.log('asdf');
 </script>

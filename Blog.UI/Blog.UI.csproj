@@ -19,12 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Blog.API">
-      <HintPath>Dlls\Blog.API.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Blog.API\Blog.API.csproj" />
   </ItemGroup>
 

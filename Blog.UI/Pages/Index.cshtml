@@ -10,7 +10,7 @@
             <span asp-validation-for="Name" class="text-danger"></span>
             <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />
             <span asp-validation-for="Password" class="text-danger"></span>
-            <input class="normal-margin btn btn-primary" id="loginForm" type="submit" value="Login" />
+            <input class="normal-margin btn btn-primary" type="submit" value="Login" />
         </form>
     </div>
     <div class='col-md-6'>
@@ -27,14 +27,11 @@
     </div>
 </div>
 
-<script>
-    var loginForm = document.getElementById("loginForm");
-    loginForm.addEventListener("click", function () {
-        var r = prompt("PUT  TOKEN HERE");
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "/user/login", true);
-        xhr.setRequestHeader("Authentication", "Bearer " + r);
-        xhr.send();
-        console.log('asdf');
-    });
-</script>
+@*<script>
+    var r = prompt("PUT  TOKEN HERE");
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "/user/login", true);
+    xhr.setRequestHeader("Authentication", "Bearer " + r);
+    xhr.send();
+    console.log('asdf');
+</script>*@
