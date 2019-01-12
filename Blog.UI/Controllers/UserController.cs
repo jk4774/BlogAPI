@@ -1,6 +1,7 @@
 ﻿using Blog.API.Models;
 using Blog.API.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -27,6 +28,7 @@ namespace Blog.UI.Controllers
             return _userController.GetById(id);
         }
 
+        [EnableCors]
         [AllowAnonymous]
         [HttpPost("Login")]
         public ActionResult<User> Login([FromForm] User user)
@@ -36,14 +38,21 @@ namespace Blog.UI.Controllers
             var status = userControllerLogin.Result;
             if (status != null && status.GetType() == typeof(NotFoundResult))
                 return NotFound();
-            var js = string.Format(
-                "<script> var xhr = new XMLHttpRequest();" +
-                    "xhr.open('POST', \"{0}\", true);" +
-                    "xhr.setRequestHeader(\"Authentication\", \"Bearer \" + \"{1}\");" +
-                    "xhr.send();" +
-                "</script>", "user/login", newUser.Token);
-            return Content(js);
-            //return new ContentResult { Content = js, ContentType = "application/javascript" };
+
+            using (var client = new HttpClient())
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newUser.Token);
+
+            //using (var req = new HttpRequestMessage())
+            //{
+            //    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //    req.Headers.Add("Authentication", string.Format("Bearer {0}", newUser.Token));
+            //}
+
+            //var bearerToken = new AuthenticationHeaderValue("Bearer " + newUser.Token);
+            //using (var client = new HttpClient())
+            //    client.DefaultRequestHeaders.Add("Authentication", string.Format("Bearer {0}", newUser.Token));
+
+            return Content(newUser.Token);
         }
 
         [AllowAnonymous]
