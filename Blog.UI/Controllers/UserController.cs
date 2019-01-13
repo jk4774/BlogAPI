@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
-//using System.Net.Http.Headers;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -39,20 +38,20 @@ namespace Blog.UI.Controllers
             if (status != null && status.GetType() == typeof(NotFoundResult))
                 return NotFound();
 
-            using (var client = new HttpClient())
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newUser.Token);
+            var client = new HttpClient();
+            var httpRequestMessage = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new System.Uri("https://localhost:5001/user/login"),
+                Headers = {
+                    { HttpRequestHeaders.Authorization.ToString(), "Bearer " + newUser.Token },
+                    { HttpRequestHeaders.Access.Tostring(), "application/json" },
+                    { "X-Version", "1" }
+                }
+            };
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newUser.Token);
 
-            //using (var req = new HttpRequestMessage())
-            //{
-            //    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    req.Headers.Add("Authentication", string.Format("Bearer {0}", newUser.Token));
-            //}
-
-            //var bearerToken = new AuthenticationHeaderValue("Bearer " + newUser.Token);
-            //using (var client = new HttpClient())
-            //    client.DefaultRequestHeaders.Add("Authentication", string.Format("Bearer {0}", newUser.Token));
-
-            return Content(newUser.Token);
+            return Ok();
         }
 
         [AllowAnonymous]
