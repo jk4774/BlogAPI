@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -39,17 +38,11 @@ namespace Blog.UI.Controllers
                 return NotFound();
 
             var client = new HttpClient();
-            var httpRequestMessage = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new System.Uri("https://localhost:5001/user/login"),
-                Headers = {
-                    { HttpRequestHeaders.Authorization.ToString(), "Bearer " + newUser.Token },
-                    { HttpRequestHeaders.Access.Tostring(), "application/json" },
-                    { "X-Version", "1" }
-                }
-            };
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newUser.Token);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", newUser.Token);
+            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + newUser.Token);
 
             return Ok();
         }
