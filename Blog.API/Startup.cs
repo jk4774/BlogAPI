@@ -27,8 +27,6 @@ namespace Blog.API
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
             services.Configure<Settings>(appSettingsSection);
 
-            services.AddCors(opt => opt.AddDefaultPolicy(r => r.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
@@ -53,7 +51,6 @@ namespace Blog.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();
             app.UseMvc();
         }

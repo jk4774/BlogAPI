@@ -3,7 +3,6 @@ using Blog.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -26,25 +25,19 @@ namespace Blog.UI.Controllers
             return _userController.GetById(id);
         }
 
-        [EnableCors]
         [AllowAnonymous]
         [HttpPost("Login")]
         public ActionResult<User> Login([FromForm] User user)
         {
-            var userControllerLogin = _userController.Login(user);
-            var newUser = userControllerLogin.Value;
-            var status = userControllerLogin.Result;
-            if (status != null && status.GetType() == typeof(NotFoundResult))
-                return NotFound();
+            return _userController.Login(user);
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", newUser.Token);
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + newUser.Token);
-
-            return Ok();
+        //    var userControllerLogin = _userController.Login(user);
+        //    var loggedUser = userControllerLogin.Value;
+        //    var status = userControllerLogin.Result;
+        //    if (status != null && status.GetType() == typeof(NotFoundResult))
+        //        return NotFound();
+        //    return Ok(loggedUser);
+        ////return CreatedAtRoute("GetUser", new { id = loggedUser.Id }, loggedUser);
         }
 
         [AllowAnonymous]
