@@ -26,18 +26,17 @@ namespace Blog.UI.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("Token")]
+        public IActionResult Token()
+        {
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpPost("Login")]
-        public ActionResult<User> Login([FromForm] User user)
+        public ActionResult<User> Login([FromBody] User user)
         {
             return _userController.Login(user);
-
-        //    var userControllerLogin = _userController.Login(user);
-        //    var loggedUser = userControllerLogin.Value;
-        //    var status = userControllerLogin.Result;
-        //    if (status != null && status.GetType() == typeof(NotFoundResult))
-        //        return NotFound();
-        //    return Ok(loggedUser);
-        ////return CreatedAtRoute("GetUser", new { id = loggedUser.Id }, loggedUser);
         }
 
         [AllowAnonymous]

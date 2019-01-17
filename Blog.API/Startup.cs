@@ -25,6 +25,8 @@ namespace Blog.API
             var appSettingsSection = Configuration.GetSection("Settings");
             var appSettings = appSettingsSection.Get<Settings>();
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
+
+            services.AddCors();
             services.Configure<Settings>(appSettingsSection);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
@@ -51,6 +53,7 @@ namespace Blog.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
         }
