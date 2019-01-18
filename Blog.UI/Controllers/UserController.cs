@@ -26,13 +26,6 @@ namespace Blog.UI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Token")]
-        public IActionResult Token()
-        {
-            return Ok();
-        }
-
-        [AllowAnonymous]
         [HttpPost("Login")]
         public ActionResult<User> Login([FromBody] User user)
         {
