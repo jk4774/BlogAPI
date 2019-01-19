@@ -23,27 +23,28 @@
     </div>
 </div>
 
-@*<script>
+<script>
     var loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('click', function () {
+        console.log('test');
         var login = document.getElementById('user-login').value;
         var password = document.getElementById('password-login').value;
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'user/login', true);
+        xhr.open('POST', '/user/login', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({ Name: login, Password: password }));
         xhr.onload = () => {
             if (xhr.status == '404') {
                 return alert('Something went wrong try again');
             }
-            if (xhr.responseText) {
-                var token = JSON.parse(xhr.responseText).token;
-                var id = JSON.parse(xhr.responseText).id;
-                xhr.open('GET', 'user/' + id, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                xhr.send();
-            }
+            var token = JSON.parse(xhr.responseText).token;
+            var id = JSON.parse(xhr.responseText).id;
+            var authorizationReq = new XMLHttpRequest();
+            authorizationReq.open('GET', '/user/' + id, true);
+            authorizationReq.setRequestHeader('Authorization', 'Bearer ' + token);
+            authorizationReq.send();
+            window.location.href = '/user/' + id;
+            console.log('test2' + token + ' ' + id);
         };
     });
-</script>*@
+</script>
