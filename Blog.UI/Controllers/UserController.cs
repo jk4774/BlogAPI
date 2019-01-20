@@ -25,7 +25,6 @@ namespace Blog.UI.Controllers
             return _userController.GetById(id);
         }
 
-        [EnableCors("Policy")]
         [AllowAnonymous]
         [HttpPost("Login")]
         public ActionResult<User> Login([FromBody] User user)

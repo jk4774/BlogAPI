@@ -26,8 +26,7 @@ namespace Blog.API
             var appSettings = appSettingsSection.Get<Settings>();
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
 
-            //services.AddCors();
-            services.AddCors(x => x.AddPolicy("Policy", r => r.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            //services.AddCors(r => r.AddPolicy("StandardPolicy", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
             services.Configure<Settings>(appSettingsSection);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
@@ -54,8 +53,8 @@ namespace Blog.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("Policy");
-            //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseStaticFiles();
+            //app.UseCors("StandardPolicy");
             app.UseAuthentication();
             app.UseMvc();
         }
