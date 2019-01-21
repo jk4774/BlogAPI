@@ -1,5 +1,6 @@
 ﻿using Blog.API.Models;
 using Blog.API.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,10 +27,22 @@ namespace Blog.API
             var appSettings = appSettingsSection.Get<Settings>();
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
 
-            //services.AddCors(r => r.AddPolicy("StandardPolicy", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
             services.Configure<Settings>(appSettingsSection);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //    };
+            //});
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
@@ -41,6 +54,14 @@ namespace Blog.API
                     ValidateAudience = false,
                 };
             });
+
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(r => 
+            //{
+
+            //    r.Cookie.Expiration = System.TimeSpan.FromMinutes(10);
+                
+
+            //});
 
             services.AddDbContext<BlogContext>(opt => opt.UseInMemoryDatabase("BlogDb"));
             services.AddScoped<UserService>();
@@ -54,8 +75,9 @@ namespace Blog.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
-            //app.UseCors("StandardPolicy");
-            app.UseAuthentication();
+            //app.UseCookieAuthentication()
+            app.user
+            //app.UseAuthentication().UseCookieAuthentication();
             app.UseMvc();
         }
     }

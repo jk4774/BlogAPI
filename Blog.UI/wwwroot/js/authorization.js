@@ -13,11 +13,12 @@ loginForm.addEventListener('click', function () {
         }
         var token = JSON.parse(loginRequest.responseText).token;
         var id = JSON.parse(loginRequest.responseText).id;
-        var authorizationRequest = new XMLHttpRequest();
-        authorizationRequest.open('GET', '/user/' + id, true);
+        document.cookie = 'Authorization=Bearer ' + token + ';';
+        //var authorizationRequest = new XMLHttpRequest();
+        /*authorizationRequest.open('GET', '/user/' + id, true);
         authorizationRequest.setRequestHeader('Authorization', 'Bearer ' + token);
-        authorizationRequest.send();
-        //window.location.href = '/user/' + id;
+        authorizationRequest.send();*/
+        window.location.href = '/user/' + id;
         console.log('test2' + token + ' ' + id);
     };
 });
