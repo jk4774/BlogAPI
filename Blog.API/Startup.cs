@@ -29,7 +29,20 @@ namespace Blog.API
 
             services.Configure<Settings>(appSettingsSection);
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
+            });
+            #region old 
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(x =>
             //{
             //    x.RequireHttpsMetadata = false;
             //    x.SaveToken = true;
@@ -42,27 +55,14 @@ namespace Blog.API
             //    };
             //});
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                };
-            });
-
             //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(r => 
             //{
 
             //    r.Cookie.Expiration = System.TimeSpan.FromMinutes(10);
-                
+
 
             //});
-
+            #endregion
             services.AddDbContext<BlogContext>(opt => opt.UseInMemoryDatabase("BlogDb"));
             services.AddScoped<UserService>();
             services.AddMvc();
@@ -75,9 +75,7 @@ namespace Blog.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
-            //app.UseCookieAuthentication()
-            app.user
-            //app.UseAuthentication().UseCookieAuthentication();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

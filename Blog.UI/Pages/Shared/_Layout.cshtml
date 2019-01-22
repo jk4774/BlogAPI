@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Blog</title>
-
+    <script src="~/js/setToken.js"></script>
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -25,7 +25,7 @@
             <p>&copy; Blog - @DateTime.Now.Year</p>
         </footer>
     </div>
-    <script src="~/js/authorization.js"></script>
+    <!--<script src="~/js/authorization.js"></script>-->
     @RenderSection("Scripts", required: false)
 </body>
 </html>

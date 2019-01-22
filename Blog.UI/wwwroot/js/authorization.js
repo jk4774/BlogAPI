@@ -1,6 +1,5 @@
 ﻿var loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('click', function () {
-    console.log('test');
     var login = document.getElementById('user-login').value;
     var password = document.getElementById('password-login').value;
     var loginRequest = new XMLHttpRequest();
@@ -13,12 +12,7 @@ loginForm.addEventListener('click', function () {
         }
         var token = JSON.parse(loginRequest.responseText).token;
         var id = JSON.parse(loginRequest.responseText).id;
-        document.cookie = 'Authorization=Bearer ' + token + ';';
-        //var authorizationRequest = new XMLHttpRequest();
-        /*authorizationRequest.open('GET', '/user/' + id, true);
-        authorizationRequest.setRequestHeader('Authorization', 'Bearer ' + token);
-        authorizationRequest.send();*/
-        window.location.href = '/user/' + id;
-        console.log('test2' + token + ' ' + id);
+        window.localStorage.setItem('Token', 'Bearer ' + token);
+        //window.location.href = '/user/' + id;
     };
 });
