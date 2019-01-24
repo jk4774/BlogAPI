@@ -1,5 +1,5 @@
 ﻿var loginForm = document.getElementById('loginForm');
-loginForm.addEventListener('click', function () {
+loginForm.addEventListener('click', () => {
     var login = document.getElementById('user-login').value;
     var password = document.getElementById('password-login').value;
     var loginRequest = new XMLHttpRequest();
@@ -10,9 +10,9 @@ loginForm.addEventListener('click', function () {
         if (loginRequest.status == '404') {
             return alert('Something went wrong try again');
         }
-        var token = JSON.parse(loginRequest.responseText).token;
-        var id = JSON.parse(loginRequest.responseText).id;
-        window.localStorage.setItem('Token', 'Bearer ' + token);
-        //window.location.href = '/user/' + id;
+        var json = JSON.parse(loginRequest.responseText);
+        window.localStorage.setItem('Authorization', 'Bearer ' + json.token);
+        window.localStorage.setItem('Id', json.id);
     };
 });
+

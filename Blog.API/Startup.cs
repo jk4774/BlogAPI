@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ namespace Blog.API
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
 
             services.Configure<Settings>(appSettingsSection);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
             {
@@ -41,29 +43,8 @@ namespace Blog.API
                     ValidateAudience = false,
                 };
             });
-            #region old 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false,
-            //    };
-            //});
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(r => 
-            //{
-
-            //    r.Cookie.Expiration = System.TimeSpan.FromMinutes(10);
-
-
-            //});
-            #endregion
-            services.AddDbContext<BlogContext>(opt => opt.UseInMemoryDatabase("BlogDb"));
+            services.AddDbContext<BlogContext>(o => o.UseInMemoryDatabase("BlogDb"));
             services.AddScoped<UserService>();
             services.AddMvc();
         }

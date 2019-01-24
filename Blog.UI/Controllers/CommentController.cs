@@ -1,4 +1,5 @@
 ﻿using Blog.API.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,7 +9,8 @@ namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize]
     public class CommentController : Controller
     {
         private readonly APIController.CommentController _commentController;

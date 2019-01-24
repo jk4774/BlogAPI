@@ -1,5 +1,6 @@
 ﻿using Blog.API.Models;
 using Blog.API.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly APIController.UserController _userController;

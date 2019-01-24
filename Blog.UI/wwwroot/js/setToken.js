@@ -1,10 +1,17 @@
-﻿if (window.localStorage.getItem('Token') === null) {
-    return alert('You are not logged');
-}
-var id = '1';
-var authorizationRequest = new XMLHttpRequest();
-authorizationRequest.open('GET', '/user/' + id, true);
-authorizationRequest.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-authorizationRequest.send();
-window.location.href = '/user/' + id;
-console.log('asdf');
+﻿//var token = window.localStorage.getItem('Token');
+//if (token) {
+//    var xhr = new XMLHttpRequest();
+//    xhr.open('GET', '/user/1', true);
+//    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+//    xhr.send();
+//    alert('asdf');
+//    //window.location.href = '/user/1';
+//}
+////if (!token) {
+//    return;
+//}
+//var xhr = new XMLHttpRequest();
+//xhr.open('GET', '/user/1', true);
+//xhr.setRequestHeader('Authorization', token);
+//xhr.send();
+//console.log('SET TOKEN');
