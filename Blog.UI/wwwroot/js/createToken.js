@@ -7,12 +7,21 @@ loginForm.addEventListener('click', () => {
     loginRequest.setRequestHeader('Content-Type', 'application/json');
     loginRequest.send(JSON.stringify({ Name: login, Password: password }));
     loginRequest.onload = () => {
-        if (loginRequest.status == '404') {
+        if (loginRequest.status != '200') {
             return alert('Something went wrong try again');
         }
         var json = JSON.parse(loginRequest.responseText);
-        window.localStorage.setItem('Authorization', 'Bearer ' + json.token);
+        window.localStorage.clear();
+        window.localStorage.setItem('Token', json.token);
         window.localStorage.setItem('Id', json.id);
+        // ???
+        var token = window.localStorage.getItem('Token');
+        var id = window.localStorage.getItem('Id');
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/' + id, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        xhr.send();
+
     };
 });
 

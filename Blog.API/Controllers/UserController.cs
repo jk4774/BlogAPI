@@ -47,19 +47,16 @@ namespace Blog.API.Controllers
         {
             if (user == null)
                 return NotFound();
-            //return Ok("inserted user is null");
 
             if (new[] { user.Name, user.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
-            //return Ok("username or password is null");
 
             var userFromDatabase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
             if (userFromDatabase == null)
                 return NotFound();
-            //return Ok("userfromdatabase is null");
+
             if (!BCryptHelper.CheckPassword(user.Password, userFromDatabase.Password))
                 return NotFound();
-            //return Ok("check password is bad");
 
             return _userService.Authenticate(userFromDatabase);
         }

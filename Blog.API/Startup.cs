@@ -29,8 +29,7 @@ namespace Blog.API
             var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
 
             services.Configure<Settings>(appSettingsSection);
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
