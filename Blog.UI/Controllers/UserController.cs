@@ -31,6 +31,8 @@ namespace Blog.UI.Controllers
         [HttpPost("Login")]
         public ActionResult<User> Login([FromBody] User user)
         {
+            //var token = _userController.Login(user).Value.Token;
+            //Response.Cookies.Append("Token", token);
             return _userController.Login(user);
         }
 
@@ -39,6 +41,12 @@ namespace Blog.UI.Controllers
         public IActionResult Register([FromForm] User user)
         {
             return _userController.Register(user);
+        }
+
+        [HttpPost("Logout")]
+        public IActionResult Logout()
+        {
+            return Ok();
         }
 
         [HttpPut("{id}")]

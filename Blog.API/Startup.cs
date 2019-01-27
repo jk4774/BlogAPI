@@ -1,4 +1,5 @@
 ﻿using Blog.API.Models;
+using Blog.API.Providers;
 using Blog.API.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,46 +27,28 @@ namespace Blog.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             var appSettingsSection = Configuration.GetSection("Settings");
             var appSettings = appSettingsSection.Get<Settings>();
-            //var signingKey = new SymmetricSecurityKey(key);
-
-            var validationParams = new TokenValidationParameters
+            var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
                 ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateAudience = false
             };
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+            var cookieAuthentication = new CookieAuthenticationOptions
             {
-                x.Cookie.Expiration = TimeSpan.FromMinutes(5);
-                x.LoginPath = "/user/login";
-                x.LogoutPath = "/user/logout";
-
-            });
-
-            services.AddMvc();
-
-            //services.AddScoped<IDataSerializer, TicketSerializer>();
-
-
-            //services.AddDataProtection(x =>
-            //{
-            //    x.ApplicationDiscriminator = string.Format(Environment.)
-            //});
-
+                CookieHttpOnly = true,
+                CookieName = "access_cookie_token",
+                TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters)
+            };
 
 
 
             #region old
             //var appSettingsSection = Configuration.GetSection("Settings");
             //var appSettings = appSettingsSection.Get<Settings>();
-            //var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
             //services.Configure<Settings>(appSettingsSection);
-            ////services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
             //{
             //    x.RequireHttpsMetadata = false;

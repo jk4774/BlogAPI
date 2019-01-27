@@ -5,13 +5,18 @@
 <div class="row">
     <div class='col-md-6'>
         <h1 class="normal-margin text-md-center">Login</h1>
+        @*<form action="/user/login" method="post">*@
+        @*<input asp-for="Name" class="normal-margin form-control" id="user-login" placeholder="Username" />*@
+        @*<input asp-for="Password" class="normal-margin form-control" id="password-login" placeholder="Password" type="password" />*@
         <input class="normal-margin form-control" id="user-login" placeholder="Username" />
         <input class="normal-margin form-control" id="password-login" placeholder="Password" type="password" />
         <input class="normal-margin btn btn-primary" id="loginForm" type="submit" value="Login" />
+        @*</form>*@
+
     </div>
     <div class='col-md-6'>
         <h1 class="normal-margin text-md-center">Register</h1>
-        <form action="/user/register" method="POST">
+        <form action="/user/register" method="post">
             <input class="normal-margin form-control" asp-for="Name" placeholder="Username" />
             <span asp-validation-for="Name" class="text-danger"></span>
             <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />
