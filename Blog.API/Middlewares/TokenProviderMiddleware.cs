@@ -1,36 +1,35 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+﻿using Blog.API.Providers;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.IdentityModel.Tokens.Jwt;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace WebApplication2
+namespace Blog.API.Middlewares
 {
     public class TokenProviderMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
         private readonly TokenProviderOptions _tokenProviderOptions;
 
-        public TokenProviderMiddleware(RequestDelegate requestDelegate, IOptions<TokenProviderOptions> tokenProviderOptions)
+        public TokenProviderMiddleware(RequestDelegate requestDelegate, TokenProviderOptions tokenProviderOptions)
         {
             _requestDelegate = requestDelegate;
-            _tokenProviderOptions = tokenProviderOptions.Value;
+            _tokenProviderOptions = tokenProviderOptions;
         }
 
         public Task Invoke (HttpContext httpContext)
         {
-            if (!httpContext.Request.Path.Equals(_tokenProviderOptions.Path, StringComparison.Ordinal))
+            if (!httpContext.Request.Path.Equals("/user/login", StringComparison.Ordinal))
             {
                 return _requestDelegate(httpContext);
             }
-
             if (!httpContext.Request.Method.Equals("POST") || !httpContext.Request.HasFormContentType)
             {
                 httpContext.Response.StatusCode = 400;
-                return httpContext.Response.WriteAsync("Bad request...");
+                return httpContext.Response.WriteAsync("Something went back request...");
             }
             return GenerateToken(httpContext);
         }
@@ -41,49 +40,32 @@ namespace WebApplication2
             var password = httpContext.Request.Form["password"];
 
             var identify = await GetIdentity(username, password);
-            if (identify == null)
-            {
-                httpContext.Response.StatusCode = 400;
-                await httpContext.Response.WriteAsync("Invalid username/password");
-                return;
-            }
-
-            var claims = new Claim[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
-            };
-
-            var jwt = new JwtSecurityToken
-            (
-                claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.Add(_tokenProviderOptions.Expiration),
-                signingCredentials: _tokenProviderOptions.SigningCredentials
-            );
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-
-            httpContext.Response.ContentType = "application/json";
-            await httpContext.Response.WriteAsync
-            (
-                JsonConvert.SerializeObject
-                (
-                    new { access_token = encodedJwt, expires_in = (int)_tokenProviderOptions.Expiration.TotalSeconds }, 
-                    new JsonSerializerSettings { Formatting = Formatting.Indented }
-                )
-            );
         }
 
         private Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            //test
-            if (username == "r" && password == "r")
-            {
-                return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] { }));
-            }
-            return Task.FromResult<ClaimsIdentity>(null);
+            //if (user == null)
+            //    return NotFound();
+
+            //if (new[] { user.Name, user.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
+            //    return NotFound();
+
+            //var userFromDatabase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
+            //if (userFromDatabase == null)
+            //    return NotFound();
+
+            //if (!BCryptHelper.CheckPassword(user.Password, userFromDatabase.Password))
+            //    return NotFound();
+
+            //return _userService.Authenticate(userFromDatabase);
+
+            return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] { }));
+
+
         }
+
+
+
+
     }
 }

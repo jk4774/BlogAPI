@@ -1,5 +1,4 @@
 ﻿using Blog.API.Models;
-using Blog.API.Providers;
 using Blog.API.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -38,34 +37,9 @@ namespace Blog.API
             };
             var cookieAuthentication = new CookieAuthenticationOptions
             {
-                CookieHttpOnly = true,
-                CookieName = "access_cookie_token",
+                Cookie = new Microsoft.AspNetCore.Http.CookieBuilder { Name = "access_token" },
                 TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters)
             };
-
-
-
-            #region old
-            //var appSettingsSection = Configuration.GetSection("Settings");
-            //var appSettings = appSettingsSection.Get<Settings>();
-            //services.Configure<Settings>(appSettingsSection);
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false,
-            //    };
-            //});
-
-            //services.AddDbContext<BlogContext>(o => o.UseInMemoryDatabase("BlogDb"));
-            //services.AddScoped<UserService>();
-            //services.AddMvc();
-            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
