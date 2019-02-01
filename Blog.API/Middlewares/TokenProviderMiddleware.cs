@@ -1,7 +1,11 @@
 ﻿using Blog.API.Providers;
+using DevOne.Security.Cryptography.BCrypt;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -12,12 +16,12 @@ namespace Blog.API.Middlewares
     public class TokenProviderMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
-        private readonly TokenProviderOptions _tokenProviderOptions;
+        private readonly SigningCredentials _signingCredentials;
 
-        public TokenProviderMiddleware(RequestDelegate requestDelegate, TokenProviderOptions tokenProviderOptions)
+        public TokenProviderMiddleware(RequestDelegate requestDelegate, SigningCredentials signingCredentials)
         {
             _requestDelegate = requestDelegate;
-            _tokenProviderOptions = tokenProviderOptions;
+            _signingCredentials = signingCredentials;
         }
 
         public Task Invoke (HttpContext httpContext)
@@ -40,32 +44,52 @@ namespace Blog.API.Middlewares
             var password = httpContext.Request.Form["password"];
 
             var identify = await GetIdentity(username, password);
+            if (identify == null)
+            {
+                httpContext.Response.StatusCode = 400;
+                await httpContext.Response.WriteAsync("Invalid username/password");
+                return;
+            }
+
+            var claims = new Claim[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
+            };
+
+            var jwt = new JwtSecurityToken
+            (
+                claims: claims,  
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(5),
+                signingCredentials: _signingCredentials
+            );
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            httpContext.Response.ContentType = "application/json";
+
+            var json = JsonConvert.SerializeObject 
+            ( 
+                new { access_token = encodedJwt, expires_in = (int)TimeSpan.FromMinutes(5).TotalSeconds }, 
+                new JsonSerializerSettings { Formatting = Formatting.Indented }
+            );
+            await httpContext.Response.WriteAsync(json);
         }
 
         private Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            //if (user == null)
-            //    return NotFound();
-
-            //if (new[] { user.Name, user.Password }.Any(x => string.IsNullOrWhiteSpace(x)))
-            //    return NotFound();
+            if (new[] { username, password }.Any(x => string.IsNullOrWhiteSpace(x)))
+                return Task.FromResult<ClaimsIdentity>(null);
 
             //var userFromDatabase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
             //if (userFromDatabase == null)
-            //    return NotFound();
+            //    return Task.FromResult<ClaimsIdentity>(null);
 
-            //if (!BCryptHelper.CheckPassword(user.Password, userFromDatabase.Password))
-            //    return NotFound();
-
-            //return _userService.Authenticate(userFromDatabase);
+            //if (!BCryptHelper.CheckPassword(password, userFromDatabase.Password))
+            //    return Task.FromResult<ClaimsIdentity>(null);
 
             return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] { }));
-
-
         }
-
-
-
-
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Blog.API.Models;
 using Blog.API.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using APIController = Blog.API.Controllers;
 
@@ -10,7 +8,6 @@ namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize(CookieAuthenticationDefaults.AuthenticationScheme)]
     [Authorize]
     public class UserController : Controller
     {
@@ -31,8 +28,6 @@ namespace Blog.UI.Controllers
         [HttpPost("Login")]
         public ActionResult<User> Login([FromBody] User user)
         {
-            //var token = _userController.Login(user).Value.Token;
-            //Response.Cookies.Append("Token", token);
             return _userController.Login(user);
         }
 
