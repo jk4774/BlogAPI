@@ -1,4 +1,5 @@
-﻿using Blog.API.Providers;
+﻿using Blog.API.Models;
+using Blog.API.Providers;
 using DevOne.Security.Cryptography.BCrypt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -17,11 +18,13 @@ namespace Blog.API.Middlewares
     {
         private readonly RequestDelegate _requestDelegate;
         private readonly SigningCredentials _signingCredentials;
+        private readonly BlogContext _blogContext;
 
-        public TokenProviderMiddleware(RequestDelegate requestDelegate, SigningCredentials signingCredentials)
+        public TokenProviderMiddleware(RequestDelegate requestDelegate, SigningCredentials signingCredentials, BlogContext blogContext)
         {
             _requestDelegate = requestDelegate;
             _signingCredentials = signingCredentials;
+            _blogContext = blogContext;
         }
 
         public Task Invoke (HttpContext httpContext)
@@ -43,7 +46,7 @@ namespace Blog.API.Middlewares
             var username = httpContext.Request.Form["username"];
             var password = httpContext.Request.Form["password"];
 
-            var identify = await GetIdentity(username, password);
+            var identify = await GetIdentity(username, password, _blogContext);
             if (identify == null)
             {
                 httpContext.Response.StatusCode = 400;
@@ -77,17 +80,18 @@ namespace Blog.API.Middlewares
             await httpContext.Response.WriteAsync(json);
         }
 
-        private Task<ClaimsIdentity> GetIdentity(string username, string password)
+        private Task<ClaimsIdentity> GetIdentity(string username, string password, BlogContext blogContext)
         {
             if (new[] { username, password }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return Task.FromResult<ClaimsIdentity>(null);
 
-            //var userFromDatabase = _blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == user.Name.ToLower());
-            //if (userFromDatabase == null)
-            //    return Task.FromResult<ClaimsIdentity>(null);
+            var userFromDb = blogContext.Users.SingleOrDefault(x => x.Name.ToLower() == username.ToLower());
 
-            //if (!BCryptHelper.CheckPassword(password, userFromDatabase.Password))
-            //    return Task.FromResult<ClaimsIdentity>(null);
+            if (userFromDb == null)
+                return Task.FromResult<ClaimsIdentity>(null);
+
+            if (!BCryptHelper.CheckPassword(password, userFromDb.Password))
+                return Task.FromResult<ClaimsIdentity>(null);
 
             return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] { }));
         }

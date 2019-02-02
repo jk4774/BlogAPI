@@ -5,6 +5,7 @@ using Blog.API.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,51 +20,59 @@ namespace Blog.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _appSettings = Configuration.GetSection("Settings").Get<Settings>();
         }
 
         public IConfiguration Configuration { get; set; }
+        private readonly Settings _appSettings;
+        private BlogContext _blogContext;
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var appSettingsSection = Configuration.GetSection("Settings");
-            var appSettings = appSettingsSection.Get<Settings>();
+            services.Configure<CookiePolicyOptions>(r =>
+            {
+                r.CheckConsentNeeded = x => true;
+                r.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
+                ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
 
-            var cookieAuthentication = new CookieAuthenticationOptions
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
             {
-                Cookie = new Microsoft.AspNetCore.Http.CookieBuilder { Name = "access_token" },
-                TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters)
-            };
+                x.Cookie = new CookieBuilder { Name = "access_token" };
+                x.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
+            });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x => x = cookieAuthentication);
             services.AddDbContext<BlogContext>(o => o.UseInMemoryDatabase("BlogDb"));
+            
+            //_blogContext = services.BuildServiceProvider().GetService<BlogContext>();
+
             services.AddScoped<UserService>();
             services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            var appSettingsSection = Configuration.GetSection("Settings");
-            var appSettings = appSettingsSection.Get<Settings>();
-            var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
+            var signingCredentials = new SigningCredentials
+                (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //_blogContext = new BlogContext()
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseCookiePolicy();
-            app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
+            app.UseMiddleware<TokenProviderMiddleware>(signingCredentials, _blogContext);
             app.UseMvc();
         }
     }
