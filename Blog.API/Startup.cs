@@ -25,7 +25,6 @@ namespace Blog.API
 
         public IConfiguration Configuration { get; set; }
         private readonly Settings _appSettings;
-        private BlogContext _blogContext;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -52,8 +51,6 @@ namespace Blog.API
             });
 
             services.AddDbContext<BlogContext>(o => o.UseInMemoryDatabase("BlogDb"));
-            
-            //_blogContext = services.BuildServiceProvider().GetService<BlogContext>();
 
             services.AddScoped<UserService>();
             services.AddMvc();
@@ -64,15 +61,17 @@ namespace Blog.API
             var signingCredentials = new SigningCredentials
                 (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
 
+            var blogContext = app.ApplicationServices.GetService<BlogContext>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            //_blogContext = new BlogContext()
+
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseCookiePolicy();
-            app.UseMiddleware<TokenProviderMiddleware>(signingCredentials, _blogContext);
+            app.UseMiddleware<TokenProviderMiddleware>(signingCredentials, blogContext);
             app.UseMvc();
         }
     }

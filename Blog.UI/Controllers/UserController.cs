@@ -28,7 +28,7 @@ namespace Blog.UI.Controllers
         [HttpPost("Login")]
         public ActionResult<User> Login([FromBody] User user)
         {
-            return _userController.Login(user);
+            await _userController.Login(user);
         }
 
         [AllowAnonymous]

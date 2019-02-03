@@ -1,11 +1,9 @@
 ﻿using Blog.API.Models;
-using Blog.API.Providers;
 using DevOne.Security.Cryptography.BCrypt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
