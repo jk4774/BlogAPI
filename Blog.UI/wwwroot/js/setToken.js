@@ -14,7 +14,8 @@ loginForm.addEventListener('click', () => {
             return alert('something went wrong');
         }
         var token = JSON.parse(xhr.responseText).access_token;
+        var id = JSON.parse(xhr.responseText).id;
         document.cookie = 'access_token=' + token + ';';
-        document.location.href = '/user/1';
+        document.location.href = '/user/' + id;
     };
 });
