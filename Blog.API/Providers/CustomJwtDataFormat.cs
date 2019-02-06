@@ -42,10 +42,6 @@ namespace Blog.API.Providers
                 {
                     throw new Exception("Token is null");
                 }
-                //if (!validJwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256Signature, StringComparison.Ordinal))
-                //{
-                //    throw new Exception("Incorrect algorithm");
-                //}
             }
             catch
             {

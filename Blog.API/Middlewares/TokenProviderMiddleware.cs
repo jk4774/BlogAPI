@@ -15,38 +15,39 @@ namespace Blog.API.Middlewares
     public class TokenProviderMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
-        //private readonly SigningCredentials _signingCredentials;
-        //private readonly BlogContext _blogContext;
+        private readonly SigningCredentials _signingCredentials;
+        private BlogContext blogContext;
 
-        //public TokenProviderMiddleware(RequestDelegate requestDelegate, SigningCredentials signingCredentials, BlogContext blogContext)
-        public TokenProviderMiddleware(RequestDelegate requestDelegate)
+        public TokenProviderMiddleware(RequestDelegate requestDelegate, SigningCredentials signingCredentials)
         {
             _requestDelegate = requestDelegate;
-            //_signingCredentials = signingCredentials;
-            //_blogContext = blogContext;
+            _signingCredentials = signingCredentials;
         }
 
-        //public Task Invoke(HttpContext httpContext)
-        public Task Invoke(HttpContext httpContext, SigningCredentials signingCredentials, BlogContext blogContext)
+        public Task Invoke(HttpContext httpContext)
         {
             if (!httpContext.Request.Path.Equals("/user/login", StringComparison.Ordinal))
             {
                 return _requestDelegate(httpContext);
             }
+
             if (!httpContext.Request.Method.Equals("POST") || !httpContext.Request.HasFormContentType)
             {
                 httpContext.Response.StatusCode = 400;
                 return httpContext.Response.WriteAsync("Something went back request...");
             }
-            return GenerateToken(httpContext, signingCredentials, blogContext);
+
+            blogContext = (BlogContext)httpContext.RequestServices.GetService(typeof(BlogContext));
+
+            return GenerateToken(httpContext); 
         }
 
-        private async Task GenerateToken(HttpContext httpContext, SigningCredentials signingCredentials, BlogContext blogContext)
+        private async Task GenerateToken(HttpContext httpContext)
         {
             var username = httpContext.Request.Form["username"];
             var password = httpContext.Request.Form["password"];
 
-            var identify = await GetIdentity(username, password, blogContext);
+            var identify = await GetIdentity(username, password);
             if (identify == null)
             {
                 httpContext.Response.StatusCode = 400;
@@ -66,8 +67,7 @@ namespace Blog.API.Middlewares
                 claims: claims,
                 notBefore: DateTime.UtcNow,
                 expires: DateTime.UtcNow.AddMinutes(5),
-                //signingCredentials: _signingCredentials
-                signingCredentials: signingCredentials
+                signingCredentials: _signingCredentials
             );
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -86,7 +86,7 @@ namespace Blog.API.Middlewares
             await httpContext.Response.WriteAsync(json);
         }
 
-        private Task<ClaimsIdentity> GetIdentity(string username, string password, BlogContext blogContext)
+        private Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
             if (new[] { username, password }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return Task.FromResult<ClaimsIdentity>(null);

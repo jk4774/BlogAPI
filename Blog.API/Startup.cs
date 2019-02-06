@@ -25,7 +25,6 @@ namespace Blog.API
 
         public IConfiguration Configuration { get; set; }
         private readonly Settings _appSettings;
-        //private BlogContext blogContext;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -50,14 +49,8 @@ namespace Blog.API
                 x.Cookie = new CookieBuilder { Name = "access_token" };
                 x.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });
+
             services.AddDbContext<BlogContext>(o => o.UseInMemoryDatabase("BlogDb"));
-
-            //blogContext = services.BuildServiceProvider().GetService<BlogContext>();
-            //services.Configure<RazorViewEngineOptions>(x => { x.FileProviders.Add(new EntityFrameworkFileProvider() });
-
-            //services.AddTransient(x => blogContext = x.GetService<BlogContext>());
-
-
             services.AddScoped<UserService>();
             services.AddMvc();
         }
@@ -67,8 +60,6 @@ namespace Blog.API
             var signingCredentials = new SigningCredentials
                 (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
 
-            var blogContext = app.ApplicationServices.GetService<BlogContext>();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,7 +68,7 @@ namespace Blog.API
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseCookiePolicy();
-            app.UseMiddleware<TokenProviderMiddleware>(signingCredentials, blogContext);
+            app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
             app.UseMvc();
         }
     }
