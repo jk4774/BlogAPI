@@ -24,13 +24,16 @@ namespace Blog.UI.Controllers
         {
             var response = _userController.GetById(id);
             if (response.GetType() == typeof(NotFoundResult))
-                return Redirect("/");
+                //return RedirectToAction("Home", "Index");
+                return Redirect("~/Index.cshtml");
             if (HttpContext.User.Identity.IsAuthenticated)
                 return Ok(response.Value);
             else
-                return Redirect("/");
+                return Redirect("~/Index.cshtml");
+            //return RedirectToAction("Home", "Index");
         }
 
+        #region old
         //[AllowAnonymous]
         //[HttpPost("Login")]
         //public ActionResult<User> Login([FromBody] User user)
@@ -47,6 +50,7 @@ namespace Blog.UI.Controllers
         //    return Ok();
         //    //return _userController.Login(user);
         //}
+        #endregion
 
         [AllowAnonymous]
         [HttpPost("Register")]

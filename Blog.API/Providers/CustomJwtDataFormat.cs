@@ -39,9 +39,7 @@ namespace Blog.API.Providers
                 claimsPrincipal = handler.ValidateToken(protectedText, _tokenValidationParameters, out SecurityToken securityToken);
                 var validJwt = (JwtSecurityToken)securityToken;
                 if (validJwt == null)
-                {
                     throw new Exception("Token is null");
-                }
             }
             catch
             {
