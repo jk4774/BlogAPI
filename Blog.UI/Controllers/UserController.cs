@@ -8,7 +8,7 @@ using APIController = Blog.API.Controllers;
 namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    //[ApiController]
     [Authorize]
     public class UserController : Controller
     {
@@ -28,8 +28,7 @@ namespace Blog.UI.Controllers
                 return Redirect("~/Index.cshtml");
             if (HttpContext.User.Identity.IsAuthenticated)
                 return Ok(response.Value);
-            else
-                return Redirect("~/Index.cshtml");
+            return Redirect("~/Index.cshtml");
             //return RedirectToAction("Home", "Index");
         }
 
@@ -80,9 +79,9 @@ namespace Blog.UI.Controllers
         public IActionResult Update(int id, [FromForm] User updatedUser)
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
-            { 
+            {
                 //
-            } 
+            }
             //
             return _userController.Update(id, updatedUser);
         }
@@ -92,9 +91,9 @@ namespace Blog.UI.Controllers
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
             {
-                 //
+                //
 
-            } 
+            }
             //
             return _userController.Delete(id);
         }

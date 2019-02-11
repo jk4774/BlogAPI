@@ -7,7 +7,6 @@ using APIController = Blog.API.Controllers;
 namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
     [Authorize]
     public class CommentController : Controller
     {

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,7 +65,7 @@ namespace Blog.UI
             app.UseAuthentication();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
-            app.UseMvc(x => x.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"));
+            app.UseMvc(x => x.MapRoute("Default", "{controller=Home}/{action=Index}"));
         }
     }
 }
