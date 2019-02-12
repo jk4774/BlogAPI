@@ -65,7 +65,7 @@ namespace Blog.UI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Logout")]
+        [HttpGet("Logout")]//will be post
         public IActionResult Logout()
         {
             if (!HttpContext.User.Identity.IsAuthenticated)

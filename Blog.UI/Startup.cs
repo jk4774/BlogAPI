@@ -1,4 +1,4 @@
-using Blog.API.Middlewares;
+﻿using Blog.API.Middlewares;
 using Blog.API.Models;
 using Blog.API.Providers;
 using Blog.API.Services;
@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Internal;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,54 +17,59 @@ namespace Blog.UI
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        private readonly Settings _settings;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _appSettings = Configuration.GetSection("Settings").Get<Settings>();
+            _settings = Configuration.GetSection("Settings").Get<Settings>();
         }
-
-        public IConfiguration Configuration { get; set; }
-        private readonly Settings _appSettings;
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(r =>
+            services.Configure<CookiePolicyOptions>(options =>
             {
-                r.CheckConsentNeeded = x => true;
-                r.MinimumSameSitePolicy = SameSiteMode.None;
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.SecurityKey)),
                 ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateAudience  = false,
                 ValidateLifetime = true,
                 ClockSkew = System.TimeSpan.Zero
             };
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(c =>
             {
-                x.Cookie = new CookieBuilder { Name = "access_token" };
-                x.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
+                c.Cookie = new CookieBuilder { Name = "access_token" };
+                c.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });
 
-            services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("BlogDb"));
+            services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("BlogDB"));
             services.AddScoped<UserService>();
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var signingCredentials = new SigningCredentials
-                (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
+                (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthentication();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
-            app.UseMvc(x => x.MapRoute("Default", "{controller=Home}/{action=Index}"));
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
