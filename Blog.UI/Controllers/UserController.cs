@@ -8,7 +8,6 @@ using APIController = Blog.API.Controllers;
 namespace Blog.UI.Controllers
 {
     [Route("[controller]")]
-    //[ApiController]
     [Authorize]
     public class UserController : Controller
     {
@@ -22,34 +21,10 @@ namespace Blog.UI.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
-            var response = _userController.GetById(id);
-            if (response.GetType() == typeof(NotFoundResult))
-                //return RedirectToAction("Home", "Index");
-                return Redirect("~/Index.cshtml");
-            if (HttpContext.User.Identity.IsAuthenticated)
-                return Ok(response.Value);
-            return Redirect("~/Index.cshtml");
-            //return RedirectToAction("Home", "Index");
+            if (!HttpContext.User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+            return Ok(_userController.GetById(id).Value);
         }
-
-        #region old
-        //[AllowAnonymous]
-        //[HttpPost("Login")]
-        //public ActionResult<User> Login([FromBody] User user)
-        //{
-        //    var response = _userController.Login(User);
-        //    if (response.GetType() == typeof(NotFoundResult))
-        //        return 
-        //    if (IsLogged)
-        //    {
-        //        var idd = HttpContext.User.Identity.Name;
-        //        return Ok(idd);
-        //        //return _userController.Login(user);
-        //    }
-        //    return Ok();
-        //    //return _userController.Login(user);
-        //}
-        #endregion
 
         [AllowAnonymous]
         [HttpPost("Register")]
@@ -99,3 +74,22 @@ namespace Blog.UI.Controllers
         }
     }
 }
+
+#region old
+        //[AllowAnonymous]
+        //[HttpPost("Login")]
+        //public ActionResult<User> Login([FromBody] User user)
+        //{
+        //    var response = _userController.Login(User);
+        //    if (response.GetType() == typeof(NotFoundResult))
+        //        return 
+        //    if (IsLogged)
+        //    {
+        //        var idd = HttpContext.User.Identity.Name;
+        //        return Ok(idd);
+        //        //return _userController.Login(user);
+        //    }
+        //    return Ok();
+        //    //return _userController.Login(user);
+        //}
+        #endregion

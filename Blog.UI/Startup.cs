@@ -64,6 +64,7 @@ namespace Blog.UI
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
