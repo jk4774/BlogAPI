@@ -9,14 +9,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
 </head>
 <body>
-    
     <div class="container body-content">
+        <h1>Blog</h1>
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; Blog - @DateTime.Now.Year</p>
         </footer>
     </div>
-    @*@RenderSection("Scripts", required: false)*@
 </body>
 </html>

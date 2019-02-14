@@ -2,7 +2,6 @@
 using Blog.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -21,9 +20,10 @@ namespace Blog.UI.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
+            var response = _userController.GetById(id);
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
-            return Ok(_userController.GetById(id).Value);
+            return View("~/Views/User/GetUser.cshtml", response.Value);
         }
 
         [AllowAnonymous]
@@ -31,46 +31,42 @@ namespace Blog.UI.Controllers
         public IActionResult Register([FromForm] User user)
         {
             var response = _userController.Register(user);
-            if (response.GetType() == typeof(NotFoundResult))
-                return Redirect("/");
-            if (HttpContext.User.Identity.IsAuthenticated)
-                return Ok("Jest zalogowany");
-            else
-                return Redirect("/");
+
+            if (response.GetType() != typeof(NoContentResult))
+                return RedirectToAction("Index", "Home");
+
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("GetUser", new { id = User.Identity.Name });
+            return Ok(response);
         }
 
         [AllowAnonymous]
-        [HttpGet("Logout")]//will be post
+        [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return Ok("zalogowany");
-            }
-            return Ok("LoggedIKKE");
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("GetUser", new { id = User.Identity.Name });
+            // Clean Cookie
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromForm] User updatedUser)
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                //
-            }
-            //
-            return _userController.Update(id, updatedUser);
+            var response = _userController.Update(id, updatedUser);
+
+
+
+            return response;
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                //
-
-            }
-            //
-            return _userController.Delete(id);
+            var response = _userController.Delete(id);
+            if (response.GetType() != typeof(NoContentResult))
+                return Ok("Something went wrong"); 
+            return response;
         }
     }
 }

@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.UI.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
-        [AllowAnonymous]
         public IActionResult Index()
         {
-            if (HttpContext.User.Identity.IsAuthenticated)
-                return Redirect("/user/");
+            if (User.Identity.IsAuthenticated)
+                return Redirect("/user/" + User.Identity.Name);
             return View("~/Views/Home/Index.cshtml");
         }
     }

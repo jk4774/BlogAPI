@@ -27,9 +27,7 @@ namespace Blog.API.Middlewares
         public Task Invoke(HttpContext httpContext)
         {
             if (!httpContext.Request.Path.Equals("/user/login", StringComparison.Ordinal))
-            {
                 return _requestDelegate(httpContext);
-            }
 
             if (!httpContext.Request.Method.Equals("POST") || !httpContext.Request.HasFormContentType)
             {
@@ -39,7 +37,7 @@ namespace Blog.API.Middlewares
 
             blogContext = (BlogContext)httpContext.RequestServices.GetService(typeof(BlogContext));
 
-            return GenerateToken(httpContext); 
+            return GenerateToken(httpContext);
         }
 
         private async Task GenerateToken(HttpContext httpContext)
@@ -55,8 +53,11 @@ namespace Blog.API.Middlewares
                 return;
             }
 
+            var userId = blogContext.Users.First(x => x.Name.ToLower() == username.ToString().ToLower()).Id.ToString();
+
             var claims = new Claim[]
             {
+                new Claim(JwtRegisteredClaimNames.UniqueName, userId),
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
@@ -73,13 +74,13 @@ namespace Blog.API.Middlewares
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             httpContext.Response.ContentType = "application/json";
 
-            var json = JsonConvert.SerializeObject
+            var json = JsonConvert.SerializeObject 
             (
                 new
                 {
                     access_token = encodedJwt,
                     expires_in = (int)TimeSpan.FromMinutes(5).TotalSeconds,
-                    id = blogContext.Users.First(x => x.Name.ToLower() == username.ToString().ToLower()).Id.ToString(),
+                    id = userId,
                 },
                 new JsonSerializerSettings { Formatting = Formatting.Indented }
             );

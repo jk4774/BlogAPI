@@ -11,7 +11,7 @@ loginForm.addEventListener('click', () => {
     xhr.send('username=' + name + '&password=' + password);
     xhr.onload = () => {
         if (xhr.status != '200') {
-            return alert('something went wrong, post user/login status is not equal 200');
+            return alert('something went wrong, user/login status is not equal 200');
         }
         var id = JSON.parse(xhr.responseText).id;
         var token = JSON.parse(xhr.responseText).access_token;
