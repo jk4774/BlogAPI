@@ -3,17 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] Blog</title>
+    <title>@ViewData["Title"] - Blog</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container body-content">
-        <h1>Blog</h1>
+        <div class="text-center h1">Blog</div>
         @RenderBody()
-        <hr />
-        <footer>
+        <footer class="text-center">
             <p>&copy; Blog - @DateTime.Now.Year</p>
         </footer>
     </div>

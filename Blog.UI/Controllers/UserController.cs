@@ -21,6 +21,8 @@ namespace Blog.UI.Controllers
         public ActionResult<User> GetById(int id)
         {
             var response = _userController.GetById(id);
+            if (response.Value.GetType() != typeof(User))
+                return RedirectToAction("Index", "Home"); 
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
             return View("~/Views/User/GetUser.cshtml", response.Value);
@@ -37,7 +39,7 @@ namespace Blog.UI.Controllers
 
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
-            return Ok(response);
+            return RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous]

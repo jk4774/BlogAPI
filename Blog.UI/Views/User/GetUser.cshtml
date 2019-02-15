@@ -2,12 +2,30 @@
 @{
     ViewData["Title"] = "User";
 }
-<h1>User Name</h1>
-<div id="main">
-    <div class="col-xs"><h3>@Model.Name</h3></div>
-    <div class="col-xs"><a href="/article/add">Add Article</a></div>
-    <div class="col-xs"><a href="/user/update">Change Password</a></div>
-    <div class="col-xs"><a href="/user/delete">Delete User</a></div>
-    <div class="col-xs"><a href="/user/logout">Logout</a></div>
-    <div class="col-lg-12">FOOTER</div>
+<div id="main"> 
+    
+    <div class="col-sm-5 text-center h3">
+        @Model.Name
+    </div>
+    
+    <div class="col-sm-2 text-center h3">
+        <a href="/article/add">
+            Add Article
+        </a>
+    </div>
+
+    <div class="col-sm-2 text-center h3">
+        <a href="/user/update">
+            Change Password
+        </a>
+    </div>
+
+    <div class="col-sm-2 text-center h3">
+        <a href="/user/delete"> Delete User </a>
+    </div>
+
+    <div class="col-sm-1 text-center h3">
+        <a href="/user/logout"> Logout </a>
+    </div>
+
 </div>
