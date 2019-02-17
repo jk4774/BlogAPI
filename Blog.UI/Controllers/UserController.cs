@@ -2,6 +2,7 @@
 using Blog.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -21,8 +22,6 @@ namespace Blog.UI.Controllers
         public ActionResult<User> GetById(int id)
         {
             var response = _userController.GetById(id);
-            if (response.Value.GetType() != typeof(User))
-                return RedirectToAction("Index", "Home"); 
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
             return View("~/Views/User/GetUser.cshtml", response.Value);
@@ -42,13 +41,15 @@ namespace Blog.UI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [AllowAnonymous]
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("GetUser", new { id = User.Identity.Name });
-            // Clean Cookie
+            if (Request.Cookies["access_token"] != null)
+            {
+                try { Response.Cookies.Delete("access_token"); }
+                catch { throw new Exception("Cannot delete cookie, something went wrong"); }
+            }
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -56,9 +57,6 @@ namespace Blog.UI.Controllers
         public IActionResult Update(int id, [FromForm] User updatedUser)
         {
             var response = _userController.Update(id, updatedUser);
-
-
-
             return response;
         }
 

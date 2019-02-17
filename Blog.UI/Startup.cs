@@ -60,7 +60,9 @@ namespace Blog.UI
             var signingCredentials = new SigningCredentials
                 (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
 
+            app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
+            app.UseExceptionHandler("/Home/Error");
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);

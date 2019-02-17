@@ -2,30 +2,42 @@
 @{
     ViewData["Title"] = "User";
 }
-<div id="main"> 
-    
+<div id="main">
+
     <div class="col-sm-5 text-center h3">
         @Model.Name
     </div>
-    
+
     <div class="col-sm-2 text-center h3">
-        <a href="/article/add">
+        <form action="/article/add" method="get">
+            <input type="submit" value="Add Article">
+        </form>
+        @*<a href="/article/add">
             Add Article
-        </a>
+        </a>*@
     </div>
 
     <div class="col-sm-2 text-center h3">
-        <a href="/user/update">
+        <form action="/user/update" method="get">
+            <input type="submit" value="Change Password">
+        </form>
+        @*<a href="/user/update">
             Change Password
-        </a>
+        </a>*@
     </div>
 
     <div class="col-sm-2 text-center h3">
-        <a href="/user/delete"> Delete User </a>
+        <form action="/user/delete" method="delete">
+            <input type="submit" value="Delete User">
+        </form>
+        @*<a href="/user/delete"> Delete User </a>*@
     </div>
 
     <div class="col-sm-1 text-center h3">
-        <a href="/user/logout"> Logout </a>
+        <form action="/user/logout" method="post">
+            <input type="submit" value="Logout">
+        </form>
+        @*<a href="/user/logout"> Logout </a>*@
     </div>
 
 </div>

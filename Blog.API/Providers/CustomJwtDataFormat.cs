@@ -43,7 +43,7 @@ namespace Blog.API.Providers
             }
             catch
             {
-                throw new Exception("Something went bad");
+                throw new Exception("Something went wrong with token");
             }
             return new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), "Cookie");
         }
