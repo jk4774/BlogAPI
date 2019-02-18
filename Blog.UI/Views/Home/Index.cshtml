@@ -7,7 +7,9 @@
         <h1 class="normal-margin text-md-center">Login</h1>
         <input class="normal-margin form-control" id="username" placeholder="Username" />
         <input class="normal-margin form-control" id="password" placeholder="Password" type="password" />
-        <input class="normal-margin btn btn-primary" id="loginForm" type="submit" value="Login" />
+        <div class="text-center h2">
+            <input class="normal-margin btn btn-primary" id="loginForm" type="submit" value="Login" />
+        </div>
     </div>
     <div class='col-md-6'>
         <h1 class="normal-margin text-md-center">Register</h1>
@@ -18,7 +20,9 @@
             <span asp-validation-for="Password" class="text-danger"></span>
             <input class="normal-margin form-control" asp-for="Email" placeholder="Email" type="email" />
             <span asp-validation-for="Email" class="text-danger"></span>
-            <input class="normal-margin btn btn-primary" type="submit" value="Register" />
+            <div class="text-center h2">
+                <input class="normal-margin btn btn-primary" type="submit" value="Register" />
+            </div>
         </form>
     </div>
 </div>

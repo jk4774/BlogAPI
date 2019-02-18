@@ -22,7 +22,7 @@ namespace Blog.UI.Controllers
         public ActionResult<User> GetById(int id)
         {
             var response = _userController.GetById(id);
-            if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated || response.Value == null)
                 return RedirectToAction("Index", "Home");
             return View("~/Views/User/GetUser.cshtml", response.Value);
         }
@@ -49,7 +49,6 @@ namespace Blog.UI.Controllers
                 try { Response.Cookies.Delete("access_token"); }
                 catch { throw new Exception("Cannot delete cookie, something went wrong"); }
             }
-
             return RedirectToAction("Index", "Home");
         }
 
@@ -70,22 +69,3 @@ namespace Blog.UI.Controllers
         }
     }
 }
-
-#region old
-        //[AllowAnonymous]
-        //[HttpPost("Login")]
-        //public ActionResult<User> Login([FromBody] User user)
-        //{
-        //    var response = _userController.Login(User);
-        //    if (response.GetType() == typeof(NotFoundResult))
-        //        return 
-        //    if (IsLogged)
-        //    {
-        //        var idd = HttpContext.User.Identity.Name;
-        //        return Ok(idd);
-        //        //return _userController.Login(user);
-        //    }
-        //    return Ok();
-        //    //return _userController.Login(user);
-        //}
-        #endregion
