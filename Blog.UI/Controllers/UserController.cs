@@ -1,8 +1,8 @@
 ﻿using Blog.API.Models;
 using Blog.API.Services;
+using Blog.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -22,7 +22,7 @@ namespace Blog.UI.Controllers
         public ActionResult<User> GetById(int id)
         {
             var response = _userController.GetById(id);
-            if (!User.Identity.IsAuthenticated || response.Value == null)
+            if (response.Value == null)
                 return RedirectToAction("Index", "Home");
             return View("~/Views/User/GetUser.cshtml", response.Value);
         }
@@ -44,28 +44,38 @@ namespace Blog.UI.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            if (Request.Cookies["access_token"] != null)
-            {
-                try { Response.Cookies.Delete("access_token"); }
-                catch { throw new Exception("Cannot delete cookie, something went wrong"); }
-            }
+            Utils.DeleteCookie(Request, Response);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Update")]
+        public IActionResult UpdateUserView()
+        {
+            return View("~/Views/User/UpdateUser.cshtml");
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromForm] User updatedUser)
         {
             var response = _userController.Update(id, updatedUser);
+            if (response.GetType() != typeof(NotFoundResult))
+            {
+
+            }
             return response;
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            if (User.Identity.Name != id.ToString())
+                return RedirectToAction("Index", "Home");
+
             var response = _userController.Delete(id);
-            if (response.GetType() != typeof(NoContentResult))
-                return Ok("Something went wrong"); 
-            return response;
+
+            Utils.DeleteCookie(Request, Response);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

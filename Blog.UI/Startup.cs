@@ -49,7 +49,6 @@ namespace Blog.UI
                 c.Cookie = new CookieBuilder { Name = "access_token" };
                 c.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });
-
             services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("BlogDB"));
             services.AddScoped<UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -62,7 +61,7 @@ namespace Blog.UI
 
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
-            app.UseExceptionHandler("/Home/Error");
+            app.UseStatusCodePagesWithRedirects("/");
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
