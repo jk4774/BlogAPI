@@ -49,7 +49,7 @@ namespace Blog.UI.Controllers
         }
 
         [HttpGet("Update")]
-        public IActionResult UpdateUserView()
+        public IActionResult UpdateView()
         {
             return View("~/Views/User/UpdateUser.cshtml");
         }
@@ -68,14 +68,12 @@ namespace Blog.UI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (User.Identity.Name != id.ToString())
-                return RedirectToAction("Index", "Home");
-
-            var response = _userController.Delete(id);
-
-            Utils.DeleteCookie(Request, Response);
-
-            return RedirectToAction("Index", "Home");
+            return Ok("usunac");
+            //if (User.Identity.Name != id.ToString())
+            //    return RedirectToAction("Index", "Home");
+            //_userController.Delete(id);
+            //Utils.DeleteCookie(Request, Response);
+            //return RedirectToAction("Index", "Home");
         }
     }
 }
