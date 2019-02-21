@@ -6,7 +6,7 @@ loginForm.addEventListener('click', () => {
         return alert('something went wrong, pass/name is empty or null');
     }
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'user/login');
+    xhr.open('POST', '/user/login');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send('username=' + name + '&password=' + password);
     xhr.onload = () => {

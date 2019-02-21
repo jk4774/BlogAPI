@@ -41,11 +41,12 @@ namespace Blog.UI
                 ValidateIssuer = false,
                 ValidateAudience  = false,
                 ValidateLifetime = true,
-                ClockSkew = System.TimeSpan.Zero
+                ClockSkew = System.TimeSpan.Zero,
             };
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(c =>
             {
+                c.LoginPath = "/";
                 c.Cookie = new CookieBuilder { Name = "access_token" };
                 c.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });

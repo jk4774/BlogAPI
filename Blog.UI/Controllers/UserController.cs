@@ -24,7 +24,7 @@ namespace Blog.UI.Controllers
             var response = _userController.GetById(id);
             if (response.Value == null)
                 return RedirectToAction("Index", "Home");
-            return View("~/Views/User/GetUser.cshtml", response.Value);
+            return View("~/Views/User/Main.cshtml", response.Value);
         }
 
         [AllowAnonymous]
@@ -51,13 +51,16 @@ namespace Blog.UI.Controllers
         [HttpGet("Update")]
         public IActionResult UpdateView()
         {
-            return View("~/Views/User/UpdateUser.cshtml");
+            return View("~/Views/User/Update.cshtml");
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "Update")]
         public IActionResult Update(int id, [FromForm] User updatedUser)
         {
-            var response = _userController.Update(id, updatedUser);
+            var user = _userController.GetById(id).Value;
+            user.Password = updatedUser.Password;
+
+            var response = _userController.Update(id, user);
             if (response.GetType() != typeof(NotFoundResult))
             {
 
@@ -65,15 +68,12 @@ namespace Blog.UI.Controllers
             return response;
         }
 
-        [HttpDelete("{id}")]
+        //[HttpDelete("{id}")]
+        [HttpDelete(Name = "Delete")]
         public IActionResult Delete(int id)
         {
-            return Ok("usunac");
-            //if (User.Identity.Name != id.ToString())
-            //    return RedirectToAction("Index", "Home");
-            //_userController.Delete(id);
-            //Utils.DeleteCookie(Request, Response);
-            //return RedirectToAction("Index", "Home");
+            Utils.DeleteCookie(Request, Response);
+            return _userController.Delete(int.Parse(User.Identity.Name));
         }
     }
 }
