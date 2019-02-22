@@ -3,6 +3,7 @@ using Blog.API.Services;
 using Blog.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -32,7 +33,6 @@ namespace Blog.UI.Controllers
         public IActionResult Register([FromForm] User user)
         {
             var response = _userController.Register(user);
-
             if (response.GetType() != typeof(NoContentResult))
                 return RedirectToAction("Index", "Home");
 
@@ -62,18 +62,23 @@ namespace Blog.UI.Controllers
 
             var response = _userController.Update(id, user);
             if (response.GetType() != typeof(NotFoundResult))
-            {
-
-            }
+                return Redirect("");
             return response;
         }
 
-        //[HttpDelete("{id}")]
-        [HttpDelete(Name = "Delete")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Utils.DeleteCookie(Request, Response);
-            return _userController.Delete(int.Parse(User.Identity.Name));
+            throw new Exception(User.Identity.Name + "  " + id);
+            //if (User.Identity.Name != id.ToString())
+            //    throw new Exception("Id is wrong");
+
+            //var response = _userController.Delete(id);
+            //if (response.GetType() != typeof(NoContentResult))
+            //    return RedirectToAction("GetUser", new { id = User.Identity.Name });
+
+            //Utils.DeleteCookie(Request, Response);
+            //return RedirectToAction("Index", "Home");
         }
     }
 }

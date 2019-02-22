@@ -40,15 +40,19 @@
     var deleteUser = document.getElementById('deleteUser');
     deleteUser.addEventListener('click', () => {
         var id = @Model.Id;
-        alert('sadf' + id );
         var xhr = new XMLHttpRequest();
         xhr.open('DELETE', '/user/delete/' + id);
+        xhr.send();
         xhr.onload = () => {
-            if (xhr.status != '204') {
-                return alert('Cannot DELETE');
-            }
-            document.location.href = '/';
+            alert(xhr.status);
+
         };
-        xhr.send(null);
+        //xhr.onload = () => {
+        //    alert(xhr.status);
+        //    //if (xhr.status != 200) {
+        //    //    return alert('Cannot Delete user, something went wrong');
+        //    //}
+        //    //document.location.href = '/';
+        //};
     });
 </script>

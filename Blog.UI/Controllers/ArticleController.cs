@@ -30,6 +30,12 @@ namespace Blog.UI.Controllers
             return _articleController.GetById(id);
         }
 
+        [HttpGet]
+        public IActionResult CreateView()
+        {
+            return Ok();
+        }
+
         [HttpPost]
         public IActionResult Create([FromForm] Article article)
         {
