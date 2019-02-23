@@ -42,17 +42,10 @@
         var id = @Model.Id;
         var xhr = new XMLHttpRequest();
         xhr.open('DELETE', '/user/delete/' + id);
-        xhr.send();
         xhr.onload = () => {
-            alert(xhr.status);
-
+            //alert(xhr.status);
+            document.location.href = '/';
         };
-        //xhr.onload = () => {
-        //    alert(xhr.status);
-        //    //if (xhr.status != 200) {
-        //    //    return alert('Cannot Delete user, something went wrong');
-        //    //}
-        //    //document.location.href = '/';
-        //};
+        xhr.send(null);
     });
 </script>

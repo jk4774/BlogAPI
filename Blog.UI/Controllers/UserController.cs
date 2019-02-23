@@ -66,19 +66,20 @@ namespace Blog.UI.Controllers
             return response;
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "Delete")]
         public IActionResult Delete(int id)
         {
-            throw new Exception(User.Identity.Name + "  " + id);
-            //if (User.Identity.Name != id.ToString())
-            //    throw new Exception("Id is wrong");
+            if (User.Identity.Name != id.ToString())
+                throw new Exception("Id is wrong");
 
             //var response = _userController.Delete(id);
             //if (response.GetType() != typeof(NoContentResult))
             //    return RedirectToAction("GetUser", new { id = User.Identity.Name });
 
-            //Utils.DeleteCookie(Request, Response);
-            //return RedirectToAction("Index", "Home");
+
+
+            Utils.DeleteCookie(Request, Response);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

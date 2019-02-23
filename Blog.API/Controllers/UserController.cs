@@ -93,6 +93,13 @@ namespace Blog.API.Controllers
             if (new[] { updatedUser.Name, updatedUser.Password, updatedUser.Email }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
+            if (_blogContext.Users.Any(x => x.Name.ToLower() == updatedUser.Name.ToLower()))
+                return NotFound();
+
+            if (_blogContext.Users.Any(x => x.Email.ToLower() == updatedUser.Email.ToLower()))
+                return NotFound();
+
+
             var encryptedPassword = BCryptHelper.HashPassword(updatedUser.Password, BCryptHelper.GenerateSalt(12));
 
             user.Name = updatedUser.Name;
