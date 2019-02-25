@@ -41,9 +41,9 @@
     deleteUser.addEventListener('click', () => {
         var id = @Model.Id;
         var xhr = new XMLHttpRequest();
-        xhr.open('DELETE', '/user/delete/' + id);
+        xhr.open('DELETE', '/user/delete/1234');
         xhr.onload = () => {
-            //alert(xhr.status);
+            alert(xhr.status);
             document.location.href = '/';
         };
         xhr.send(null);

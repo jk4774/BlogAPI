@@ -62,7 +62,7 @@ namespace Blog.UI
 
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
-            //app.UseStatusCodePagesWithRedirects("/");
+            app.UseStatusCodePagesWithRedirects("/");
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);

@@ -17,7 +17,8 @@ namespace Blog.API.Services
             _settings = settings.Value;
         }
 
-        public User Authenticate(User user)
+        //public Tuple<User, string> Authenticate(User user)
+        public User Authenticate (User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -28,6 +29,7 @@ namespace Blog.API.Services
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             return new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email, Token = tokenHandler.WriteToken(securityToken) };
+            //return new Tuple<User, string>(new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email }, tokenHandler.WriteToken(securityToken));
         }
     }
 }

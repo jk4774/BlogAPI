@@ -3,7 +3,6 @@ using Blog.API.Services;
 using Blog.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using APIController = Blog.API.Controllers;
 
 namespace Blog.UI.Controllers
@@ -49,7 +48,7 @@ namespace Blog.UI.Controllers
         }
 
         [HttpGet("Update")]
-        public IActionResult UpdateView()
+        public IActionResult UpdateView() 
         {
             return View("~/Views/User/Update.cshtml");
         }
@@ -61,23 +60,19 @@ namespace Blog.UI.Controllers
             user.Password = updatedUser.Password;
 
             var response = _userController.Update(id, user);
-            if (response.GetType() != typeof(NotFoundResult))
+            if (response.GetType() != typeof(NoContentResult))
                 return Redirect("");
             return response;
         }
 
-        [HttpDelete("{id}", Name = "Delete")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             if (User.Identity.Name != id.ToString())
-                throw new Exception("Id is wrong");
-
-            //var response = _userController.Delete(id);
-            //if (response.GetType() != typeof(NoContentResult))
-            //    return RedirectToAction("GetUser", new { id = User.Identity.Name });
-
-
-
+                return RedirectToAction("GetUser", new { id = User.Identity.Name });
+            var response = _userController.Delete(id);
+            if (response.GetType() != typeof(NoContentResult))
+                return RedirectToAction("GetUser", new { id = User.Identity.Name });
             Utils.DeleteCookie(Request, Response);
             return RedirectToAction("Index", "Home");
         }
