@@ -37,7 +37,7 @@ namespace Blog.API
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(/*_appSettings.SecurityKey*/"ULTRA_RARE3_PASSWEORAWEF#$%$HU!!@#")),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidateLifetime = true,

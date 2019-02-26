@@ -56,8 +56,10 @@ namespace Blog.API.Controllers
 
             if (!BCryptHelper.CheckPassword(user.Password, userFromDatabase.Password))
                 return NotFound();
-
-            return _userService.Authenticate(userFromDatabase);
+            //Temporary
+            var user1 = _userService.Authenticate(userFromDatabase);
+            user1.Item1.Password = user1.Item2;
+            return user1.Item1;
         }
 
         [AllowAnonymous]

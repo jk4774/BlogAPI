@@ -17,19 +17,20 @@ namespace Blog.API.Services
             _settings = settings.Value;
         }
 
-        //public Tuple<User, string> Authenticate(User user)
-        public User Authenticate (User user)
+        public Tuple<User, string> Authenticate(User user)
+        //public User Authenticate (User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, user.Id.ToString()) }),
                 Expires = DateTime.Now.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(/*_settings.SecurityKey*/"ULTRA_RARE3_PASSWEORAWEF#$%$HU!!@#")), SecurityAlgorithms.HmacSha256Signature)
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            return new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email, Token = tokenHandler.WriteToken(securityToken) };
-            //return new Tuple<User, string>(new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email }, tokenHandler.WriteToken(securityToken));
+            var token = tokenHandler.WriteToken(securityToken);
+            //return new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email, Token = token };
+            return new Tuple<User, string>(new User { Id = user.Id, Name = user.Name, Password = "", Email = user.Email }, tokenHandler.WriteToken(securityToken));
         }
     }
 }
