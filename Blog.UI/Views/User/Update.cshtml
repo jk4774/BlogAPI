@@ -11,16 +11,22 @@
 
 
 <script>
-    //var changePasswordForm = document.getElementById('changePassword');
-    //changePasswordForm.addEventListener('click', () => {
-    //    var oldPassword = document.getElementById('oldpassword');
-    //    var newPassword = document.getElementById('oldpassword');
-    //    if (!oldPassword || !newPassword) {
-    //        return alert('You must fill both old and new password');
-    //    }
+    var changePasswordForm = document.getElementById('changePassword');
+    changePasswordForm.addEventListener('click', () => {
+        var oldPassword = document.getElementById('oldpassword').value;
+        var newPassword = document.getElementById('newpassword').value;
+        if (!oldPassword || !newPassword) {
+            return alert('You must fill both old and new password');
+        }
 
-    //    var xhr = new XMLHttpRequest();
-    //    xhr.open('')
+        var xhr = new XMLHttpRequest();
+        var id =  @Model.Id;
 
-    //});
+        xhr.open('PUT', '/user/update/' + id);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify(''));
+        xhr.onload = () => {
+            alert(xhr.status);
+        };
+    });
 </script>

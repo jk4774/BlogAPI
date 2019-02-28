@@ -54,15 +54,16 @@ namespace Blog.UI.Controllers
         }
 
         [HttpPut("{id}", Name = "Update")]
-        public IActionResult Update(int id, [FromForm] User updatedUser)
+        public IActionResult Update(int id, [FromBody] User updatedUser)
         {
-            var user = _userController.GetById(id).Value;
-            user.Password = updatedUser.Password;
-
-            var response = _userController.Update(id, user);
+            if (updatedUser == null)
+                return NotFound();
+            var currentUser = _userController.GetById(id).Value;
+            var response = _userController.Update(id,
+                new User { Id = id, Name = currentUser.Name, Password = updatedUser.Password, Email = currentUser.Email });
             if (response.GetType() != typeof(NoContentResult))
-                return Redirect("");
-            return response;
+                return RedirectToAction("Index", "Home");
+            return RedirectToAction("GetUser", new { id = User.Identity.Name });
         }
 
         [HttpDelete("{id}")]
