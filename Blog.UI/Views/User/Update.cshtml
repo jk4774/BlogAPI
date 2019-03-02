@@ -9,7 +9,6 @@
     <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" />
 </div>
 
-
 <script>
     var changePasswordForm = document.getElementById('changePassword');
     changePasswordForm.addEventListener('click', () => {
@@ -20,13 +19,13 @@
         }
 
         var xhr = new XMLHttpRequest();
-        var id =  @Model.Id;
-
+        var id = @Model.Id;
+        
         xhr.open('PUT', '/user/update/' + id);
         xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send(JSON.stringify(''));
+        xhr.send(JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword }));
         xhr.onload = () => {
-            alert(xhr.status);
+            //alert(xhr.status);
         };
     });
 </script>

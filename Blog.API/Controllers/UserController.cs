@@ -75,7 +75,7 @@ namespace Blog.API.Controllers
                     return NotFound();
 
             var encryptedPassword = BCryptHelper.HashPassword(user.Password, BCryptHelper.GenerateSalt(12));
-            var newUser = new User() { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email };
+            var newUser = new User { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email };
 
             _blogContext.Users.Add(newUser);
             _blogContext.SaveChanges();
@@ -98,12 +98,34 @@ namespace Blog.API.Controllers
             if (_blogContext.Users.Any(x => x.Email.ToLower() == updatedUser.Email.ToLower()))
                 return NotFound();
 
-
             var encryptedPassword = BCryptHelper.HashPassword(updatedUser.Password, BCryptHelper.GenerateSalt(12));
 
             user.Name = updatedUser.Name;
             user.Password = encryptedPassword;
             user.Email = updatedUser.Email;
+            _blogContext.Users.Update(user);
+            _blogContext.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
+        {
+            var user = _blogContext.Users.Find(id);
+            if (user == null)
+                return NotFound();
+
+            if (new [] { oldPassword, newPassword }.Any(x => string.IsNullOrWhiteSpace(x))) 
+                return NotFound();
+
+            var isOldPasswordCorrect = Login(new User { Name = user.Name, Password = oldPassword }).Value;
+
+            if (isOldPasswordCorrect == null)
+                return NotFound();
+
+            var encryptedPassword = BCryptHelper.HashPassword(newPassword, BCryptHelper.GenerateSalt(12));
+
+            user.Password = encryptedPassword;
             _blogContext.Users.Update(user);
             _blogContext.SaveChanges();
             return NoContent();

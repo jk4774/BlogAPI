@@ -12,7 +12,7 @@ namespace Blog.UI.Controllers
     public class UserController : Controller
     {
         private readonly APIController.UserController _userController;
-
+        
         public UserController(BlogContext blogContext, UserService userService)
         {
             _userController = new APIController.UserController(blogContext, userService);
@@ -50,20 +50,21 @@ namespace Blog.UI.Controllers
         [HttpGet("Update")]
         public IActionResult UpdateView() 
         {
-            return View("~/Views/User/Update.cshtml");
+            return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
         [HttpPut("{id}", Name = "Update")]
-        public IActionResult Update(int id, [FromBody] User updatedUser)
+        public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassowrd /*[FromBody] User updatedUser*/)
         {
-            if (updatedUser == null)
-                return NotFound();
-            var currentUser = _userController.GetById(id).Value;
-            var response = _userController.Update(id,
-                new User { Id = id, Name = currentUser.Name, Password = updatedUser.Password, Email = currentUser.Email });
-            if (response.GetType() != typeof(NoContentResult))
-                return RedirectToAction("Index", "Home");
-            return RedirectToAction("GetUser", new { id = User.Identity.Name });
+            return Ok(id + " " + oldPassword + "  " + newPassowrd);
+            // if (updatedUser == null)
+            //     return NotFound();
+            // var currentUser = _userController.GetById(id).Value;
+            // var response = _userController.Update(id,
+            //     new User { Id = id, Name = currentUser.Name, Password = updatedUser.Password, Email = currentUser.Email });
+            // if (response.GetType() != typeof(NoContentResult))
+            //    return RedirectToAction("Index", "Home");
+            // return RedirectToAction("GetUser", new { id = User.Identity.Name });
         }
 
         [HttpDelete("{id}")]
