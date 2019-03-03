@@ -235,92 +235,92 @@ namespace Blog.Tests
         }
 
         [Fact]
-        public void PUT_Update_UpdatedUserIsNull_NotFound()
+        public void PUT_UpdateUser_UpdatedUserIsNull_NotFound()
         {
             // Arrange 
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, null);
+            var User = UserController.UpdateUser(1, null);
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdatedUserNameIsWhiteSpace_NotFound()
+        public void PUT_UpdateUser_UpdatedUserNameIsWhiteSpace_NotFound()
         {
             // Arrange 
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = "", Password = "pass", Email = "asdf@aer"});
+            var User = UserController.UpdateUser(1, new User { Id = 1, Name = "", Password = "pass", Email = "asdf@aer"});
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdatedUserPasswordIsWhiteSpace_NotFound()
+        public void PUT_UpdateUser_UpdatedUserPasswordIsWhiteSpace_NotFound()
         {
             // Arrange 
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = "asdew", Password = " ", Email = "asdf@aer"});
+            var User = UserController.UpdateUser(1, new User { Id = 1, Name = "asdew", Password = " ", Email = "asdf@aer"});
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdatedUserEmailIsWhiteSpace_NotFound()
+        public void PUT_UpdateUser_UpdatedUserEmailIsWhiteSpace_NotFound()
         {
             // Arrange 
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = "zxcvasdf", Password = "pass", Email = " "});
+            var User = UserController.UpdateUser(1, new User { Id = 1, Name = "zxcvasdf", Password = "pass", Email = " "});
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_EveryValueInUpdatedUserIsWhiteSpace_NotFound()
+        public void PUT_UpdateUser_EveryValueInUpdatedUserIsWhiteSpace_NotFound()
         {
             // Arrange 
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(1, new User { Id = 1, Name = " ", Password = " ", Email = " " });
+            var User = UserController.UpdateUser(1, new User { Id = 1, Name = " ", Password = " ", Email = " " });
 
             // Assert 
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdateExistingUser_NoContent()
+        public void PUT_UpdateUser_UpdateExistingUser_NoContent()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
             UserController.Register(new User { Id = 3, Name = "name554", Password = "pass1", Email = "test@test3333.com" });
-            var User = UserController.Update(3, new User { Id = 3, Name = "name33", Password = "pass2", Email = "test@test33.com"});
+            var User = UserController.UpdateUser(3, new User { Id = 3, Name = "name33", Password = "pass2", Email = "test@test33.com"});
 
             // Assert
             Assert.IsType<NoContentResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdateNotExistingUser_NotFound()
+        public void PUT_UpdateUser_UpdateNotExistingUser_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Update(77, new User { Id = 77, Name = "name", Password = "pass", Email = "test@test.com"});
+            var User = UserController.UpdateUser(77, new User { Id = 77, Name = "name", Password = "pass", Email = "test@test.com"});
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
@@ -329,48 +329,126 @@ namespace Blog.Tests
         #region new 
 
         [Fact]
-        public void PUT_Update_UpdateWithTheSameName_NotFound()
+        public void PUT_UpdateUser_UpdateWithTheSameName_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
             UserController.Register(new User { Id = 4321, Name = "name", Password = "pass", Email = "test@test.com" });
-            var User = UserController.Update(4321, new User { Id = 4321, Name = "name", Password = "qwer", Email = "test21234@test.com" });
+            var User = UserController.UpdateUser(4321, new User { Id = 4321, Name = "name", Password = "qwer", Email = "test21234@test.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdateWithTheSameEmail_NotFound()
+        public void PUT_UpdateUser_UpdateWithTheSameEmail_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
             UserController.Register(new User { Id = 44444, Name = "name1", Password = "pass1", Email = "qwer@qwer.com" });
-            var User = UserController.Update(44444, new User { Id = 44444, Name = "name1", Password = "pass2", Email = "qw3r@QWER.com" });
+            var User = UserController.UpdateUser(44444, new User { Id = 44444, Name = "name1", Password = "pass2", Email = "qw3r@QWER.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
         }
 
         [Fact]
-        public void PUT_Update_UpdateWithTheSameBothNameAndEmail_NotFound()
+        public void PUT_UpdateUser_UpdateWithTheSameBothNameAndEmail_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
             UserController.Register(new User { Id = 55555, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
-            var User = UserController.Update(55555, new User { Id = 55555, Name = "name4", Password = "qwer3!", Email = "email@EMAIL.com" });
+            var User = UserController.UpdateUser(55555, new User { Id = 55555, Name = "name4", Password = "qwer3!", Email = "email@EMAIL.com" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);
         }
 
         #endregion
+
+
+#region  UpdateChange
+
+        [Fact]
+        public void PUT_UpdatePassword_UserDoesNotExist_NotFound()
+        {
+            // Arrange
+            var UserController = Utils.GetUserController();
+
+            // Act
+            // UserController.Register(new User { Id = 54321, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
+            var User = UserController.UpdatePassword(1, "a", "b");
+
+            // Assert
+            Assert.IsType<NotFoundResult>(User);  
+        }
+
+        [Fact]
+        public void PUT_UpdatePassword_OldPasswordIsWhiteSpace_NotFound() 
+        {
+            // Arrange
+            var UserController = Utils.GetUserController();
+
+            // Act
+            UserController.Register(new User { Id = 3245, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
+            var User = UserController.UpdatePassword(3245, " ", "b");
+
+            // Assert
+            Assert.IsType<NotFoundResult>(User);  
+        }
+
+        [Fact]
+        public void PUT_UpdatePassword_NewPasswordIsWhiteSpace_NotFound() 
+        {
+            // Arrange
+            var UserController = Utils.GetUserController();
+
+            // Act
+            UserController.Register(new User { Id = 7888, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
+            var User = UserController.UpdatePassword(7888, "r", " ");
+
+            // Assert
+            Assert.IsType<NotFoundResult>(User);  
+        }
+
+        [Fact]
+        public void PUT_UpdatePassword_OldPasswordIsWrong_NotFound() 
+        {
+            // Arrange
+            var UserController = Utils.GetUserController();
+
+            // Act
+            UserController.Register(new User { Id = 7888, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
+            var User = UserController.UpdatePassword(7888, "qwe3!f", "newPass!");
+
+            // Assert
+            Assert.IsType<NotFoundResult>(User);  
+        }
+
+        [Fact]
+        public void PUT_UpdatePassword_OldPasswordIsOkay_NoContent() 
+        {
+            // Arrange
+            var UserController = Utils.GetUserController();
+
+            // Act
+            UserController.Register(new User { Id = 7888, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
+            var User = UserController.UpdatePassword(7888, "qwe3!", "newPass4!");
+
+            // Assert
+            Assert.IsType<NoContentResult>(User);  
+        }
+
+
+#endregion
+
+
 
 
 

@@ -83,7 +83,7 @@ namespace Blog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] User updatedUser)
+        public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
         {
             var user = _blogContext.Users.Find(id);
             if (new[] { user, updatedUser }.Any(x => x == null))
@@ -109,7 +109,7 @@ namespace Blog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
+        public IActionResult UpdatePassword(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
         {
             var user = _blogContext.Users.Find(id);
             if (user == null)
@@ -118,9 +118,9 @@ namespace Blog.API.Controllers
             if (new [] { oldPassword, newPassword }.Any(x => string.IsNullOrWhiteSpace(x))) 
                 return NotFound();
 
-            var isOldPasswordCorrect = Login(new User { Name = user.Name, Password = oldPassword }).Value;
+            var oldUser = Login(new User { Name = user.Name, Password = oldPassword });
 
-            if (isOldPasswordCorrect == null)
+            if (oldUser.Value == null)
                 return NotFound();
 
             var encryptedPassword = BCryptHelper.HashPassword(newPassword, BCryptHelper.GenerateSalt(12));
