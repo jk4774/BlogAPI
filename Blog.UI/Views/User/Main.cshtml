@@ -39,9 +39,8 @@
 <script>
     var deleteUser = document.getElementById('deleteUser');
     deleteUser.addEventListener('click', () => {
-        var id = @Model.Id;
-        var xhr = new XMLHttpRequest();
-        xhr.open('DELETE', '/user/delete/' + id);
+        var xhr = new XMLHttpRequest(); 
+        xhr.open('DELETE', '/user/delete/' + @Model.Id, true);
         xhr.onload = () => {
             alert(xhr.status);
             document.location.href = '/';

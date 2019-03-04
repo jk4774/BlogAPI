@@ -4,28 +4,32 @@
 }
 
 <div class="normal-margin col-lg-12 text-center">
-    <input class="normal-margin form-control" id="oldpassword" placeholder="Old Password" type="password" />
-    <input class="normal-margin form-control" id="newpassword" placeholder="New Password" type="password" />
-    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" />
+    <form>
+        <input class="normal-margin form-control" id="oldpassword" placeholder="Old Password" type="password" />
+        <input class="normal-margin form-control" id="newpassword" placeholder="New Password" type="password" />
+        <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" />
+    </form>
 </div>
 
 <script>
-    var changePasswordForm = document.getElementById('changePassword');
-    changePasswordForm.addEventListener('click', () => {
-        var oldPassword = document.getElementById('oldpassword').value;
-        var newPassword = document.getElementById('newpassword').value;
-        if (!oldPassword || !newPassword) {
-            return alert('You must fill both old and new password');
-        }
+    $(function(){
+        $('form').on('submit', function() {
+            let oldPass = $('#oldpassword').val();
+            let newPass = $('#newpassword').val();
+            
+            if (!oldPass || !newPass) {
+                return alert('cannot be null');
+            }
+            alert(@Model.Id);
+            $.ajax({
+                url: '/user/update/' + @Model.Id;
+                type: 'PUT',
+                data: { oldPassword: oldPass, newPassword: newPass },
+                success: function(data) {
+                    alert('asdf');
+                }
+            });
 
-        var xhr = new XMLHttpRequest();
-        var id = @Model.Id;
-        
-        xhr.open('PUT', '/user/update/' + id);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send(JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword }));
-        xhr.onload = () => {
-            //alert(xhr.status);
-        };
+        });
     });
 </script>
