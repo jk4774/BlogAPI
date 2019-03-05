@@ -5,8 +5,8 @@
 
 <div class="normal-margin col-lg-12 text-center">
     <form>
-        <input class="normal-margin form-control" id="oldpassword" placeholder="Old Password" type="password" />
-        <input class="normal-margin form-control" id="newpassword" placeholder="New Password" type="password" />
+        <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
+        <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
         <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" />
     </form>
 </div>
@@ -14,22 +14,35 @@
 <script>
     $(function(){
         $('form').on('submit', function() {
-            let oldPass = $('#oldpassword').val();
-            let newPass = $('#newpassword').val();
+            let oldPass = $('#old-password').val();
+            let newPass = $('#new-password').val();
             
-            if (!oldPass || !newPass) {
+            /*if (!oldPass || !newPass) {
                 return alert('cannot be null');
-            }
-            alert(@Model.Id);
+            }*/
+            
+            var xhr = new XMLHttpRequest();
+            
+            
+/*
+            xhr.open('PUT', '/user/update/' + @Model.Id, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+            xhr.setRequestHeader('Access-Control-Allow-Origins', '*');
+xhr.send(JSON.stringify({ oldPassword: oldPass, newPassword: newPass }));
+            xhr.onload = () => {
+                alert('update ok ');
+            };*/
+            
+
             $.ajax({
-                url: '/user/update/' + @Model.Id;
+                url: '/user/update/' + @Model.Id,
                 type: 'PUT',
                 data: { oldPassword: oldPass, newPassword: newPass },
                 success: function(data) {
                     alert('asdf');
                 }
             });
-
         });
     });
 </script>

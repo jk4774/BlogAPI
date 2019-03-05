@@ -42,7 +42,6 @@
         var xhr = new XMLHttpRequest(); 
         xhr.open('DELETE', '/user/delete/' + @Model.Id, true);
         xhr.onload = () => {
-            alert(xhr.status);
             document.location.href = '/';
         };
         xhr.send();

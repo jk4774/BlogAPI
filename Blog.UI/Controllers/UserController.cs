@@ -57,8 +57,8 @@ namespace Blog.UI.Controllers
         public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassowrd)
         {
             var response = _userController.UpdatePassword(id, oldPassword, newPassowrd);
-            if (response.GetType() != typeof(NoContentResult))
-                return RedirectToAction("Update", "User");
+            //if (response.GetType() != typeof(NoContentResult))
+            //    return RedirectToAction("Update", "User");
             return RedirectToAction("GetUser", new { id = User.Identity.Name });
         }
 
