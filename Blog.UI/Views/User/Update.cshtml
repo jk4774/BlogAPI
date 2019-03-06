@@ -17,32 +17,34 @@
             let oldPass = $('#old-password').val();
             let newPass = $('#new-password').val();
             
-            /*if (!oldPass || !newPass) {
+            if (!oldPass || !newPass) {
                 return alert('cannot be null');
-            }*/
-            
-            var xhr = new XMLHttpRequest();
-            
-            
-/*
-            xhr.open('PUT', '/user/update/' + @Model.Id, true);
+            }
+
+
+            /*var xhr = new XMLHttpRequest();            
+
+            xhr.open('PUT', '/user/' + @Model.Id);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
             xhr.setRequestHeader('Access-Control-Allow-Origins', '*');
-xhr.send(JSON.stringify({ oldPassword: oldPass, newPassword: newPass }));
+            
             xhr.onload = () => {
                 alert('update ok ');
-            };*/
-            
+            };
+            xhr.send(JSON.stringify({ oldPassword: oldPass, newPassword: newPass }));
+*/
 
             $.ajax({
-                url: '/user/update/' + @Model.Id,
+                url: '/user/' + @Model.Id,
                 type: 'PUT',
-                data: { oldPassword: oldPass, newPassword: newPass },
+                contentType: 'application/json',
+                data: JSON.stringify({ oldPassword: oldPass, newPassword: newPass }),
                 success: function(data) {
                     alert('asdf');
                 }
             });
+            alert('asdf');
         });
     });
 </script>

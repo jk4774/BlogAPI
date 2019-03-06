@@ -53,12 +53,12 @@ namespace Blog.UI.Controllers
             return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
-        [HttpPut("{id}", Name = "Update")]
-        public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassowrd)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
         {
-            var response = _userController.UpdatePassword(id, oldPassword, newPassowrd);
-            //if (response.GetType() != typeof(NoContentResult))
-            //    return RedirectToAction("Update", "User");
+            var response = _userController.UpdatePassword(id, oldPassword, newPassword);
+            if (response.GetType() != typeof(NoContentResult))
+               return RedirectToAction("Update", "User");
             return RedirectToAction("GetUser", new { id = User.Identity.Name });
         }
 

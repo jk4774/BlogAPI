@@ -53,7 +53,7 @@ namespace Blog.UI
             services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("BlogDB"));
             services.AddScoped<UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddCors(x => x.AddPolicy("NewPolicy", r=>r.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()));
+            services.AddCors(x => x.AddPolicy("NewPolicy", r => r.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -64,8 +64,8 @@ namespace Blog.UI
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
             
-            app.UseHttpsRedirection();
-            app.UseStatusCodePagesWithRedirects("/");
+            //app.UseHttpsRedirection();
+            //app.UseStatusCodePagesWithRedirects("/");
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
