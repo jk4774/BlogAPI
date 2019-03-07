@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace Blog.API.Providers
 {
-    public class CustomJwtDataFormat : ISecureDataFormat<AuthenticationTicket>
+    public class CustomJwtDataFormat : ISecureDataFormat<AuthenticationTicket> 
     {
         private readonly TokenValidationParameters _tokenValidationParameters;
 

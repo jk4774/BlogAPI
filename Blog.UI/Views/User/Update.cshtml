@@ -32,11 +32,12 @@
             xhr.onload = () => {
                 alert('update ok ');
             };
+
             xhr.send(JSON.stringify({ oldPassword: oldPass, newPassword: newPass }));
 */
 
             $.ajax({
-                url: '/user/' + @Model.Id,
+                url: '/user/update/' + @Model.Id,
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify({ oldPassword: oldPass, newPassword: newPass }),

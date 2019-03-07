@@ -53,10 +53,11 @@ namespace Blog.UI.Controllers
             return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("User/Update/{id}")]
         public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
         {
             var response = _userController.UpdatePassword(id, oldPassword, newPassword);
+            
             if (response.GetType() != typeof(NoContentResult))
                return RedirectToAction("Update", "User");
             return RedirectToAction("GetUser", new { id = User.Identity.Name });
@@ -67,9 +68,12 @@ namespace Blog.UI.Controllers
         {
             if (User.Identity.Name != id.ToString())
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
+
             var response = _userController.Delete(id);
+
             if (response.GetType() != typeof(NoContentResult))
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
+
             Utils.DeleteCookie(Request, Response);
             return RedirectToAction("Index", "Home");
         }

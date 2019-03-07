@@ -32,7 +32,7 @@ namespace Blog.API.Middlewares
             if (!httpContext.Request.Method.Equals("POST") || !httpContext.Request.HasFormContentType)
             {
                 httpContext.Response.StatusCode = 400;
-                return httpContext.Response.WriteAsync("Something went back request...");
+                return httpContext.Response.WriteAsync("Something went wrong...");
             }
 
             blogContext = (BlogContext)httpContext.RequestServices.GetService(typeof(BlogContext));
@@ -63,24 +63,24 @@ namespace Blog.API.Middlewares
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
             };
 
+            var expires = DateTime.UtcNow.AddMinutes(3); 
+            
             var jwt = new JwtSecurityToken
             (
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(5),
+                expires: expires,
                 signingCredentials: _signingCredentials
             );
 
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             httpContext.Response.ContentType = "application/json";
 
             var json = JsonConvert.SerializeObject 
             (
-                new
+                new 
                 {
-                    access_token = encodedJwt,
-                    expires_in = (int)TimeSpan.FromMinutes(5).TotalSeconds,
-                    id = userId,
+                    access_token = new JwtSecurityTokenHandler().WriteToken(jwt),
+                    expires_in = expires
                 },
                 new JsonSerializerSettings { Formatting = Formatting.Indented }
             );

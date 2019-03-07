@@ -19,7 +19,6 @@ namespace Blog.UI
     {
         public IConfiguration Configuration { get; }
         private readonly Settings _settings;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
