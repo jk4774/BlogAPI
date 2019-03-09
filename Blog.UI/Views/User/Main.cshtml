@@ -40,7 +40,7 @@
     var deleteUser = document.getElementById('deleteUser');
     deleteUser.addEventListener('click', () => {
         var xhr = new XMLHttpRequest(); 
-        xhr.open('DELETE', '/user/delete/' + @Model.Id, true);
+        xhr.open('DELETE', '/user/' + @Model.Id);
         xhr.onload = () => {
             document.location.href = '/';
         };

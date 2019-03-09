@@ -12,19 +12,9 @@ namespace Blog.UI.Controllers
             {
                 var jwtHandler = new JwtSecurityTokenHandler();
                 var token = jwtHandler.ReadJwtToken(Request.Cookies["access_token"]);
-                var expires = DateTime.Parse(Request.Cookies["expires"]);
-
-                if (DateTime.UtcNow.AddMinutes(3) > expires){
-
-                }
-
-                // return Ok ("Curre: " + DateTime.UtcNow.AddMinutes(3).ToLongTimeString()
-                //  + "   FROM: " + token.ValidFrom + 
-                //  "   TO:" + token.ValidTo + "\n"  + 
-                //  (DateTime.UtcNow.AddMinutes(3) > token.ValidTo));
                 
-                //if (DateTime.UtcNow.AddMinutes(3) > token.ValidTo) 
-                //    Response.Cookies.Delete("access_token");
+                if (DateTime.UtcNow > token.ValidTo)
+                    Response.Cookies.Delete("access_token");
             }
 
             if (User.Identity.IsAuthenticated)

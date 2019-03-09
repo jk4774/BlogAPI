@@ -53,7 +53,7 @@ namespace Blog.UI.Controllers
             return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
-        [HttpPut("User/Update/{id}")]
+        [HttpPut("update/{id}")]
         public IActionResult Update(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
         {
             var response = _userController.UpdatePassword(id, oldPassword, newPassword);

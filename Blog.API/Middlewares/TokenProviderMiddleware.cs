@@ -63,13 +63,11 @@ namespace Blog.API.Middlewares
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
             };
 
-            var expires = DateTime.UtcNow.AddMinutes(3); 
-            
             var jwt = new JwtSecurityToken
             (
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: expires,
+                expires: DateTime.UtcNow.AddMinutes(3),
                 signingCredentials: _signingCredentials
             );
 
@@ -77,11 +75,7 @@ namespace Blog.API.Middlewares
 
             var json = JsonConvert.SerializeObject 
             (
-                new 
-                {
-                    access_token = new JwtSecurityTokenHandler().WriteToken(jwt),
-                    expires_in = expires
-                },
+                new { access_token = new JwtSecurityTokenHandler().WriteToken(jwt) },
                 new JsonSerializerSettings { Formatting = Formatting.Indented }
             );
             await httpContext.Response.WriteAsync(json);

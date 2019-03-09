@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Blog.API.Providers
 {
@@ -32,11 +34,20 @@ namespace Blog.API.Providers
         public AuthenticationTicket Unprotect(string protectedText, string purpose)
         {
             var handler = new JwtSecurityTokenHandler();
-            var claimsPrincipal = handler.ValidateToken(protectedText, _tokenValidationParameters, out SecurityToken securityToken);
-            var validJwt = (JwtSecurityToken)securityToken;
-            if (validJwt == null)
-                throw new Exception("Token is null");
-            return new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), "Cookie");
+            ClaimsPrincipal claimsPrincipal;
+            
+            try
+            {
+                claimsPrincipal = handler.ValidateToken(protectedText, _tokenValidationParameters, out SecurityToken securityToken);
+                var validJwt = (JwtSecurityToken)securityToken;
+                if (validJwt == null)
+                    throw new Exception("Token is null");
+                return new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), "Cookie");
+            } 
+            catch(Exception e)
+            {
+                return null;
+            } 
         }
     }
 }
