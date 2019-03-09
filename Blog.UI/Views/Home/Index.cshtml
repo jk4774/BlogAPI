@@ -24,10 +24,9 @@
     </div>
 </div>
 <script>
-    var loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('click', () => {
-        var name = document.getElementById('username').value;
-        var password = document.getElementById('password').value;
+    document.getElementById('loginForm').addEventListener('click', () => {
+        let name = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
 
         if (!name || !password) {
             return alert('something went wrong, pass/name is empty or null');
@@ -47,5 +46,5 @@
         };
         xhr.send('username=' + name + '&password=' + password);
     });
-
+    document.getElementById();
 </script>

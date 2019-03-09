@@ -5,83 +5,30 @@
 
 <div class="normal-margin col-lg-12 text-center">
     <form>
-    <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
-    <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
-    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> </form>
+        <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
+        <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
+        <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> 
+    </form>
 </div>
 
 <script>
-    /*var d = document.getElementById('changePassword');
-    d.addEventListener('click', () => {
-        var old = document.getElementById('old-password').value;
-        var newp = document.getElementById('new-password').value;
+    document.getElementById('changePassword').addEventListener('click', () => {
+        var oldPassword = document.getElementById('old-password').value;
+        var newPassword = document.getElementById('new-password').value;
+
+        if (!oldPassword || !newPassword) {
+            return alert('cannot be null');
+        }
+
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/user/update/' + @Model.Id);
-        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
-        xhr.send(JSON.stringify({ oldPassword: old, newPassword: newp }));
-    });*/
-
-
-    $('#changePassword').closest('form').submit(() => {
-        $.ajax({
-           url: 'user/update/' + @Model.Id,
-           type: 'PUT',
-           dataType: 'json',
-           data: JSON.stringify({oldPassword: $('#old-password').val(), newPassword: $('#new-password').val() }),
-           headers: {
-               'Content-Type': 'application/json; charset=UTF-8',
-               'Accept': 'application/json'
-           }  
-        });
-    });
-    
-    /*$(function(){
-        $('form').on('submit', function() {
-            let oldPass = $('#old-password').val();
-            let newPass = $('#new-password').val();
-            
-            if (!oldPass || !newPass) {
-                return alert('cannot be null');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = () => {
+            if (xhr.status != '200') {
+                return alert('something went wrong cannot update password, try again');
             }
-*/
-
-            /*var xhr = new XMLHttpRequest();            
-
-            xhr.open('PUT', '/user/' + @Model.Id);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-            xhr.setRequestHeader('Access-Control-Allow-Origins', '*');
-            
-            xhr.onload = () => {
-                alert('update ok ');
-            };
-
-            xhr.send(JSON.stringify({ oldPassword: oldPass, newPassword: newPass }));
-*/
-            //var xhr = new XMLHttpRequest();
-        //    xhr.open('PUT', '/user/update/' + @Model.Id);
-       //     xhr.setRequestHeader('Content-Type', 'application/json');
-
-//xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-     //       xhr.setRequestHeader('Access-Control-Allow-Origins', '*');
-      //      xhr.onload = () => {
-      //          alert('PUT OK ');
-      //      };
-
-      //      xhr.send(JSON.stringify({ oldPassword: oldPass, newPassword: newPass }));
-
-
-            //console.log(@Model.Id);
-           /* var url2 = '/user/' + @Model.Id;
-            $.ajax({
-                url: url2,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify({ oldPassword: oldPass, newPassword: newPass }),
-                success: function(data) {
-                    alert('asdf');
-                }
-            });*/
-    //    });
-    //});
+            window.location.href = '/';
+        };
+        xhr.send(JSON.stringify({ Old: oldPassword, New: newPassword }));
+    });
 </script>

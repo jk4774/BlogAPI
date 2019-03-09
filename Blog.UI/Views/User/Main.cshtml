@@ -37,12 +37,11 @@
 
 </div>
 <script>
-    var deleteUser = document.getElementById('deleteUser');
-    deleteUser.addEventListener('click', () => {
+    document.getElementById('deleteUser').addEventListener('click', () => {
         var xhr = new XMLHttpRequest(); 
         xhr.open('DELETE', '/user/' + @Model.Id);
         xhr.onload = () => {
-            document.location.href = '/';
+            window.location.href = '/';
         };
         xhr.send();
     });

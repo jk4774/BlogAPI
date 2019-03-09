@@ -109,21 +109,19 @@ namespace Blog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePassword(int id, [FromBody] string oldPassword, [FromBody] string newPassword)
+        public IActionResult UpdatePassword(int id, [FromBody] Password password)
         {
             var user = _blogContext.Users.Find(id);
-            if (user == null)
+            if (user == null || password == null)
                 return NotFound();
 
-            if (new [] { oldPassword, newPassword }.Any(x => string.IsNullOrWhiteSpace(x))) 
+            if (new [] { password.Old, password.New }.Any(x => string.IsNullOrWhiteSpace(x))) 
                 return NotFound();
 
-            var oldUser = Login(new User { Name = user.Name, Password = oldPassword });
-
-            if (oldUser.Value == null)
+            if (!BCryptHelper.CheckPassword(password.Old, user.Password))
                 return NotFound();
 
-            var encryptedPassword = BCryptHelper.HashPassword(newPassword, BCryptHelper.GenerateSalt(12));
+            var encryptedPassword = BCryptHelper.HashPassword(password.New, BCryptHelper.GenerateSalt(12));
 
             user.Password = encryptedPassword;
             _blogContext.Users.Update(user);

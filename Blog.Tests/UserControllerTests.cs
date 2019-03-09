@@ -383,7 +383,7 @@ namespace Blog.Tests
 
             // Act
             // UserController.Register(new User { Id = 54321, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
-            var User = UserController.UpdatePassword(1, "a", "b");
+            var User = UserController.UpdatePassword(1, new Password { Old = "a", New = "b" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);  
@@ -397,7 +397,7 @@ namespace Blog.Tests
 
             // Act
             UserController.Register(new User { Id = 3245, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
-            var User = UserController.UpdatePassword(3245, " ", "b");
+            var User = UserController.UpdatePassword(3245, new Password { Old = "", New = "b" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);  
@@ -411,7 +411,7 @@ namespace Blog.Tests
 
             // Act
             UserController.Register(new User { Id = 7888, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
-            var User = UserController.UpdatePassword(7888, "r", " ");
+            var User = UserController.UpdatePassword(7888, new Password { Old = "a", New = " " });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);  
@@ -425,7 +425,7 @@ namespace Blog.Tests
 
             // Act
             UserController.Register(new User { Id = 7888, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
-            var User = UserController.UpdatePassword(7888, "qwe3!f", "newPass!");
+            var User = UserController.UpdatePassword(7888, new Password { Old = "qwe3!f", New = "newPass!" });
 
             // Assert
             Assert.IsType<NotFoundResult>(User);  
@@ -439,7 +439,7 @@ namespace Blog.Tests
 
             // Act
             UserController.Register(new User { Id = 7888, Name = "name4", Password = "qwe3!", Email = "EMAIL@EMAIL.com" });
-            var User = UserController.UpdatePassword(7888, "qwe3!", "newPass4!");
+            var User = UserController.UpdatePassword(7888, new Password { Old = "qwe3!", New = "newPass4!" });
 
             // Assert
             Assert.IsType<NoContentResult>(User);  
@@ -447,10 +447,6 @@ namespace Blog.Tests
 
 
 #endregion
-
-
-
-
 
         [Fact]
         public void DELETE_Delete_DeleteExistingUser_NoContent()
