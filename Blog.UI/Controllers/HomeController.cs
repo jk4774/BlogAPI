@@ -8,9 +8,12 @@ namespace Blog.UI.Controllers
     {
         public IActionResult Index() 
         {
+<<<<<<< HEAD
             // if (Response.StatusCode == 302) {
             //     Response.Cookies.Delete("access_token");
             // }
+=======
+>>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
             if (Request.Cookies["access_token"] != null) 
             {
                 var jwtHandler = new JwtSecurityTokenHandler();

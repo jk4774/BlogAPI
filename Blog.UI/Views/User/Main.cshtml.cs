@@ -11,7 +11,11 @@ using Blog.API.Controllers;
 
 namespace Blog.UI.Pages.User
 {
+<<<<<<< HEAD
     public class MainModel : PageModel
+=======
+    public class GetUserModel : PageModel
+>>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
     {
         public void OnGet()
         {

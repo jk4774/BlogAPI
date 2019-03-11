@@ -30,6 +30,7 @@ namespace Blog.UI.Controllers
             return _articleController.GetById(id);
         }
 
+<<<<<<< HEAD
         [HttpGet("Create")]
         public IActionResult CreateView()
         {
@@ -45,6 +46,18 @@ namespace Blog.UI.Controllers
                 return NotFound();
             return Ok();
             //return RedirectToAction("GetUser", "User", new { id = User.Identity.Name }); 
+=======
+        [HttpGet]
+        public IActionResult CreateView()
+        {
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromForm] Article article)
+        {
+            return _articleController.Create(article);
+>>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
         }
 
         [HttpPut("{id}")]

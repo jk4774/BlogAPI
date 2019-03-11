@@ -45,8 +45,12 @@ namespace Blog.UI
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(c =>
             {
+<<<<<<< HEAD
                 //c.LogoutPath = "/user/logout";
                 //c.LoginPath = "/";
+=======
+                c.LoginPath = "/";
+>>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
                 c.Cookie = new CookieBuilder { Name = "access_token" };
                 c.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });

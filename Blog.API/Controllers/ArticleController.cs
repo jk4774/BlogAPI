@@ -73,7 +73,11 @@ namespace Blog.API.Controllers
 
             _blogContext.Articles.Add(article);
             _blogContext.SaveChanges();
+<<<<<<< HEAD
             return NoContent();
+=======
+            return CreatedAtRoute("GetComment", new { id = article.Id }, article);
+>>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
         }
 
         [HttpPut("{id}")]
