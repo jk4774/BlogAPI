@@ -1,0 +1,48 @@
+﻿@model Blog.API.Models.User;
+@{
+    ViewData["Title"] = "User";
+}
+<div id="main">
+
+    <div class="col-sm-5 text-center h3">
+        @Model.Name
+    </div>
+
+    <div class="col-sm-2 text-center h3">
+        <form action="/article/create" method="get">
+            <input type="submit" class="btn btn-outline-primary btn-lg" value="Create Article">
+        </form>
+    </div>
+
+    <div class="col-sm-2 text-center h3">
+        <form action="/user/update" method="get">
+            <input type="submit" class="btn btn-outline-primary btn-lg" value="Change Password">
+        </form>
+    </div>
+
+    <div class="col-sm-2 text-center h3">
+        <input type="submit" class="btn btn-outline-primary btn-lg" id="deleteUser" value="Delete User">
+    </div>
+
+    <div class="col-sm-1 text-center h3">
+        <form action="/user/logout" method="post">
+            <input type="submit" class="btn btn-outline-primary btn-lg" value="Logout">
+        </form>
+    </div>
+
+    <div class="col-sm-12 text-left h4">
+        <p></p>
+        <p></p>
+    </div>
+
+</div>
+<script>
+    document.getElementById('deleteUser').addEventListener('click', () => {
+        var xhr = new XMLHttpRequest(); 
+        xhr.open('DELETE', '/user/' + @Model.Id);
+        xhr.onload = () => {
+            window.location.href = '/';
+        };
+        xhr.send();
+    });
+</script>
