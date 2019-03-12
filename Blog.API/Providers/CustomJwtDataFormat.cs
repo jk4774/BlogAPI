@@ -44,11 +44,7 @@ namespace Blog.API.Providers
                     throw new Exception("Token is null");
                 return new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), "Cookie");
             } 
-<<<<<<< HEAD
-            catch(Exception e)
-=======
             catch(Exception)
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
             {
                 return null;
             } 

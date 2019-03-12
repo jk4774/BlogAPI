@@ -4,40 +4,27 @@
 }
 
 <div class="normal-margin col-lg-12 text-center">
-<<<<<<< HEAD
     <form>
         <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
         <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
         <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> 
-    </form>
-=======
-    <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
-    <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
-    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> 
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
+    </form> 
 </div>
 
 <script>
     document.getElementById('changePassword').addEventListener('click', () => {
-<<<<<<< HEAD
         var oldPassword = document.getElementById('old-password').value;
         var newPassword = document.getElementById('new-password').value;
-=======
-        let oldPassword = document.getElementById('old-password').value;
-        let newPassword = document.getElementById('new-password').value;
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
 
-        if (!oldPassword || !newPassword) {
+        if (!oldPassword || !newPassword) 
             return alert('cannot be null');
-        }
 
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/user/update/' + @Model.Id);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = () => {
-            if (xhr.status != '200') {
+            if (xhr.status != '200') 
                 return alert('something went wrong cannot update password, try again');
-            }
             window.location.href = '/';
         };
         xhr.send(JSON.stringify({ Old: oldPassword, New: newPassword }));

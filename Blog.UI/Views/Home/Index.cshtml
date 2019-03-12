@@ -5,19 +5,13 @@
 <div class="row">
     <div class='col-md-6'>
         <h1 class="normal-margin text-md-center">Login</h1>
-<<<<<<< HEAD
         <input class="normal-margin form-control" id="username" placeholder="Username" />
         <input class="normal-margin form-control" id="password" placeholder="Password" type="password" />
-=======
-        <input class="normal-margin form-control" id="login-username" placeholder="Username" />
-        <input class="normal-margin form-control" id="login-password" placeholder="Password" type="password" />
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
         <div class="text-center h2">
             <input class="normal-margin btn btn-primary btn-lg" id="loginForm" type="submit" value="Login" />
         </div>
     </div>
     <div class='col-md-6'>
-<<<<<<< HEAD
         <h1 class="normal-margin text-md-center">Register</h1>
         <form action="/user/register" method="post">
             <input class="normal-margin form-control" asp-for="Name" placeholder="Username" />
@@ -27,28 +21,18 @@
                 <input class="normal-margin btn btn-primary btn-lg" type="submit" value="Register" id="registerForm" />
             </div>
         </form>
-=======
-            <h1 class="normal-margin text-md-center">Register</h1>
-            <input class="normal-margin form-control" id="register-username" placeholder="Username" />
-            <input class="normal-margin form-control" id="register-password" placeholder="Password" type="password" />            
-            <input class="normal-margin form-control" id="register-email" placeholder="Email" type="email" />
-            <div class="text-center h2">
-                <input class="normal-margin btn btn-primary btn-lg" id="registerForm" type="submit" value="Register" />
-            </div>
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
     </div>
 </div>
 <script>
+    window.onload = () => {
+        if (@TempData[""] == "") {
+            
+        }
+    };
     document.getElementById('loginForm').addEventListener('click', () => {
-<<<<<<< HEAD
         let name = document.getElementById('username').value;
         let password = document.getElementById('password').value;
 
-=======
-        let name = document.getElementById('login-username').value;
-        let password = document.getElementById('login-password').value;
-        alert(name + ' ' + password);
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
         if (!name || !password) 
             return alert('something went wrong, pass/name is empty or null');
 
@@ -56,40 +40,12 @@
         xhr.open('POST', '/user/login');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = () => {
-<<<<<<< HEAD
             if (xhr.status != '200') 
                 return alert('something went wrong, user/login status is not equal 200');
-=======
-            if (xhr.status != '200')  
-                return alert('something went wrong, user/login status is not equal 200');
-            
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
             var token = JSON.parse(xhr.responseText).access_token;
             document.cookie = 'access_token=' + token + ';';
             document.location.href = '/';
         };
         xhr.send('username=' + name + '&password=' + password);
     });
-<<<<<<< HEAD
-=======
-
-    document.getElementById('registerForm').addEventListener('click', () => {
-        let name = document.getElementById('register-username').value;
-        let password = document.getElementById('register-password').value;
-        let email = document.getElementById('register-email').value;
-
-        if (!name || !password || !email)
-            return alert('name/pass/email cannot be null');
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/user/register');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = () => {
-            if (xhr.status != '200') 
-                return alert('something went wrong, cannot register an user');
-            return alert('correctly register');    
-        };
-        xhr.send(JSON.stringify({ Name: name, Password: password, Email: email }));
-    });
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
 </script>

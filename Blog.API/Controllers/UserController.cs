@@ -70,21 +70,8 @@ namespace Blog.API.Controllers
             if (new[] { user.Name, user.Password, user.Email }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
-<<<<<<< HEAD
-            if (_blogContext.Users.Any(x => x.Name.ToLower() == user.Name.ToLower()))
+            if (_blogContext.Users.Any(x => x.Name.ToLower() == user.Name.ToLower() || x.Email.ToLower() == user.Email.ToLower()))
                 return NotFound();
-
-            if (_blogContext.Users.Any(x => x.Email.ToLower() == user.Email.ToLower()))
-                return NotFound();
-
-            //foreach (var User in _blogContext.Users)
-                //if (User.Name.ToLower() == user.Name.ToLower() || User.Email.ToLower() == user.Email.ToLower())
-                  //  return NotFound();
-=======
-            foreach (var User in _blogContext.Users)
-                if (User.Name.ToLower() == user.Name.ToLower() || User.Email.ToLower() == user.Email.ToLower())
-                    return NotFound();
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
 
             var encryptedPassword = BCryptHelper.HashPassword(user.Password, BCryptHelper.GenerateSalt(12));
             var newUser = new User { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email };

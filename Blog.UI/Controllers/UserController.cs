@@ -33,11 +33,7 @@ namespace Blog.UI.Controllers
         {
             var response = _userController.Register(user);
             if (response.GetType() != typeof(NoContentResult))
-<<<<<<< HEAD
-                return NotFound("User with this name or email already exist");
-=======
-                return RedirectToAction("Index", "Home");
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
+                return NotFound();
 
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });

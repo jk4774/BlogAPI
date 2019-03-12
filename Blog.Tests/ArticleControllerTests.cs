@@ -68,7 +68,6 @@ namespace Blog.Tests
             Assert.IsType<NotFoundResult>(Article.Result);
         }
 
-<<<<<<< HEAD
 #region new2
         [Fact]
         public void POST_Create_TitleIsWhitespace_NoContent()
@@ -100,11 +99,6 @@ namespace Blog.Tests
 
         [Fact]
         public void POST_Create_CorrectArticle_NoContent()
-=======
-
-        [Fact]
-        public void POST_Create_CorrectArticle_CreatedAtRoute()
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
         {
             // Arrange 
             var ArticleController = Utils.GetArticleController();
@@ -113,11 +107,7 @@ namespace Blog.Tests
             var Article = ArticleController.Create(new Article { Id = 3, UserId = 3, Title = "title", Content = "content", Date = DateTime.Now });
 
             // Assert
-<<<<<<< HEAD
             Assert.IsType<NoContentResult>(Article);
-=======
-            Assert.IsType<CreatedAtRouteResult>(Article);
->>>>>>> 985bfe7c4ee18457b422a6e3096a96a463e2690f
         }
 
         [Fact]
