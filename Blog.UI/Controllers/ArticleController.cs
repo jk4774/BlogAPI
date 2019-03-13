@@ -12,14 +12,14 @@ namespace Blog.UI.Controllers
     public class ArticleController : Controller
     {
         private readonly APIController.ArticleController _articleController;
-         
+        
         public ArticleController(BlogContext blogContext)
         {
             _articleController = new APIController.ArticleController(blogContext);
         }
 
         [HttpGet]
-        public ActionResult<List<Dictionary<Article, List<Comment>>>> GetAll()
+        public ActionResult<Dictionary<Article, List<Comment>>> GetAll()
         {
             return _articleController.GetAll();
         }

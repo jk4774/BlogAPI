@@ -15,9 +15,6 @@ namespace Blog.UI.Controllers
                 
                 if (DateTime.UtcNow > token.ValidTo)
                     Response.Cookies.Delete("access_token");
-
-                if (token.ValidTo > DateTime.UtcNow && Response.StatusCode == 302) 
-                    Response.Cookies.Delete("access_token");
             }
 
             if (User.Identity.IsAuthenticated)

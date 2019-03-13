@@ -47,6 +47,7 @@ namespace Blog.API.Providers
             catch(Exception)
             {
                 return null;
+                //throw new Exception("Something went wrong with token.");
             } 
         }
     }

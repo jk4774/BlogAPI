@@ -31,21 +31,20 @@ namespace Blog.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Dictionary<Article, List<Comment>>>> GetAll()
+        public ActionResult<Dictionary<Article, List<Comment>>> GetAll()
         {
             if (_blogContext.Articles == null || _blogContext.Articles.Count() == 0)
                 return NotFound();
 
-            var List = new List<Dictionary<Article, List<Comment>>> { };
+            var Dictionary = new Dictionary<Article, List<Comment>>{};
             foreach (var Article in _blogContext.Articles)
             {
-                var Dictionary = new Dictionary<Article, List<Comment>> { { Article, new List<Comment> { } } };
+                Dictionary.Add(Article, new List<Comment>{ } );
                 foreach (var Comment in _blogContext.Comments.Where(x => x.ArticleId == Article.Id))
                     Dictionary.Last().Value.Add(Comment);
-                List.Add(Dictionary);
             }
 
-            return List;
+            return Dictionary;
         }
 
         [HttpGet("{id}", Name = "GetArticle")]

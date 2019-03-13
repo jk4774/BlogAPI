@@ -24,18 +24,18 @@ namespace Blog.Tests
         }
 
         [Fact]
-        public void GET_GetAll_ArticlesCountIsZero_ListDictionaryArticleAndListOfCommentsIsNotNullAndHas1Element()
+        public void GET_GetAll_ArticlesCoundIsZero_DictionaryArticleAndListOfCommentsHasOneElements()
         {
             // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
             ArticleController.DeleteArticles();
-            ArticleController.Create(new Article { Id = 1, UserId = 4, Title = "title", Content = "cont", Date = DateTime.Now });
-            var Articles = ArticleController.GetAll();
+            ArticleController.Create(new Article { Id = 1, UserId = 4, Title = "Test1", Content = "Content2", Date = DateTime.Now });
+            var Articles = ArticleController.GetAll(); 
 
             // Assert
-            Assert.IsType<ActionResult<List<Dictionary<Article, List<Comment>>>>>(Articles);
+            Assert.IsType<Dictionary<Article, List<Comment>>>(Articles.Value);
             Assert.True(Articles.Value != null);
             Assert.True(Articles.Value.Count == 1);
         }

@@ -1,4 +1,5 @@
-﻿using Blog.API.Models;
+﻿using System.Linq;
+using Blog.API.Models;
 using Blog.API.Services;
 using Blog.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -12,19 +13,30 @@ namespace Blog.UI.Controllers
     public class UserController : Controller
     {
         private readonly APIController.UserController _userController;
-        
+        private readonly APIController.ArticleController _articleController;
+        private BlogContext _blogContext;
         public UserController(BlogContext blogContext, UserService userService)
         {
             _userController = new APIController.UserController(blogContext, userService);
+            _articleController = new APIController.ArticleController(blogContext);
+            _blogContext = blogContext;
         }
 
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
+            //DEBUG
+            if (_blogContext.Users.Count() == 0  && Request.Cookies["access_token"] != null)
+            {
+                Response.Cookies.Delete("access_token");
+                return RedirectToAction("Index", "Home");
+            }
+            //END DEBUG
+            var getArticles = _articleController.GetAll();
             var response = _userController.GetById(id);
             if (response.Value == null)
                 return RedirectToAction("Index", "Home");
-            return View("~/Views/User/Main.cshtml", response.Value);
+            return View("~/Views/User/Main.cshtml", new FullUser { User = response.Value, Articles = getArticles.Value });
         }
 
         [AllowAnonymous]

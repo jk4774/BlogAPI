@@ -1,14 +1,11 @@
-﻿@model Blog.API.Models.User;
+﻿@model Blog.API.Models.FullUser;
 @{
     ViewData["Title"] = "User";
-    @if (@TempData[""] == "") {
-
-    }
 }
 <div id="main">
 
     <div class="col-sm-5 text-center h3">
-        @Model.Name
+        @Model.User.Name
     </div>
 
     <div class="col-sm-2 text-center h3">
@@ -34,14 +31,34 @@
     </div>
 
     <div class="col-sm-12 text-left h4">
-        <p></p>
-        <p></p>
+        @if (@Model.Articles != null)
+        {
+            @if(@Model.Articles.Count > 0) 
+            {
+                @foreach (var Article in @Model.Articles)
+                {
+                    <p>@Article.Key.Title</p>
+                    <p>@Article.Key.Content</p>
+                    @if (@Article.Value != null)
+                    {
+                        @if(@Article.Value.Count > 0) 
+                        {
+                            @foreach (var Comment in @Article.Value)
+                            {
+                                <p>@Comment.Content</p>
+                                <p>@Comment.Author</p>
+                            }
+                        }
+                    }
+                }
+            }
+        }
     </div>
 </div>
 <script>
     document.getElementById('deleteUser').addEventListener('click', () => {
         var xhr = new XMLHttpRequest(); 
-        xhr.open('DELETE', '/user/' + @Model.Id);
+        xhr.open('DELETE', '/user/' + @Model.User.Id);
         xhr.onload = () => {
             window.location.href = '/';
         };
