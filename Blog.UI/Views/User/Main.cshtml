@@ -33,9 +33,14 @@
     <div class="col-sm-12 text-left h4">
         @if (@Model.Articles != null)
         {                
-            @foreach (var Article in @Model.Articles)
+            @foreach (var Article in @Model.Articles.OrderByDescending(x => x.Key.Id))
             {
-                <p class="col-sm-12 h5 rounded-30" style="background-color: gray; color: white;" >@Article.Key.Title<br> @Article.Key.Content </p>
+                <div class="col-sm-12 h3" style="background-color: #B0E0E6; color: white;" >
+                    <p class="text-center h2">@Article.Key.Title</p>
+                    <p class="text-left h3">@Article.Key.Content</p>
+                    <p class="text-right h3">@Article.Key.Author</p>
+                    <p class="text-right h3">Last edit: @Article.Key.Date</p>
+                </div>
                 @if (@Article.Value != null)
                 {
                     @foreach (var Comment in @Article.Value)

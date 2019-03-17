@@ -18,12 +18,6 @@ namespace Blog.UI.Controllers
             _articleController = new APIController.ArticleController(blogContext);
         }
 
-        [HttpGet]
-        public ActionResult<Dictionary<Article, List<Comment>>> GetAll()
-        {
-            return _articleController.GetAll();
-        }
-
         [HttpGet("{id}", Name = "GetArticle")]
         public ActionResult<Tuple<Article, List<Comment>>> GetById(int id)
         {
@@ -33,17 +27,22 @@ namespace Blog.UI.Controllers
         [HttpGet("Create")]
         public IActionResult CreateView()
         {
+            if (TempData["Message"] != null)
+                ViewBag.Message = TempData["Message"].ToString();
             return View("~/Views/Article/Create.cshtml");
         }
 
         [HttpPost("Create")]
         public IActionResult Create([FromForm] Article article)
         {
-            article.UserId = int.Parse(User.Identity.Name);
+            article.Date = DateTime.UtcNow;
             var response = _articleController.Create(article);
             if (response.GetType() != typeof(NoContentResult))
-                return NotFound();
-            return  RedirectToAction("Index", "Home");
+            {
+                TempData["Message"] = "Cannot add article, something went wrong.";
+                return RedirectToAction("Create", "Article");
+            }
+            return RedirectToAction("Index", "Home");
         }
         
         [HttpPut("{id}")]

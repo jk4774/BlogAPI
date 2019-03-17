@@ -31,7 +31,7 @@ namespace Blog.Tests
 
             // Act
             ArticleController.DeleteArticles();
-            ArticleController.Create(new Article { Id = 1, UserId = 4, Title = "Test1", Content = "Content2", Date = DateTime.Now });
+            ArticleController.Create(new Article { Id = 1, Author = "authorName", Title = "Test1", Content = "Content2", Date = DateTime.Now });
             var Articles = ArticleController.GetAll(); 
 
             // Assert
@@ -47,7 +47,7 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            ArticleController.Create(new Article { Id = 2, UserId = 2, Title = "title", Content = "content", Date = DateTime.Now });
+            ArticleController.Create(new Article { Id = 2, Author = "authorName", Title = "title", Content = "content", Date = DateTime.Now });
             var Article = ArticleController.GetById(2);
 
             // Assert
@@ -76,7 +76,7 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            var Article = ArticleController.Create(new Article { Id = 3, UserId = 3, Title = " ", Content = "con", Date = DateTime.Now });
+            var Article = ArticleController.Create(new Article { Id = 3, Author = "authorName", Title = " ", Content = "con", Date = DateTime.Now });
 
             // Assert
             Assert.IsType<NotFoundResult>(Article);
@@ -89,7 +89,7 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            var Article = ArticleController.Create(new Article { Id = 3, UserId = 3, Title = "tit", Content = " ", Date = DateTime.Now });
+            var Article = ArticleController.Create(new Article { Id = 3, Author = "authorName", Title = "tit", Content = " ", Date = DateTime.Now });
 
             // Assert
             Assert.IsType<NotFoundResult>(Article);
@@ -104,7 +104,7 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            var Article = ArticleController.Create(new Article { Id = 3, UserId = 3, Title = "title", Content = "content", Date = DateTime.Now });
+            var Article = ArticleController.Create(new Article { Id = 3, Author = "authorName", Title = "title", Content = "content", Date = DateTime.Now });
 
             // Assert
             Assert.IsType<NoContentResult>(Article);
@@ -131,8 +131,8 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            ArticleController.Create(new Article { Id = 4, UserId = 4, Title = "title", Content = "content", Date = DateTime.Now });
-            var Article = ArticleController.Update(4, new Article { Id = 4, UserId = 4, Title = "title2", Content = "newContent", Date = DateTime.Now.AddDays(1) });
+            ArticleController.Create(new Article { Id = 4, Author = "authorName", Title = "title", Content = "content", Date = DateTime.Now });
+            var Article = ArticleController.Update(4, new Article { Id = 4, Author = "authorName", Title = "title2", Content = "newContent", Date = DateTime.Now.AddDays(1) });
 
             // Assert
             Assert.IsType<NoContentResult>(Article);
@@ -145,7 +145,7 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            var Article = ArticleController.Update(5, new Article { Id = 5, UserId = 5, Title = "title", Content = "content", Date = DateTime.Now });
+            var Article = ArticleController.Update(5, new Article { Id = 5, Author = "authorName", Title = "title", Content = "content", Date = DateTime.Now });
 
             // Assert
             Assert.IsType<NotFoundResult>(Article);
@@ -158,7 +158,7 @@ namespace Blog.Tests
             var ArticleController = Utils.GetArticleController();
 
             // Act
-            ArticleController.Create(new Article { Id = 6, UserId = 6, Title = "title", Content = "content", Date = DateTime.Now });
+            ArticleController.Create(new Article { Id = 6, Author = "authorName", Title = "title", Content = "content", Date = DateTime.Now });
             var Article = ArticleController.Delete(6);
 
             // Assert

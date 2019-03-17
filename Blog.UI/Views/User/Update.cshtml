@@ -4,11 +4,9 @@
 }
 
 <div class="normal-margin col-lg-12 text-center">
-    <!-- <form> -->
-        <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
-        <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
-        <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> 
-    <!-- </form>  -->
+    <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
+    <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
+    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> 
 </div>
 
 <script>
@@ -29,6 +27,5 @@
             window.location.href = '/';
         };
         xhr.send(JSON.stringify({ Old: oldPassword, New: newPassword }));
-        
     });
 </script>
