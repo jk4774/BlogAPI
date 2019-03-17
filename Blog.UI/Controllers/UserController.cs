@@ -25,17 +25,20 @@ namespace Blog.UI.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
-            //DEBUG
-            if (_blogContext.Users.Count() == 0  && Request.Cookies["access_token"] != null)
+            #region debug
+            if (_blogContext.Users.Count() == 0 && Request.Cookies["access_token"] != null)
             {
                 Response.Cookies.Delete("access_token");
                 return RedirectToAction("Index", "Home");
             }
-            //END DEBUG
+            #endregion
             var getArticles = _articleController.GetAll();
             var response = _userController.GetById(id);
             if (response.Value == null)
+            {
+                TempData["Message"] = "Cannot find user with this id.";
                 return RedirectToAction("Index", "Home");
+            }
             return View("~/Views/User/Main.cshtml", new FullUser { User = response.Value, Articles = getArticles.Value });
         }
 
@@ -45,17 +48,22 @@ namespace Blog.UI.Controllers
         {
             var response = _userController.Register(user);
             if (response.GetType() != typeof(NoContentResult))
-                return NotFound();
+            {
+                TempData["Message"] = "Cannot register, user with this name or email already exist.";
+                return RedirectToAction("Index", "Home");
+            }
 
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
+            TempData["Message"] = "The user has been registered correctly.";
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            Utils.DeleteCookie(Request, Response);
+            Utils.DeleteCookie(HttpContext);
+            TempData["Message"] = "User has been logged out.";
             return RedirectToAction("Index", "Home");
         }
 
@@ -70,21 +78,34 @@ namespace Blog.UI.Controllers
         {
             var response = _userController.UpdatePassword(id, password);
             if (response.GetType() != typeof(NoContentResult))
-               return RedirectToAction("Update", "User");
-            return RedirectToAction("GetUser", new { id = User.Identity.Name });
+            {
+                TempData["Message"] = "Something went wrong, cannot update password.";
+                return RedirectToAction("Update", "User"); 
+            }
+
+            TempData["Message"] = "Password has been changed correctly.";
+            // , IsDanger = false };
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             if (User.Identity.Name != id.ToString())
+            {
+                TempData["Message"] = "Something went wrong id has not passed.";
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
-
+            }
+                
             var response = _userController.Delete(id);
             if (response.GetType() != typeof(NoContentResult))
+            {
+                TempData["Message"] = "Something went wrong, cannot delete user.";
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
-
-            Utils.DeleteCookie(Request, Response);
+            }
+                
+            Utils.DeleteCookie(HttpContext);
+            TempData["Message"] = "The user has been deleted correctly.";
             return RedirectToAction("Index", "Home");
         }
     }

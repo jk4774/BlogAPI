@@ -2,7 +2,13 @@
 @{
     ViewData["Title"] = "Main Page";
 }
+
 <div class="row">
+
+    @if(@ViewBag.Message != null)
+    {
+        <div class="col-sm-12 normal-margin alert alert-danger"> @ViewBag.Message </div>
+    }
     <div class='col-md-6'>
         <h1 class="normal-margin text-md-center">Login</h1>
         <input class="normal-margin form-control" id="username" placeholder="Username" />
@@ -24,8 +30,6 @@
     </div>
 </div>
 <script>
-    window.onload = () => {
-    };
     document.getElementById('loginForm').addEventListener('click', () => {
         let name = document.getElementById('username').value;
         let password = document.getElementById('password').value;

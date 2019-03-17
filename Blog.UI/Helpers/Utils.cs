@@ -5,13 +5,13 @@ namespace Blog.UI.Helpers
 {
     public static class Utils
     {
-        public static void DeleteCookie(HttpRequest httpRequest, HttpResponse httpResponse, string cookieName = "access_token")
+        public static void DeleteCookie(HttpContext httpContext, string cookieName = "access_token")
         {
-            if (httpRequest.Cookies[cookieName] != null)
+            if (httpContext.Request.Cookies[cookieName] != null)
             {
                 try
                 {
-                    httpResponse.Cookies.Delete(cookieName);
+                    httpContext.Response.Cookies.Delete(cookieName);
                 }
                 catch
                 {

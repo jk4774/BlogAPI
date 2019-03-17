@@ -17,6 +17,12 @@ namespace Blog.UI.Controllers
                     Response.Cookies.Delete("access_token");
             }
 
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = TempData["Message"].ToString();
+                // ViewBag.IsDanger = TempData["IsDanger"];
+            }
+
             if (User.Identity.IsAuthenticated)
                 return Redirect("/user/" + User.Identity.Name);
             return View("~/Views/Home/Index.cshtml");

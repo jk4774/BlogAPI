@@ -3,7 +3,7 @@
     ViewData["Title"] = "User";
 }
 <div id="main">
-
+    
     <div class="col-sm-5 text-center h3">
         @Model.User.Name
     </div>
@@ -37,8 +37,7 @@
             {
                 @foreach (var Article in @Model.Articles)
                 {
-                    <p>@Article.Key.Title</p>
-                    <p>@Article.Key.Content</p>
+                    <p class="col-sm-12 h5 rounded-30" style="background-color: gray; color: white;" >@Article.Key.Title<br> @Article.Key.Content </p>
                     @if (@Article.Value != null)
                     {
                         @if(@Article.Value.Count > 0) 

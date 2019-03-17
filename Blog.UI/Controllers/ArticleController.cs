@@ -43,9 +43,9 @@ namespace Blog.UI.Controllers
             var response = _articleController.Create(article);
             if (response.GetType() != typeof(NoContentResult))
                 return NotFound();
-            return Ok();
-            //return RedirectToAction("GetUser", "User", new { id = User.Identity.Name }); 
+            return  RedirectToAction("Index", "Home");
         }
+        
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromForm] Article updatedArticle)
         {
