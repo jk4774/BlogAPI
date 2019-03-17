@@ -45,17 +45,13 @@ namespace Blog.UI
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(c =>
             {
-                //c.LogoutPath = "/user/logout";
-                c.LoginPath = "/";
                 c.Cookie = new CookieBuilder { Name = "access_token" };
                 c.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });
             
             services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("BlogDB"));
             services.AddScoped<UserService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
-            services.AddSession();
-            services.AddCors(x => x.AddPolicy("NewPolicy", r => r.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -63,23 +59,17 @@ namespace Blog.UI
             var signingCredentials = new SigningCredentials
                 (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_settings.SecurityKey)), SecurityAlgorithms.HmacSha256Signature);
 
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            
-            //app.UseHttpsRedirection();
-            //app.UseStatusCodePagesWithRedirects("/");
-            app.UseSession();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
             app.UseMiddleware<TokenProviderMiddleware>(signingCredentials);
             app.UseAuthentication();
-            app.UseCors("NewPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseCookiePolicy();
         }
     }
 }

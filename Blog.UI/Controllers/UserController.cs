@@ -55,7 +55,7 @@ namespace Blog.UI.Controllers
 
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetUser", new { id = User.Identity.Name });
-            TempData["Message"] = "The user has been registered correctly.";
+            TempData["Message"] = "$The user has been registered correctly.";
             return RedirectToAction("Index", "Home");
         }
 
@@ -83,8 +83,7 @@ namespace Blog.UI.Controllers
                 return RedirectToAction("Update", "User"); 
             }
 
-            TempData["Message"] = "Password has been changed correctly.";
-            // , IsDanger = false };
+            TempData["Message"] = "$Password has been changed correctly.";
             return RedirectToAction("Index", "Home");
         }
 
@@ -105,7 +104,7 @@ namespace Blog.UI.Controllers
             }
                 
             Utils.DeleteCookie(HttpContext);
-            TempData["Message"] = "The user has been deleted correctly.";
+            TempData["Message"] = "$The user has been deleted correctly.";
             return RedirectToAction("Index", "Home");
         }
     }

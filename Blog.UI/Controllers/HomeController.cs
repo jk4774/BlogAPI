@@ -18,10 +18,7 @@ namespace Blog.UI.Controllers
             }
 
             if (TempData["Message"] != null)
-            {
                 ViewBag.Message = TempData["Message"].ToString();
-                // ViewBag.IsDanger = TempData["IsDanger"];
-            }
 
             if (User.Identity.IsAuthenticated)
                 return Redirect("/user/" + User.Identity.Name);
