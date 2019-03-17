@@ -63,7 +63,7 @@ namespace Blog.UI.Controllers
         public IActionResult Logout()
         {
             Utils.DeleteCookie(HttpContext);
-            TempData["Message"] = "User has been logged out.";
+            TempData["Message"] = "$User has been logged out.";
             return RedirectToAction("Index", "Home");
         }
 
@@ -76,36 +76,14 @@ namespace Blog.UI.Controllers
         [HttpPut("Update/{id}")]
         public IActionResult Update(int id, [FromBody] Password password)
         {
-            var response = _userController.UpdatePassword(id, password);
-            if (response.GetType() != typeof(NoContentResult))
-            {
-                TempData["Message"] = "Something went wrong, cannot update password.";
-                return RedirectToAction("Update", "User"); 
-            }
-
-            TempData["Message"] = "$Password has been changed correctly.";
-            return RedirectToAction("Index", "Home");
+            return _userController.UpdatePassword(id, password);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
-        {
-            if (User.Identity.Name != id.ToString())
-            {
-                TempData["Message"] = "Something went wrong id has not passed.";
-                return RedirectToAction("GetUser", new { id = User.Identity.Name });
-            }
-                
-            var response = _userController.Delete(id);
-            if (response.GetType() != typeof(NoContentResult))
-            {
-                TempData["Message"] = "Something went wrong, cannot delete user.";
-                return RedirectToAction("GetUser", new { id = User.Identity.Name });
-            }
-                
+        {            
             Utils.DeleteCookie(HttpContext);
-            TempData["Message"] = "$The user has been deleted correctly.";
-            return RedirectToAction("Index", "Home");
+            return _userController.Delete(id);
         }
     }
 }

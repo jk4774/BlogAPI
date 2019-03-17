@@ -32,22 +32,16 @@
 
     <div class="col-sm-12 text-left h4">
         @if (@Model.Articles != null)
-        {
-            @if(@Model.Articles.Count > 0) 
+        {                
+            @foreach (var Article in @Model.Articles)
             {
-                @foreach (var Article in @Model.Articles)
+                <p class="col-sm-12 h5 rounded-30" style="background-color: gray; color: white;" >@Article.Key.Title<br> @Article.Key.Content </p>
+                @if (@Article.Value != null)
                 {
-                    <p class="col-sm-12 h5 rounded-30" style="background-color: gray; color: white;" >@Article.Key.Title<br> @Article.Key.Content </p>
-                    @if (@Article.Value != null)
+                    @foreach (var Comment in @Article.Value)
                     {
-                        @if(@Article.Value.Count > 0) 
-                        {
-                            @foreach (var Comment in @Article.Value)
-                            {
-                                <p>@Comment.Content</p>
-                                <p>@Comment.Author</p>
-                            }
-                        }
+                        <p>@Comment.Content</p>
+                        <p>@Comment.Author</p>
                     }
                 }
             }
@@ -59,6 +53,9 @@
         var xhr = new XMLHttpRequest(); 
         xhr.open('DELETE', '/user/' + @Model.User.Id);
         xhr.onload = () => {
+            if (xhr.status != '204') 
+                return alert('Something went wrong, cannot delete the user.');
+            alert("The user has been deleted correctly.");
             window.location.href = '/';
         };
         xhr.send();

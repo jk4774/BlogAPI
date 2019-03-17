@@ -45,6 +45,7 @@ namespace Blog.UI
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(c =>
             {
+                c.LoginPath = "/";
                 c.Cookie = new CookieBuilder { Name = "access_token" };
                 c.TicketDataFormat = new CustomJwtDataFormat(tokenValidationParameters);
             });

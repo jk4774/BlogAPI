@@ -7,7 +7,7 @@
 
     @if(ViewBag.Message != null)
     {
-        @if (ViewBag.Message.Contains("$"))
+        @if (ViewBag.Message.StartsWith("$"))
         {
             <div class="col-sm-12 normal-margin alert alert-success"> @ViewBag.Message.Trim('$') </div>
         }
