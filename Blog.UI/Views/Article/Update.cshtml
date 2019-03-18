@@ -1,0 +1,36 @@
+@model Blog.API.Models.Article;
+@{
+    ViewData["Title"] = "Update Article";
+}
+
+@if (ViewBag.Message != null)
+{
+    <div class="col-lg-12 normal-margin alert alert-danger"> @ViewBag.Message </div>
+}
+
+<div class="normal-margin col-lg-12 text-center">
+    <input class="normal-margin form-control" id="new-title" value="@Model.Title" type="password" />
+    <textarea class="normal-margin form-control" id="new-content" value="@Model.Content"></textarea>
+    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="updateArticle" value="Update Article" /> 
+</div>
+
+<script>
+    document.getElementById('updateArticle').addEventListener('click', () => {
+        let newTitle = document.getElementById('new-title').value;
+        let newContent = document.getElementById('new-content').value;
+
+        if (!newTitle || !newContent) 
+            return alert('Cannot be empty.');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', '/article/update/' + @Model.Id);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = () => {
+            if (xhr.status != '204')
+                return alert('Something went wrong cannot update the password, try again');
+            alert('Password has been updated correctly.');
+            window.location.href = '/';
+        };
+        xhr.send(JSON.stringify({ Old: oldPassword, New: newPassword }));
+    });
+</script>

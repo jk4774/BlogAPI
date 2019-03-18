@@ -70,6 +70,7 @@ namespace Blog.API.Controllers
             if (new[] { article.Title, article.Content }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
+            article.Date = DateTime.Now;
             _blogContext.Articles.Add(article);
             _blogContext.SaveChanges();
             return NoContent();

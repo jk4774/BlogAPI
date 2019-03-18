@@ -12,10 +12,12 @@ namespace Blog.UI.Controllers
     public class ArticleController : Controller
     {
         private readonly APIController.ArticleController _articleController;
+        private readonly BlogContext _blogContext;
         
         public ArticleController(BlogContext blogContext)
         {
             _articleController = new APIController.ArticleController(blogContext);
+            _blogContext = blogContext;
         }
 
         [HttpGet("{id}", Name = "GetArticle")]
@@ -35,7 +37,8 @@ namespace Blog.UI.Controllers
         [HttpPost("Create")]
         public IActionResult Create([FromForm] Article article)
         {
-            article.Date = DateTime.UtcNow;
+            article.UserId = int.Parse(User.Identity.Name);
+            article.UserName = _blogContext.Users.Find(article.UserId).Name;
             var response = _articleController.Create(article);
             if (response.GetType() != typeof(NoContentResult))
             {
@@ -43,6 +46,14 @@ namespace Blog.UI.Controllers
                 return RedirectToAction("Create", "Article");
             }
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Update")]
+        public IActionResult UpdateView()
+        {
+            if (TempData["Message"] != null)
+                ViewBag.Message = TempData["Message"].ToString();
+            return View("~/Views/Article/Update.cshtml");
         }
         
         [HttpPut("{id}")]

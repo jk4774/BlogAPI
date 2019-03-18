@@ -30,23 +30,41 @@
         </form>
     </div>
 
-    <div class="col-sm-12 text-left h4">
+    <div class="col-sm-12">
         @if (@Model.Articles != null)
         {                
-            @foreach (var Article in @Model.Articles.OrderByDescending(x => x.Key.Id))
+            @foreach (var Article in @Model.Articles.OrderBy(x => x.Key.Date))
             {
-                <div class="col-sm-12 h3" style="background-color: #B0E0E6; color: white;" >
-                    <p class="text-center h2">@Article.Key.Title</p>
-                    <p class="text-left h3">@Article.Key.Content</p>
-                    <p class="text-right h3">@Article.Key.Author</p>
-                    <p class="text-right h3">Last edit: @Article.Key.Date</p>
+                <div class="col-sm-12 h5 border border-primary rounded">
+                    @if (@Article.Key.UserId == @Model.User.Id)
+                    {
+                        <p class="col-sm-6 text-center h4">@Article.Key.Title</p>
+                        <div class="col-sm-3 text-center h5">
+                            <form action="/article/update/@Article.Key.Id" method="get">
+                                <input type="submit" class="btn btn-outline-primary btn-lg" value="Update Article">
+                            </form>
+                        </div>    
+                        <div class="col-sm-3 text-center h5">
+                            <input type="submit" class="btn btn-outline-primary btn-lg" id="deleteArticle" value="Delete Article">
+                            <input type="hidden" id="article-id" value="@Article.Key.Id">
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="col-sm-12 text-center h4">@Article.Key.Title</p>
+                    }
+                    
+                    <p class="col-sm-12 text-left h5">@Article.Key.Content</p>
+                    <div class="col-sm-12 h5">
+                        <span class="text-left">Author: @Article.Key.UserName</span>
+                        <span class="text-right">Last edit: @Article.Key.Date</span>
+                    </div>
                 </div>
                 @if (@Article.Value != null)
                 {
                     @foreach (var Comment in @Article.Value)
                     {
-                        <p>@Comment.Content</p>
-                        <p>@Comment.Author</p>
+
                     }
                 }
             }
@@ -61,6 +79,18 @@
             if (xhr.status != '204') 
                 return alert('Something went wrong, cannot delete the user.');
             alert("The user has been deleted correctly.");
+            window.location.href = '/';
+        };
+        xhr.send();
+    });
+    document.getElementById('deleteArticle').addEventListener('click', () => {
+        let id = document.getElementById('').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/article/' + );
+        xhr.onload = () => {
+            if (xhr.status != '204') 
+                return alert('Something went wrong, cannot delete this article.');
+            alert('This article and all comments had been deleted correctly.');
             window.location.href = '/';
         };
         xhr.send();
