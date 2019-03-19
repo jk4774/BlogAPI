@@ -53,12 +53,9 @@
                     {
                         <p class="col-sm-12 text-center h4">@Article.Key.Title</p>
                     }
-                    
                     <p class="col-sm-12 text-left h5">@Article.Key.Content</p>
-                    <div class="col-sm-12 h5">
-                        <span class="text-left">Author: @Article.Key.UserName</span>
-                        <span class="text-right">Last edit: @Article.Key.Date</span>
-                    </div>
+                    <p class="col-sm-6 text-left">Author: @Article.Key.UserName</p>
+                    <p class="col-sm-6 text-right">Last edit: @Article.Key.Date</p>
                 </div>
                 @if (@Article.Value != null)
                 {
@@ -83,7 +80,7 @@
         };
         xhr.send();
     });
-    document.getElementById('deleteArticle').addEventListener('click', () => {
+    /*document.getElementById('deleteArticle').addEventListener('click', () => {
         let id = document.getElementById('').value;
         var xhr = new XMLHttpRequest();
         xhr.open('DELETE', '/article/' + );
@@ -94,5 +91,5 @@
             window.location.href = '/';
         };
         xhr.send();
-    });
+    });*/
 </script>

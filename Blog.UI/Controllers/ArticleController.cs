@@ -48,16 +48,21 @@ namespace Blog.UI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("Update")]
-        public IActionResult UpdateView()
+        [HttpGet("Update/{id}")]
+        public IActionResult UpdateView(int id)
         {
+            var article = _blogContext.Articles.Find(id);
+            if (article == null)
+                return RedirectToAction("Index", "Home");
+            if (article.UserId != int.Parse(User.Identity.Name))
+                return RedirectToAction("Index", "Home");
             if (TempData["Message"] != null)
                 ViewBag.Message = TempData["Message"].ToString();
-            return View("~/Views/Article/Update.cshtml");
+            return View("~/Views/Article/Update.cshtml", new Article { Id = article.Id, Title = article.Title, Content = article.Content  });
         }
         
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromForm] Article updatedArticle)
+        [HttpPut("Update/{id}")]
+        public IActionResult Update(int id, [FromBody] Article updatedArticle)
         {
             return _articleController.Update(id, updatedArticle);
         }

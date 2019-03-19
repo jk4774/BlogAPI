@@ -9,8 +9,8 @@
 }
 
 <div class="normal-margin col-lg-12 text-center">
-    <input class="normal-margin form-control" id="new-title" value="@Model.Title" type="password" />
-    <textarea class="normal-margin form-control" id="new-content" value="@Model.Content"></textarea>
+    <input class="normal-margin form-control" id="new-title" value="@Model.Title"  />
+    <textarea class="normal-margin form-control" id="new-content" >@Model.Content</textarea>
     <input class="normal-margin btn btn-primary btn-lg" type="submit" id="updateArticle" value="Update Article" /> 
 </div>
 
@@ -27,10 +27,10 @@
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = () => {
             if (xhr.status != '204')
-                return alert('Something went wrong cannot update the password, try again');
-            alert('Password has been updated correctly.');
+                return alert('Something went wrong cannot update the article, try again');
+            alert('The article has been updated correctly.');
             window.location.href = '/';
         };
-        xhr.send(JSON.stringify({ Old: oldPassword, New: newPassword }));
+        xhr.send(JSON.stringify({ Title: newTitle, Content: newContent }));
     });
 </script>
