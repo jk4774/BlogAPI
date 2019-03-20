@@ -29,7 +29,7 @@
         <h2 class="normal-margin text-md-center">Register</h2>
         <form action="/user/register" method="post">
             <input class="normal-margin form-control" asp-for="Name" placeholder="Username" />
-            <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />            
+            <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />
             <input class="normal-margin form-control" asp-for="Email" placeholder="Email" type="email" />
             <div class="text-center h2">
                 <input class="normal-margin btn btn-primary btn-lg" type="submit" value="Register" id="registerForm" />
@@ -42,19 +42,20 @@
         let name = document.getElementById('username').value;
         let password = document.getElementById('password').value;
 
-        if (!name || !password) 
-            return alert('something went wrong, pass/name is empty or null');
+        if (!name || !password)
+            return alert('Something went wrong, pass/name is empty or null');
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/user/login');
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = () => {
-            if (xhr.status != '200') 
-                return alert('something went wrong, user/login status is not equal 200');
-            var token = JSON.parse(xhr.responseText).access_token;
-            document.cookie = 'access_token=' + token + ';';
-            document.location.href = '/';
-        };
-        xhr.send('username=' + name + '&password=' + password);
+        fetch('/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'username=' + name + '&password=' + password
+        }).then((response) => {
+            if (response.status != '200')
+                return alert('Something went wrong, status is not equal 200');
+            response.json().then((text) => {
+                document.cookie = 'access_token=' + text.access_token + ';';
+                document.location.href = '/';
+            });
+        });
     });
 </script>

@@ -6,18 +6,18 @@
 <div class="normal-margin col-lg-12 text-center">
     <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
     <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
-    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" /> 
+    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" />
 </div>
 
 <script>
     document.getElementById('changePassword').addEventListener('click', () => {
-        var oldPassword = document.getElementById('old-password').value;
-        var newPassword = document.getElementById('new-password').value;
+        let oldPassword = document.getElementById('old-password').value;
+        let newPassword = document.getElementById('new-password').value;
 
-        if (!oldPassword || !newPassword) 
+        if (!oldPassword || !newPassword)
             return alert('Old and new passswords cannot be null.');
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open('PUT', '/user/update/' + @Model.Id);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = () => {

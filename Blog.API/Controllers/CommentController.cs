@@ -59,7 +59,7 @@ namespace Blog.API.Controllers
             if (new[] { comment, updatedComment }.Any(x => x == null))
                 return NotFound();
 
-            if (new[] { updatedComment.Author, updatedComment.Content }.Any(x => string.IsNullOrWhiteSpace(x)) || updatedComment.Date == null)
+            if (new[] { updatedComment.Author, updatedComment.Content }.Any(x => string.IsNullOrWhiteSpace(x)))
                 return NotFound();
 
             comment.UserId = updatedComment.UserId;

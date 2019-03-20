@@ -32,7 +32,7 @@ namespace Blog.Tests
             // Act
             ArticleController.DeleteArticles();
             ArticleController.Create(new Article { Id = 1, UserId = 1, UserName = "authorName", Title = "Test1", Content = "Content2", Date = DateTime.Now });
-            var Articles = ArticleController.GetAll(); 
+            var Articles = ArticleController.GetAll();
 
             // Assert
             Assert.IsType<Dictionary<Article, List<Comment>>>(Articles.Value);
@@ -43,7 +43,7 @@ namespace Blog.Tests
         [Fact]
         public void GET_GetById_ArticleWithThisIdExist_TupleArticleAndComments()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -58,7 +58,7 @@ namespace Blog.Tests
         [Fact]
         public void GET_GetById_ArticleWithThisIdDoesNotExist_NotFound()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -83,7 +83,7 @@ namespace Blog.Tests
         }
 
         [Fact]
-        public void POST_Create_ContentIsEmpty_NotFound() 
+        public void POST_Create_ContentIsEmpty_NotFound()
         {
               // Arrange
             var ArticleController = Utils.GetArticleController();
@@ -100,7 +100,7 @@ namespace Blog.Tests
         [Fact]
         public void POST_Create_CorrectArticle_NoContent()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -113,7 +113,7 @@ namespace Blog.Tests
         [Fact]
         public void POST_Create_IncorrectArticle_NotFound()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -127,7 +127,7 @@ namespace Blog.Tests
         [Fact]
         public void PUT_Update_UpdateExistingArticle_NoContent()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -141,7 +141,7 @@ namespace Blog.Tests
         [Fact]
         public void PUT_Update_UpdateNoExistingArticle_NotFound()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -154,7 +154,7 @@ namespace Blog.Tests
         [Fact]
         public void DELETE_Delete_DeleteExistingArticle_NoContent()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -168,7 +168,7 @@ namespace Blog.Tests
         [Fact]
         public void DELETE_Delete_DeleteNotExistingArticle_NotFound()
         {
-            // Arrange 
+            // Arrange
             var ArticleController = Utils.GetArticleController();
 
             // Act
@@ -177,5 +177,23 @@ namespace Blog.Tests
             // Assert
             Assert.IsType<NotFoundResult>(Article);
         }
+
+        [Fact]
+        public void DELETE_Delete_DeleteExistingArticleWithComments_NoContent()
+        {
+            //Arrange
+            var ArticleController = Utils.GetArticleController();
+            var CommentController = Utils.GetCommentController();
+
+            // Act
+            ArticleController.Create(new Article { Id = 7, UserId = 2, UserName = "authorName", Title = "title", Content = "content35", Date = DateTime.Now });
+            CommentController.Create(new Comment { Id = 123, UserId = 3, ArticleId = 7, Author = "authorName", Content = "COMMENTABOUTASDF", Date = DateTime.Now });
+            CommentController.Create(new Comment { Id = 124, UserId = 4, ArticleId = 7, Author = "authorName", Content = "COMMENTABOUTASDF2", Date = DateTime.Now });
+            var Article = ArticleController.Delete(7);
+
+            // Assert
+            Assert.IsType<NoContentResult>(Article);
+        }
+
     }
 }

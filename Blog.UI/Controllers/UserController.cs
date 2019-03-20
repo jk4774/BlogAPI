@@ -25,13 +25,11 @@ namespace Blog.UI.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
-            #region debug
             if (_blogContext.Users.Count() == 0 && Request.Cookies["access_token"] != null)
             {
                 Response.Cookies.Delete("access_token");
                 return RedirectToAction("Index", "Home");
             }
-            #endregion
             var getArticles = _articleController.GetAll();
             var response = _userController.GetById(id);
             if (response.Value == null)
@@ -68,7 +66,7 @@ namespace Blog.UI.Controllers
         }
 
         [HttpGet("Update")]
-        public IActionResult UpdateView() 
+        public IActionResult UpdateView()
         {
             return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
@@ -81,7 +79,9 @@ namespace Blog.UI.Controllers
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
-        {            
+        {
+            if (id != int.Parse(User.Identity.Name))
+                return NotFound();
             Utils.DeleteCookie(HttpContext);
             return _userController.Delete(id);
         }

@@ -13,7 +13,7 @@ namespace Blog.UI.Controllers
     {
         private readonly APIController.ArticleController _articleController;
         private readonly BlogContext _blogContext;
-        
+
         public ArticleController(BlogContext blogContext)
         {
             _articleController = new APIController.ArticleController(blogContext);
@@ -58,18 +58,34 @@ namespace Blog.UI.Controllers
                 return RedirectToAction("Index", "Home");
             if (TempData["Message"] != null)
                 ViewBag.Message = TempData["Message"].ToString();
-            return View("~/Views/Article/Update.cshtml", new Article { Id = article.Id, Title = article.Title, Content = article.Content  });
+            return View("~/Views/Article/Update.cshtml", new Article { Id = article.Id, Title = article.Title, Content = article.Content });
         }
-        
+
         [HttpPut("Update/{id}")]
         public IActionResult Update(int id, [FromBody] Article updatedArticle)
         {
             return _articleController.Update(id, updatedArticle);
         }
 
-        [HttpDelete("{id}")]
+        // [HttpGet("Delete/{id}")]
+        // public IActionResult DeleteView(int id)
+        // {
+        //     var article = _blogContext.Articles.Find(id);
+        //     if (article == null)
+        //         return RedirectToAction("Index", "Home");
+        //     if (article.UserId != int.Parse(User.Identity.Name))
+        //         return RedirectToAction("Index", "Home");
+        //     return View("~/Views/Article/Delete.cshtml", new Article { Id = id });
+        // }
+
+        [HttpDelete("Delete/{id}")]
         public IActionResult Delete(int id)
         {
+            var article = _blogContext.Articles.Find(id);
+            if (article == null)
+                return RedirectToAction("Index", "Home");
+            if (article.UserId != int.Parse(User.Identity.Name))
+                return RedirectToAction("Index", "Home");
             return _articleController.Delete(id);
         }
     }

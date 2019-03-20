@@ -3,7 +3,7 @@
     ViewData["Title"] = "User";
 }
 <div id="main">
-    
+
     <div class="col-sm-5 text-center h3">
         @Model.User.Name
     </div>
@@ -32,26 +32,46 @@
 
     <div class="col-sm-12">
         @if (@Model.Articles != null)
-        {                
-            @foreach (var Article in @Model.Articles.OrderBy(x => x.Key.Date))
+        {
+            @foreach (var Article in @Model.Articles.OrderByDescending(x => x.Key.Date))
             {
                 <div class="col-sm-12 h5 border border-primary rounded">
                     @if (@Article.Key.UserId == @Model.User.Id)
                     {
                         <p class="col-sm-6 text-center h4">@Article.Key.Title</p>
-                        <div class="col-sm-3 text-center h5">
+                        <div class="col-sm-2 text-center h5">
                             <form action="/article/update/@Article.Key.Id" method="get">
                                 <input type="submit" class="btn btn-outline-primary btn-lg" value="Update Article">
                             </form>
-                        </div>    
-                        <div class="col-sm-3 text-center h5">
-                            <input type="submit" class="btn btn-outline-primary btn-lg" id="deleteArticle" value="Delete Article">
-                            <input type="hidden" id="article-id" value="@Article.Key.Id">
+                        </div>
+                        <div class="col-sm-2 text-center h5">
+                            <input type="button" class="btn btn-outline-primary btn-lg" onclick="
+                              if(window.confirm('Are you sure you want to delete?'))
+                              {
+                                  fetch('/article/' + @Article.Key.Id, {
+                                      method: 'DELETE'
+                                  }).then((response) => {
+                                      if (response.status != '204')
+                                          return alert('Something went wrong. Cannot delete article.');
+                                      alert('Article has been deleted correctly.');
+                                  });
+                              }
+                            " value="Delete Article">
+                        </div>
+                        <div class="col-sm-2 text-center h5">
+                            <form action="/comment/@Article.Key.Id" method="get">
+                                <input type="submit" class="btn btn-outline-primary btn-lg" value="Add Comment"/>
+                            </form>
                         </div>
                     }
                     else
                     {
-                        <p class="col-sm-12 text-center h4">@Article.Key.Title</p>
+                        <p class="col-sm-10 text-center h4">@Article.Key.Title</p>
+                        <div class="col-sm-2 text-center h5">
+                            <form action="/comment/@Article.Key.Id" method="get">
+                                <input type="submit" class="btn btn-outline-primary btn-lg" value="Add Comment"/>
+                            </form>
+                        </div>
                     }
                     <p class="col-sm-12 text-left h5">@Article.Key.Content</p>
                     <p class="col-sm-6 text-left">Author: @Article.Key.UserName</p>
@@ -61,7 +81,7 @@
                 {
                     @foreach (var Comment in @Article.Value)
                     {
-
+                        //
                     }
                 }
             }
@@ -70,26 +90,13 @@
 </div>
 <script>
     document.getElementById('deleteUser').addEventListener('click', () => {
-        var xhr = new XMLHttpRequest(); 
-        xhr.open('DELETE', '/user/' + @Model.User.Id);
-        xhr.onload = () => {
-            if (xhr.status != '204') 
-                return alert('Something went wrong, cannot delete the user.');
-            alert("The user has been deleted correctly.");
-            window.location.href = '/';
-        };
-        xhr.send();
+        fetch('/user/' + @Model.User.Id, {
+            method: 'DELETE',
+        }).then((response) => {
+          if (response.status != '204')
+              return alert('Something went wrong, cannot delete the user.');
+          alert("The user has been deleted correctly.");
+          window.location.href = '/';
+        });
     });
-    /*document.getElementById('deleteArticle').addEventListener('click', () => {
-        let id = document.getElementById('').value;
-        var xhr = new XMLHttpRequest();
-        xhr.open('DELETE', '/article/' + );
-        xhr.onload = () => {
-            if (xhr.status != '204') 
-                return alert('Something went wrong, cannot delete this article.');
-            alert('This article and all comments had been deleted correctly.');
-            window.location.href = '/';
-        };
-        xhr.send();
-    });*/
 </script>
