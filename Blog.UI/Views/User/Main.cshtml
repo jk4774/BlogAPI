@@ -54,6 +54,7 @@
                                       if (response.status != '204')
                                           return alert('Something went wrong. Cannot delete article.');
                                       alert('Article has been deleted correctly.');
+                                      window.location.href = '/';
                                   });
                               }
                             " value="Delete Article">
@@ -73,7 +74,7 @@
                             </form>
                         </div>
                     }
-                    <p class="col-sm-12 text-left h5">@Article.Key.Content</p>
+                    <p class="col-sm-12 text-left h5" style="word-break: break-word;">@Article.Key.Content</p>
                     <p class="col-sm-6 text-left">Author: @Article.Key.UserName</p>
                     <p class="col-sm-6 text-right">Last edit: @Article.Key.Date</p>
                 </div>

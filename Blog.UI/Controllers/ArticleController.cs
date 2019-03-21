@@ -78,7 +78,7 @@ namespace Blog.UI.Controllers
         //     return View("~/Views/Article/Delete.cshtml", new Article { Id = id });
         // }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             var article = _blogContext.Articles.Find(id);

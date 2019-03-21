@@ -17,15 +17,15 @@
         if (!oldPassword || !newPassword)
             return alert('Old and new passswords cannot be null.');
 
-        let xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/user/update/' + @Model.Id);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = () => {
-            if (xhr.status != '204')
+        fetch('/user/update/' + @Model.Id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Old: oldPassword, New: newPassword })
+        }).then((response) => {
+            if (response.status != '204')
                 return alert('Something went wrong cannot update the password, try again');
             alert('Password has been updated correctly.');
             window.location.href = '/';
-        };
-        xhr.send(JSON.stringify({ Old: oldPassword, New: newPassword }));
+        });
     });
 </script>
