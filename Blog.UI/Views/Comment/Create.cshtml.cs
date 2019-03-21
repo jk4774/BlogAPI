@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Blog.API.Models;
 using Blog.API.Controllers;
 
-namespace Blog.UI.Pages.Article
+namespace Blog.UI.Pages.Comment
 {
-    public class UpdateModel: PageModel
+    public class CreateModel: PageModel
     {
         public void OnGet()
         {

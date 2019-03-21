@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Blog.API.Models;
 using Blog.API.Controllers;
 
-namespace Blog.UI.Pages
+namespace Blog.UI.Pages.Article
 {
     public class CreateModel: PageModel
     {
-        public void OnGet() 
+        public void OnGet()
         {
 
         }
