@@ -20,7 +20,7 @@ namespace Blog.UI.Controllers
             _blogContext = blogContext;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id?}")]
         public IActionResult CreateView(int id)
         {
             var article = _blogContext.Articles.Find(id);
@@ -33,7 +33,7 @@ namespace Blog.UI.Controllers
 
         [HttpPost]
         public IActionResult Create([FromForm] Comment comment)
-        {
+        {   
             var article = _blogContext.Articles.Find(comment.ArticleId);
             if (article == null)
                 return RedirectToAction("Index", "Home");
@@ -41,10 +41,9 @@ namespace Blog.UI.Controllers
             if (string.IsNullOrWhiteSpace(comment.Content))
             {
                 TempData["Message"] = "Content cannot be empty.";
-                return RedirectToAction("Create", "Comment");
+                return RedirectToAction("Create", "Comment", new { id = comment.ArticleId });
             }
 
-            comment.ArticleId = comment.ArticleId;
             comment.UserId = int.Parse(User.Identity.Name);
             comment.Author = _blogContext.Users.Find(comment.UserId).Name;
             comment.Date = DateTime.Now;
@@ -53,7 +52,7 @@ namespace Blog.UI.Controllers
             if (response.GetType() != typeof(NoContentResult))
             {
                 TempData["Message"] = "Cannot add article, something went wrong.";
-                return RedirectToAction("Create", "Comment");
+                return RedirectToAction("Create", "Comment", new { id = comment.ArticleId });
             }
 
             return RedirectToAction("Index", "Home");

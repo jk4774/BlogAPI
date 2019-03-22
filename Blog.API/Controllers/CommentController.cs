@@ -49,7 +49,7 @@ namespace Blog.API.Controllers
 
             _blogContext.Comments.Add(comment);
             _blogContext.SaveChanges();
-            return CreatedAtRoute("GetComment", new { id = comment.Id }, comment);
+            return NoContent();
         }
 
         [HttpPost("{id}")]

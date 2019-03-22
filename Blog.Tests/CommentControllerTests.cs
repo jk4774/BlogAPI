@@ -77,7 +77,7 @@ namespace Blog.Tests
             var Comment = CommentController.Create(new Comment { Id = 4, UserId = 9, ArticleId = 3, Author = "author", Content = "content", Date = DateTime.Now });
 
             // Assert
-            Assert.IsType<CreatedAtRouteResult>(Comment);
+            Assert.IsType<NoContentResult>(Comment);
         }
 
         [Fact]

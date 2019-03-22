@@ -80,13 +80,14 @@
                 </div>
                 @if (@Article.Value != null)
                 {
-                    @foreach (var Comment in @Article.Value)
-                    {
+                    @foreach (var Comment in @Article.Value.OrderByDescending(x => x.Date))
+                     {
                         <div class="col-sm-12 h5 border border-primary rounded">
+                            @Comment.Author
                             @Comment.Content
+                            @Comment.Date
                         </div>
-                        //
-                    }
+                     }
                 }
             }
         }
