@@ -1,3 +1,4 @@
+using System;
 ﻿using Blog.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,10 @@ namespace Blog.UI.Controllers
             return View("~/Views/Comment/Create.cshtml", new Comment { ArticleId = id });
         }
 
-        [HttpPost("{id}")]
-        public IActionResult Create(int id, [FromForm] Comment comment)
+        [HttpPost]
+        public IActionResult Create([FromForm] Comment comment)
         {
-            var article = _blogContext.Articles.Find(id);
+            var article = _blogContext.Articles.Find(comment.ArticleId);
             if (article == null)
                 return RedirectToAction("Index", "Home");
 
@@ -43,8 +44,10 @@ namespace Blog.UI.Controllers
                 return RedirectToAction("Create", "Comment");
             }
 
+            comment.ArticleId = comment.ArticleId;
             comment.UserId = int.Parse(User.Identity.Name);
             comment.Author = _blogContext.Users.Find(comment.UserId).Name;
+            comment.Date = DateTime.Now;
 
             var response = _commentController.Create(comment);
             if (response.GetType() != typeof(NoContentResult))
