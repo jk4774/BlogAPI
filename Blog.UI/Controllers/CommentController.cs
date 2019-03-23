@@ -33,7 +33,7 @@ namespace Blog.UI.Controllers
 
         [HttpPost]
         public IActionResult Create([FromForm] Comment comment)
-        {   
+        {
             var article = _blogContext.Articles.Find(comment.ArticleId);
             if (article == null)
                 return RedirectToAction("Index", "Home");
@@ -58,7 +58,7 @@ namespace Blog.UI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("Update/{id}")]
+        /*[HttpGet("Update/{id}")]
         public IActionResult UpdateView(int id)
         {
             var comment = _blogContext.Comments.Find(id);
@@ -74,7 +74,7 @@ namespace Blog.UI.Controllers
         public IActionResult Update(int id, [FromForm] Comment updatedComment)
         {
             return _commentController.Update(id, updatedComment);
-        }
+        }*/
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
