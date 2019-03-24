@@ -82,32 +82,34 @@
                 {
                     @foreach (var Comment in @Article.Value.OrderByDescending(x => x.Date))
                     {
-                        <div class="col-sm-12 h5 border border-primary rounded">
+                    <div class="col-sm-12 h5 border border-primary rounded">
                         @if (@Comment.UserId == @Model.User.Id)
                         {
-                            <div class="col-sm-12 text-center h5">
-                                <input type="button" class="btn btn-outline-primary btn-lg" onclick="
+                            <div class="col-sm-10 text-left h5">@Comment.Content</div>
+                            <div class="col-sm-2 h5">
+                                <input type="button" class="btn btn-outline-primary btn-sm" onclick="
                                     if(window.confirm('Are you sure you want to delete?'))
                                     {
                                         fetch('/comment/' + @Comment.Id, {
                                             method: 'DELETE'
                                         }).then((response) => {
-                                        if (response.status != '204')
-                                            return alert('Something went wrong. Cannot delete comment.');
+                                            if (response.status != '204')
+                                                return alert('Something went wrong. Cannot delete comment.');
                                             alert('The comment has been deleted correctly.');
                                             window.location.href = '/';
                                         });
                                     }
-                              " value="Delete Comment">
-                          </div>
+                                " value="Delete Comment">
+                            </div>
                         }
-                        <div class="col-sm-12 normal-margin text-left">@Comment.Content</div>
+                        else
+                        {
+                            <div class="col-sm-12 normal-margin text-left">@Comment.Content</div>
+                        }
                         <div class="col-sm-6 text-left">Author: @Comment.Author</div>
                         <div class="col-sm-6 text-right">Date: @Comment.Date</div>
-
-                        </div>
-
-                     }
+                    </div>
+                    }
                 }
             }
         }

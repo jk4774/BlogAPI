@@ -72,6 +72,9 @@ namespace Blog.API.Controllers
 
             if (_blogContext.Users.Any(x => x.Name.ToLower() == user.Name.ToLower() || x.Email.ToLower() == user.Email.ToLower()))
                 return NotFound();
+            
+            if (new[] { user.Name, user.Password, user.Email }.Any(x => x.Length < 8))
+                return NotFound();
 
             var encryptedPassword = BCryptHelper.HashPassword(user.Password, BCryptHelper.GenerateSalt(12));
             var newUser = new User { Id = user.Id, Name = user.Name, Password = encryptedPassword, Email = user.Email };

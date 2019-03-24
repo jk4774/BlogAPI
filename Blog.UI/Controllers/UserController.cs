@@ -45,9 +45,12 @@ namespace Blog.UI.Controllers
         public IActionResult Register([FromForm] User user)
         {
             var response = _userController.Register(user);
+
             if (response.GetType() != typeof(NoContentResult))
             {
-                TempData["Message"] = "Cannot register, user with this name or email already exist.";
+                TempData["Message"] = "Name, Password and Email must be minimum 8length and cannot be empty or " +
+                                      "user with this name or email already exist."; 
+                                        
                 return RedirectToAction("Index", "Home");
             }
 
