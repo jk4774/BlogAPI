@@ -3,6 +3,7 @@ using Blog.API.Models;
 using Blog.API.Services;
 using Blog.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using APIController = Blog.API.Controllers;
 
@@ -48,8 +49,9 @@ namespace Blog.UI.Controllers
 
             if (response.GetType() != typeof(NoContentResult))
             {
-                TempData["Message"] = "Name, Password and Email must be minimum 8length and cannot be empty or " +
-                                      "user with this name or email already exist."; 
+                TempData["Message"] = "Name length cannot be less than 4. <br /> " +
+                                      "Length of Password and Email cannot be less than 8. <br />" +
+                                      "User with this name or email already exist."; 
                                         
                 return RedirectToAction("Index", "Home");
             }

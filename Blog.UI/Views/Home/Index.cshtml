@@ -13,7 +13,7 @@
         }
         else
         {
-            <div class="col-sm-12 normal-margin alert alert-danger"> @ViewBag.Message </div>
+            <div class="col-sm-12 normal-margin alert alert-danger"> @Html.Raw(ViewBag.Message) </div>
         }
     }
 

@@ -73,7 +73,7 @@ namespace Blog.API.Controllers
             if (_blogContext.Users.Any(x => x.Name.ToLower() == user.Name.ToLower() || x.Email.ToLower() == user.Email.ToLower()))
                 return NotFound();
             
-            if (new[] { user.Name, user.Password, user.Email }.Any(x => x.Length < 8))
+            if (new[] { user.Password, user.Email }.Any(x => x.Length < 8) || user.Name.Length < 4)
                 return NotFound();
 
             var encryptedPassword = BCryptHelper.HashPassword(user.Password, BCryptHelper.GenerateSalt(12));
@@ -134,6 +134,19 @@ namespace Blog.API.Controllers
             var user = _blogContext.Users.Find(id);
             if (user == null)
                 return NotFound();
+
+            try
+            {
+                foreach (var article in _blogContext.Articles.Where(x => x.UserId == id))
+                    _blogContext.Articles.Remove(article);
+
+                foreach (var comment in _blogContext.Comments.Where(x => x.UserId == id))
+                    _blogContext.Comments.Remove(comment);
+            }
+            catch
+            {
+                return NotFound();
+            }
 
             _blogContext.Users.Remove(user);
             _blogContext.SaveChanges();

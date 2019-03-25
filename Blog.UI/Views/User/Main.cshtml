@@ -77,7 +77,7 @@
                     <p class="col-sm-12 text-left h5" style="word-break: break-word;">@Article.Key.Content</p>
                     <p class="col-sm-6 text-left">Author: @Article.Key.UserName</p>
                     <p class="col-sm-6 text-right">Last edit: @Article.Key.Date</p>
-                </div>
+                
                 @if (@Article.Value != null)
                 {
                     @foreach (var Comment in @Article.Value.OrderByDescending(x => x.Date))
@@ -111,6 +111,7 @@
                     </div>
                     }
                 }
+                </div>
             }
         }
     </div>

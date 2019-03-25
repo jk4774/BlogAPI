@@ -28,7 +28,7 @@ namespace Blog.Tests
             var UserController = Utils.GetUserController();
 
             // Act
-            UserController.Register(new User { Id = 1, Name = "Username12", Password = "Username121!", Email = "test@test.com" });
+            UserController.Register(new User { Id = 1, Name = "qwer", Password = "Username121!", Email = "test@test.com" });
             var User = UserController.GetById(1);
 
             // Assert
@@ -236,13 +236,13 @@ namespace Blog.Tests
 
         #region NewTests
         [Fact]
-        public void POST_Register_LengthOfNameIsLesserThan8_NotFound()
+        public void POST_Register_LengthOfNameIsLessThan4_NotFound()
         {
             // Arrange
             var UserController = Utils.GetUserController();
 
             // Act
-            var User = UserController.Register(new User { Id = 1, Name = "qwer", Password = "Qwerty1!", Email = "TEST@TEST.com" });
+            var User = UserController.Register(new User { Id = 1, Name = "asd", Password = "Qwerty1!", Email = "TEST@TEST.com" });
             // Assert
             Assert.IsType<NotFoundResult>(User);
         }
