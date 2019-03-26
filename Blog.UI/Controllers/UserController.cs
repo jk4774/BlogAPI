@@ -3,7 +3,6 @@ using Blog.API.Models;
 using Blog.API.Services;
 using Blog.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using APIController = Blog.API.Controllers;
 
@@ -16,6 +15,7 @@ namespace Blog.UI.Controllers
         private readonly APIController.UserController _userController;
         private readonly APIController.ArticleController _articleController;
         private BlogContext _blogContext;
+
         public UserController(BlogContext blogContext, UserService userService)
         {
             _userController = new APIController.UserController(blogContext, userService);
@@ -31,6 +31,7 @@ namespace Blog.UI.Controllers
                 Response.Cookies.Delete("access_token");
                 return RedirectToAction("Index", "Home");
             }
+
             var getArticles = _articleController.GetAll();
             var response = _userController.GetById(id);
             if (response.Value == null)
@@ -82,13 +83,13 @@ namespace Blog.UI.Controllers
             return _userController.UpdatePassword(id, password);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            if (id != int.Parse(User.Identity.Name))
-                return NotFound();
-            Utils.DeleteCookie(HttpContext);
-            return _userController.Delete(id);
-        }
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    if (id != int.Parse(User.Identity.Name))
+        //        return NotFound();
+        //    Utils.DeleteCookie(HttpContext);
+        //    return _userController.Delete(id);
+        //}
     }
 }
