@@ -186,10 +186,10 @@ namespace Blog.Tests
             var CommentController = Utils.GetCommentController();
 
             // Act
-            ArticleController.Create(new Article { Id = 7, UserId = 2, UserName = "authorName", Title = "title", Content = "content35", Date = DateTime.Now });
-            CommentController.Create(new Comment { Id = 123, UserId = 3, ArticleId = 7, Author = "authorName", Content = "COMMENTABOUTASDF", Date = DateTime.Now });
-            CommentController.Create(new Comment { Id = 124, UserId = 4, ArticleId = 7, Author = "authorName", Content = "COMMENTABOUTASDF2", Date = DateTime.Now });
-            var Article = ArticleController.Delete(7);
+            ArticleController.Create(new Article { Id = 77, UserId = 2, UserName = "authorName", Title = "title", Content = "content35", Date = DateTime.Now });
+            CommentController.Create(new Comment { Id = 123, UserId = 3, ArticleId = 77, Author = "authorName", Content = "COMMENTABOUTASDF", Date = DateTime.Now });
+            CommentController.Create(new Comment { Id = 124, UserId = 4, ArticleId = 77, Author = "authorName", Content = "COMMENTABOUTASDF2", Date = DateTime.Now });
+            var Article = ArticleController.Delete(77);
 
             // Assert
             Assert.IsType<NoContentResult>(Article);
