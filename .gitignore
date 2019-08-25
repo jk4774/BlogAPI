@@ -1,3 +1,4 @@
 .vscode
-Blog.*/obj
-Blog.*/bin
+.vs
+*/obj
+*/bin
