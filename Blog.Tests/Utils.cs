@@ -3,6 +3,7 @@ using Blog.API.Models;
 using Blog.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace Blog.Tests
 {
@@ -10,7 +11,7 @@ namespace Blog.Tests
     {
         private static BlogContext GetBlogContext()
         {
-            return new BlogContext(new DbContextOptionsBuilder<BlogContext>().UseInMemoryDatabase().Options);
+            return new BlogContext(new DbContextOptionsBuilder<BlogContext>().UseInMemoryDatabase(Guid.NewGuid().ToString().Substring(0, 7)).Options);
         }
 
         public static ArticleController GetArticleController()
