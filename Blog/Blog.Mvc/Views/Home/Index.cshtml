@@ -1,8 +1,20 @@
-﻿@{
+﻿@model Blog.Entities.User
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-md-6 text-center">
+        <h2>Login</h2>
+        @using (Html.BeginForm("User", "Login", FormMethod.Post))
+        {
+            @Html.TextBoxFor(m => @Model.Email)
+            @Html.TextBoxFor(m => @Model.Password)
+            @Html.ValidationMessageFor(m => @Model.Email)
+            @Html.ValidationMessageFor(m => @Model.Password)
+        }
+    </div>
+    <div class="col-md-6 text-center">
+        <h2>Register</h2>
+    </div>
 </div>

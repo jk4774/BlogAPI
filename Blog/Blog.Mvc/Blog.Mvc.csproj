@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Blog.Entities/Blog.Entities.csproj" />
+    <ProjectReference Include="../Blog.Context/Blog.Context.csproj" />
+    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="3.1.5" /> -->
+  </ItemGroup>
+
 </Project>

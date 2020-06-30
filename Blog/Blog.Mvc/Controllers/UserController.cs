@@ -6,15 +6,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Blog.Mvc.Models;
-using Blog.Context;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Mvc.Controllers
 {
-    public class HomeController : Controller
+    [Authorize]
+    public class UserController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Register()
         {
             return View();
         }
+
+        public IActionResult Login()
+        {
+            return View();
+        }  
+
     }
 }
