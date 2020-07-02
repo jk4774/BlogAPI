@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Blog.Entities;
+using BlogEntities;
 
-namespace Blog.Context
+namespace BlogContext
 {
     public class Blog : DbContext
     {

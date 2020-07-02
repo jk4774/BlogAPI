@@ -1,4 +1,4 @@
-﻿@model Blog.Entities.User
+﻿@model BlogEntities.User
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -16,5 +16,12 @@
     </div>
     <div class="col-md-6 text-center">
         <h2>Register</h2>
+        @using (Html.BeginForm("User", "Register", FormMethod.Post))
+        {
+            @Html.TextBoxFor(m => @Model.Email)
+            @Html.TextBoxFor(m => @Model.Password)
+            @Html.ValidationMessageFor(m => @Model.Email)
+            @Html.ValidationMessageFor(m => @Model.Password)
+        }
     </div>
 </div>

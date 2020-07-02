@@ -5,14 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Blog.Mvc.Models;
-using Microsoft.AspNetCore.Authorization;
+using BlogMvc.Models;
+using BlogContext;
 
-namespace Blog.Mvc.Controllers
+namespace BlogMvc.Controllers
 {
-    [Authorize]
-    public class CommentController : Controller
+    public class HomeController : Controller
     {
-           
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

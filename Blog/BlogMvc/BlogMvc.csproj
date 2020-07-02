@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Blog.Entities/Blog.Entities.csproj" />
-    <ProjectReference Include="../Blog.Context/Blog.Context.csproj" />
+    <ProjectReference Include="../BlogEntities/BlogEntities.csproj" />
+    <ProjectReference Include="../BlogContext/BlogContext.csproj" />
     <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="3.1.5" /> -->
   </ItemGroup>
 

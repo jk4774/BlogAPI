@@ -1,6 +1,6 @@
 using System;
 
-namespace Blog.Mvc.Models
+namespace BlogMvc.Models
 {
     public class ErrorViewModel
     {

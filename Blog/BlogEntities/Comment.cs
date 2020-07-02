@@ -1,19 +1,18 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.Entities
+namespace BlogEntities
 {
-    public class Article
+    public class Comment 
     {
         [Required]
-        public int Id { get; set; }
+        public int Id { get; set; } 
         [Required]
         public int UserId { get; set; }
         [Required]
-        [EmailAddress]
-        public string AuthorEmail { get; set; }
+        public int ArticleId { get; set; }
         [Required]
-        public string Title { get; set; }
+        public string Author { get; set; }
         [Required]
         public string Content { get; set; }
         public DateTime Date { get; set; }
