@@ -1,0 +1,178 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/krzys/projects/blogcsharp/Blog/BlogMvc/BlogMvc.csproj": {}
+  },
+  "projects": {
+    "/home/krzys/projects/blogcsharp/Blog/BlogContext/BlogContext.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/krzys/projects/blogcsharp/Blog/BlogContext/BlogContext.csproj",
+        "projectName": "BlogContext",
+        "projectPath": "/home/krzys/projects/blogcsharp/Blog/BlogContext/BlogContext.csproj",
+        "packagesPath": "/home/krzys/.nuget/packages/",
+        "outputPath": "/home/krzys/projects/blogcsharp/Blog/BlogContext/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/krzys/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj": {
+                "projectPath": "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SQLite": {
+              "target": "Package",
+              "version": "[3.1.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.301/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj",
+        "projectName": "BlogEntities",
+        "projectPath": "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj",
+        "packagesPath": "/home/krzys/.nuget/packages/",
+        "outputPath": "/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/krzys/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.301/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/krzys/projects/blogcsharp/Blog/BlogMvc/BlogMvc.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/krzys/projects/blogcsharp/Blog/BlogMvc/BlogMvc.csproj",
+        "projectName": "BlogMvc",
+        "projectPath": "/home/krzys/projects/blogcsharp/Blog/BlogMvc/BlogMvc.csproj",
+        "packagesPath": "/home/krzys/.nuget/packages/",
+        "outputPath": "/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/krzys/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/home/krzys/projects/blogcsharp/Blog/BlogContext/BlogContext.csproj": {
+                "projectPath": "/home/krzys/projects/blogcsharp/Blog/BlogContext/BlogContext.csproj"
+              },
+              "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj": {
+                "projectPath": "/home/krzys/projects/blogcsharp/Blog/BlogEntities/BlogEntities.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.301/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

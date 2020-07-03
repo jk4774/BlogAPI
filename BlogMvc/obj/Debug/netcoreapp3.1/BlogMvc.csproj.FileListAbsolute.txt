@@ -1,0 +1,7 @@
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.csprojAssemblyReference.cache
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.AssemblyInfoInputs.cache
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.AssemblyInfo.cs
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.csproj.CoreCompileInputs.cache
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.MvcApplicationPartsAssemblyInfo.cache
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.RazorAssemblyInfo.cache
+/home/krzys/projects/blogcsharp/Blog/BlogMvc/obj/Debug/netcoreapp3.1/BlogMvc.RazorAssemblyInfo.cs

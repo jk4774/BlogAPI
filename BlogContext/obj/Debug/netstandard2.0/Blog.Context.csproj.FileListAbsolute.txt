@@ -1,0 +1,4 @@
+/home/krzys/projects/Blog/Blog.Context/obj/Debug/netstandard2.0/Blog.Context.csprojAssemblyReference.cache
+/home/krzys/projects/Blog/Blog.Context/obj/Debug/netstandard2.0/Blog.Context.AssemblyInfoInputs.cache
+/home/krzys/projects/Blog/Blog.Context/obj/Debug/netstandard2.0/Blog.Context.AssemblyInfo.cs
+/home/krzys/projects/Blog/Blog.Context/obj/Debug/netstandard2.0/Blog.Context.csproj.CoreCompileInputs.cache

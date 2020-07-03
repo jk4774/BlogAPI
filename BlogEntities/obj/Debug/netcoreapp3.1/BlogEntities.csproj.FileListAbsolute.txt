@@ -1,0 +1,9 @@
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/bin/Debug/netcoreapp3.1/BlogEntities.deps.json
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/bin/Debug/netcoreapp3.1/BlogEntities.dll
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/bin/Debug/netcoreapp3.1/BlogEntities.pdb
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/Debug/netcoreapp3.1/BlogEntities.csprojAssemblyReference.cache
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/Debug/netcoreapp3.1/BlogEntities.AssemblyInfoInputs.cache
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/Debug/netcoreapp3.1/BlogEntities.AssemblyInfo.cs
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/Debug/netcoreapp3.1/BlogEntities.csproj.CoreCompileInputs.cache
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/Debug/netcoreapp3.1/BlogEntities.dll
+/home/krzys/projects/blogcsharp/Blog/BlogEntities/obj/Debug/netcoreapp3.1/BlogEntities.pdb
