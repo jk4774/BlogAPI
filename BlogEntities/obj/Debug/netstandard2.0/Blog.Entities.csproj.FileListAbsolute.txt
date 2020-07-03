@@ -1,9 +1,0 @@
-/home/krzys/projects/Blog/Blog.Entities/bin/Debug/netstandard2.0/Blog.Entities.deps.json
-/home/krzys/projects/Blog/Blog.Entities/bin/Debug/netstandard2.0/Blog.Entities.dll
-/home/krzys/projects/Blog/Blog.Entities/bin/Debug/netstandard2.0/Blog.Entities.pdb
-/home/krzys/projects/Blog/Blog.Entities/obj/Debug/netstandard2.0/Blog.Entities.csprojAssemblyReference.cache
-/home/krzys/projects/Blog/Blog.Entities/obj/Debug/netstandard2.0/Blog.Entities.AssemblyInfoInputs.cache
-/home/krzys/projects/Blog/Blog.Entities/obj/Debug/netstandard2.0/Blog.Entities.AssemblyInfo.cs
-/home/krzys/projects/Blog/Blog.Entities/obj/Debug/netstandard2.0/Blog.Entities.csproj.CoreCompileInputs.cache
-/home/krzys/projects/Blog/Blog.Entities/obj/Debug/netstandard2.0/Blog.Entities.dll
-/home/krzys/projects/Blog/Blog.Entities/obj/Debug/netstandard2.0/Blog.Entities.pdb
