@@ -1,31 +1,4 @@
-@model Blog.API.Models.Article;
+﻿@page
+@model BlogMvc.Views.Article.UpdateModel
 @{
-    ViewData["Title"] = "Update Article";
 }
-
-<div class="normal-margin col-lg-12 text-center">
-    <input class="normal-margin form-control" id="new-title" value="@Model.Title"  />
-    <textarea class="normal-margin form-control" id="new-content" >@Model.Content</textarea>
-    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="updateArticle" value="Update Article" />
-</div>
-
-<script>
-    document.getElementById('updateArticle').addEventListener('click', () => {
-        let newTitle = document.getElementById('new-title').value;
-        let newContent = document.getElementById('new-content').value;
-
-        if (!newTitle || !newContent)
-            return alert('Cannot be empty.');
-
-        fetch('/article/update/' + @Model.Id, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Title: newTitle, Content: newContent })
-        }).then((response) => {
-            if (response.status != '204')
-                return alert('Something went wrong cannot update the article, try again.');
-            alert('The article has been updated correctly.');
-            window.location.href = '/';
-        });
-    });
-</script>

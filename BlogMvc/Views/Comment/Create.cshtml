@@ -1,20 +1,4 @@
-@model Blog.API.Models.Comment;
+﻿@page
+@model BlogMvc.Views.Comment.CreateModel
 @{
-    ViewData["Title"] = "Add comment";
 }
-<div class="row">
-    @if (ViewBag.Message != null)
-    {
-        <div class="col-md-12 normal-margin alert alert-danger"> @ViewBag.Message </div>
-    }
-    <div class="col-md-12">
-        <form method="POST" action="/comment">
-            <h2 class="normal-margin text-md-center"> Create Article </h2>
-            <textarea class="normal-margin form-control" asp-for="Content" placeholder="Content"></textarea>
-            <input type="hidden" asp-for="ArticleId" value="@Model.ArticleId" />
-            <div class="text-center h2">
-                <input class="normal-margin btn btn-primary btn-lg" type="submit" value="Add Comment"/>
-            </div>
-        </form>
-    </div>
-</div>

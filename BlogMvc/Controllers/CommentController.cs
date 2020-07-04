@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using BlogMvc.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogContext;
+using BlogEntities;
 
 namespace BlogMvc.Controllers
 {

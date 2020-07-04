@@ -1,20 +1,4 @@
-@model Blog.API.Models.Article;
+﻿@page
+@model BlogMvc.Views.Article.CreateModel
 @{
-    ViewData["Title"] = "Create article";
 }
-<div class="row">
-    @if (ViewBag.Message != null)
-    {
-        <div class="col-md-12 normal-margin alert alert-danger"> @ViewBag.Message </div>
-    }
-    <div class="col-md-12">
-        <form method="POST" action="/article/create">
-            <h2 class="normal-margin text-md-center"> Create Article </h2>
-            <input class="normal-margin form-control" asp-for="Title" placeholder="Title" />
-            <textarea class="normal-margin form-control" asp-for="Content" placeholder="Content"></textarea>
-            <div class="text-center h2">
-                <input class="normal-margin btn btn-primary btn-lg" type="submit" value="Add Article"/>
-            </div>
-        </form>
-    </div>
-</div>

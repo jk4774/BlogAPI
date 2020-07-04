@@ -1,31 +1,4 @@
-﻿@model Blog.API.Models.User;
+﻿@page
+@model BlogMvc.Views.User.UpdateModel
 @{
-    ViewData["Title"] = "Update User";
 }
-
-<div class="normal-margin col-lg-12 text-center">
-    <input class="normal-margin form-control" id="old-password" placeholder="Old Password" type="password" />
-    <input class="normal-margin form-control" id="new-password" placeholder="New Password" type="password" />
-    <input class="normal-margin btn btn-primary btn-lg" type="submit" id="changePassword" value="Change Password" />
-</div>
-
-<script>
-    document.getElementById('changePassword').addEventListener('click', () => {
-        let oldPassword = document.getElementById('old-password').value;
-        let newPassword = document.getElementById('new-password').value;
-
-        if (!oldPassword || !newPassword)
-            return alert('Old and new passswords cannot be null.');
-
-        fetch('/user/update/' + @Model.Id, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Old: oldPassword, New: newPassword })
-        }).then((response) => {
-            if (response.status != '204')
-                return alert('Something went wrong cannot update the password, try again');
-            alert('Password has been updated correctly.');
-            window.location.href = '/';
-        });
-    });
-</script>

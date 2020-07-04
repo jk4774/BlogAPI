@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BlogMvc.Models;
 using BlogContext;
+using BlogEntities;
 
 namespace BlogMvc.Controllers
 {
