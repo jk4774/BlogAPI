@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using BlogMvc.Models;
 using Microsoft.AspNetCore.Authorization;
 using BlogEntities;
 using BlogContext;
+using System.Linq;
 
 namespace BlogMvc.Controllers
 {
@@ -24,7 +20,22 @@ namespace BlogMvc.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
-            return View();
+            if (_blog.Users.Count() == 0 )
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var articles = _blog.Articles.ToList();
+            var user = _blog.Users.Find(id);
+            
+            if (user == null) 
+            {
+                // there is no user with this id 
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View ("~/Views/User/Main.cshtml", new UserViewModel() { User = user, Articles = articles });
+
             // if (_blog.Users.Count() == 0 && Request.Cookies["access_token"] != null)
             // {
             //     Response.Cookies.Delete("access_token");
@@ -80,7 +91,7 @@ namespace BlogMvc.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        public IActionResult Update(int id, [FromBody] Password password)
+        public IActionResult Update(int id, [FromBody] PasswordViewModel password)
         {
             return View();
             // return _userController.UpdatePassword(id, password);
