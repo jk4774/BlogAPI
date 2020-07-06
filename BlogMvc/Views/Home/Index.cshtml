@@ -3,6 +3,13 @@
     ViewData["Title"] = "Main Page";
 }
 
-<div>
-    Blog Home Index
+<div class="col-md-12">
+    <h2 class="normal-margin text-md-center">Register</h2>
+    <form action="/user/register" method="post">            
+        <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />
+        <input class="normal-margin form-control" asp-for="Email" placeholder="Email" type="email" />
+        <div class="text-center h2">
+            <input class="normal-margin btn btn-primary btn-lg" type="submit" value="Register" id="registerForm" />
+        </div>
+    </form>
 </div>

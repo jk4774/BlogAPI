@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BlogContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogMvc
 {
@@ -23,7 +25,15 @@ namespace BlogMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddAuthentication();
+            // var memoryDb = new DbContextOptionsBuilder<Blog>()
+                // .UseMemoryCache();
+            
+            services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config => {
+                    config.LoginPath = "/home";
+                    config.Cookie.Name = "Auth.Cookie";
+                });
             services.AddControllersWithViews();
         }
 
@@ -46,7 +56,9 @@ namespace BlogMvc
             
             app.UseRouting();
             
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
         }
     }

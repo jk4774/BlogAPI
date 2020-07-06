@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -8,10 +8,6 @@
     <ProjectReference Include="../BlogEntities/BlogEntities.csproj" />
     <ProjectReference Include="../BlogContext/BlogContext.csproj" />
     <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="3.1.5" /> -->
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.5" />
   </ItemGroup>
 
 </Project>

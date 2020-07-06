@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using BlogEntities;
 using BlogContext;
 using System.Linq;
+using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace BlogMvc.Controllers
 {
@@ -56,7 +59,43 @@ namespace BlogMvc.Controllers
         [HttpPost("Register")]
         public IActionResult Register([FromForm] User user)
         {
-            return View();
+            // if (!ModelState.IsValid)
+            // {
+            //     return NotFound("Model is not valid");
+            // }
+`
+            var users = _blog.Users.ToList();
+
+            // if (users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
+            // {
+            //     return NotFound("User with this email is existing in db");
+            // }
+
+            var encryptedPassword = user.Password.ToString();
+            user.Password = encryptedPassword;
+
+            _blog.Users.Add(user);
+            var in2 = _blog.SaveChanges();
+            
+            if (in2 != 1) {
+                return NotFound("Cannot add user to db");
+            }
+
+            var userClaims = new List<Claim>();
+            userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+
+            var userIdentity = new ClaimsIdentity(userClaims);
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+
+            HttpContext.SignInAsync(userPrincipal);
+
+            return Ok("Everything is good");
+
+            // return RedirectToAction("GetUser", new { id = HttpContext.User.Name  });
+
+            // return RedirectToAction("Index", "Home");
+
+            // return View();
             // var response = _userController.Register(user);
 
             // if (response.GetType() != typeof(NoContentResult))
