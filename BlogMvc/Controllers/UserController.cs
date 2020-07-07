@@ -59,7 +59,7 @@ namespace BlogMvc.Controllers
         [HttpPost("Register")]
         public IActionResult Register([FromForm] User user)
         {
-            // if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             // {
             //     return NotFound("Model is not valid");
             // }
