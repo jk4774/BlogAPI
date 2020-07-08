@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using BlogServices;
 
 namespace BlogMvc.Controllers
 {
@@ -15,9 +16,11 @@ namespace BlogMvc.Controllers
     public class UserController : Controller
     {
         private readonly Blog _blog;
-        public UserController(Blog blog)
+        private readonly UserService _userService;
+        public UserController(Blog blog, UserService userService)
         {
             _blog = blog;
+            _userService = userService;
         }
 
         [HttpGet("{id}", Name = "GetUser")]
@@ -56,15 +59,47 @@ namespace BlogMvc.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("Login")]
+        public IActionResult Login([FromForm] User user)
+        {
+            // if (HttpContext.User.Identity.IsAuthenticated)
+            // {   
+
+            // }
+
+            if (!ModelState.IsValid)
+            {
+                // var validationErrors = 
+                //     ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
+                return NotFound(ModelState);
+            }
+
+            if (!_userService.CheckPassword(user))
+            {
+                return NotFound("Wrong password");
+            }
+
+            HttpContext.SignInAsync();
+
+
+            // validation user
+            // check in db if exist == true
+                //  SignIn() -> /user/:id
+            // else
+                //  Go to main page (wrong credentials)
+        }
+
+        [AllowAnonymous]
         [HttpPost("Register")]
         public IActionResult Register([FromForm] User user)
         {
             if (!ModelState.IsValid)
-            // {
-            //     return NotFound("Model is not valid");
-            // }
-`
-            var users = _blog.Users.ToList();
+            {  
+                var validationErrors = 
+                    ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
+
+                // return NotFound("Model is not valid");
+            }
 
             // if (users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
             // {
@@ -116,7 +151,10 @@ namespace BlogMvc.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            return View();
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+            
+            // return View();
             // Utils.DeleteCookie(HttpContext);
             // TempData["Message"] = "$User has been logged out.";
             // return RedirectToAction("Index", "Home");
