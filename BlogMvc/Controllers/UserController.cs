@@ -26,67 +26,39 @@ namespace BlogMvc.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public ActionResult<User> GetById(int id)
         {
-            if (_blog.Users.Count() == 0 )
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             var articles = _blog.Articles.ToList();
             var user = _blog.Users.Find(id);
-            
             if (user == null) 
-            {
-                // there is no user with this id 
                 return RedirectToAction("Index", "Home");
-            }
 
-            return View ("~/Views/User/Main.cshtml", new UserViewModel() { User = user, Articles = articles });
-
-            // if (_blog.Users.Count() == 0 && Request.Cookies["access_token"] != null)
-            // {
-            //     Response.Cookies.Delete("access_token");
-            //     return RedirectToAction("Index", "Home");
-            // }
-
-            // var getArticles = _articleController.GetAll();
-            // var response = _userController.GetById(id);
-            // if (response.Value == null)
-            // {
-            //     TempData["Message"] = "Cannot find user with this id.";
-            //     return RedirectToAction("Index", "Home");
-            // }
-            // return View("~/Views/User/Main.cshtml", new FullUser { User = response.Value, Articles = getArticles.Value });
+            return View ("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
 
         [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login([FromForm] User user)
         {
-            // if (HttpContext.User.Identity.IsAuthenticated)
-            // {   
-
-            // }
-
             if (!ModelState.IsValid)
-            {
-                // var validationErrors = 
-                //     ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
                 return NotFound(ModelState);
-            }
 
-            if (!_userService.CheckPassword(user))
-            {
+            var userDb = _blog.Users.FirstOrDefault(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
+            if (userDb == null)
+                return NotFound("User does not exist");
+
+            var hashedPassword = _userService.HashPassword(user.Password);
+
+            if (userDb.Password != hashedPassword) 
                 return NotFound("Wrong password");
-            }
 
-            HttpContext.SignInAsync();
+            var userClaims = new List<Claim>();
+            userClaims.Add(new Claim(ClaimTypes.Name, userDb.Id.ToString()));
 
+            var userIdentity = new ClaimsIdentity(userClaims);
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
 
-            // validation user
-            // check in db if exist == true
-                //  SignIn() -> /user/:id
-            // else
-                //  Go to main page (wrong credentials)
+            HttpContext.SignInAsync(userPrincipal);
+
+            return RedirectToAction("GetUser", new { id = HttpContext.User.Identity.Name });
         }
 
         [AllowAnonymous]
@@ -97,17 +69,13 @@ namespace BlogMvc.Controllers
             {  
                 var validationErrors = 
                     ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
-
-                // return NotFound("Model is not valid");
+                return NotFound(ModelState);
             }
 
-            // if (users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
-            // {
-            //     return NotFound("User with this email is existing in db");
-            // }
+            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
+                return NotFound("User with this email is existing in db");
 
-            var encryptedPassword = user.Password.ToString();
-            user.Password = encryptedPassword;
+            user.Password = _userService.HashPassword(user.Password);
 
             _blog.Users.Add(user);
             var in2 = _blog.SaveChanges();
@@ -124,28 +92,7 @@ namespace BlogMvc.Controllers
 
             HttpContext.SignInAsync(userPrincipal);
 
-            return Ok("Everything is good");
-
-            // return RedirectToAction("GetUser", new { id = HttpContext.User.Name  });
-
-            // return RedirectToAction("Index", "Home");
-
-            // return View();
-            // var response = _userController.Register(user);
-
-            // if (response.GetType() != typeof(NoContentResult))
-            // {
-            //     TempData["Message"] = "Name length cannot be less than 4. <br /> " +
-            //                           "Length of Password and Email cannot be less than 8. <br />" +
-            //                           "User with this name or email already exist."; 
-                                        
-            //     return RedirectToAction("Index", "Home");
-            // }
-
-            // if (User.Identity.IsAuthenticated)
-            //     return RedirectToAction("GetUser", new { id = User.Identity.Name });
-            // TempData["Message"] = "$The user has been registered correctly.";
-            // return RedirectToAction("Index", "Home");
+            return RedirectToAction("GetUser", new { id = HttpContext.User.Identity.Name });
         }
 
         [HttpPost("Logout")]
@@ -153,11 +100,6 @@ namespace BlogMvc.Controllers
         {
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
-            
-            // return View();
-            // Utils.DeleteCookie(HttpContext);
-            // TempData["Message"] = "$User has been logged out.";
-            // return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("Update")]
