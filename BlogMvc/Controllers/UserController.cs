@@ -38,6 +38,7 @@ namespace BlogMvc.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromForm] User user)
         {
+            // return NotFound();
             if (!ModelState.IsValid)
                 return NotFound(ModelState);
 
