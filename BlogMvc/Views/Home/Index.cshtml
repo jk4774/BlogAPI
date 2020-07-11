@@ -6,7 +6,7 @@
 <div id="row">
     <div class="col-md-6">
         <h2 class="text-md-center">Login</h2>
-        @Html.BeginForm("Login", "User", "/user/login", FormMethod.Post)
+        @using (@Html.BeginForm("Login", "User", FormMethod.Post))
         {
             <input class="normal-margin form-control" asp-for="Email" placeholder="Email" type="email" />
             <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />
@@ -17,7 +17,7 @@
     </div>
     <div class="col-md-6">
         <h2 class="text-md-center">Register</h2>
-        @Html.BeginForm("Login", "User", "/user/login", FormMethod.Post)
+        @using(@Html.BeginForm("Register", "User", FormMethod.Post))
         {
             <input class="normal-margin form-control" asp-for="Email" placeholder="Email" type="email" />
             <input class="normal-margin form-control" asp-for="Password" placeholder="Password" type="password" />

@@ -1,14 +1,16 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using BlogMvc.Models;
-using Microsoft.AspNetCore.Authorization;
-using BlogEntities;
-using BlogContext;
 using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using BlogMvc.Models;
 using BlogServices;
+using BlogEntities;
+using BlogContext;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogMvc.Controllers
 {
@@ -24,10 +26,10 @@ namespace BlogMvc.Controllers
         }
 
         [HttpGet("{id}", Name = "GetUser")]
-        public ActionResult<User> GetById(int id)
+        public async Task<ActionResult<User>> GetById(int id)
         {
-            var articles = _blog.Articles.ToList();
-            var user = _blog.Users.Find(id);
+            var articles = await _blog.Articles.ToListAsync();
+            var user = await _blog.Users.FindAsync(id);
             if (user == null) 
                 return RedirectToAction("Index", "Home");
 
@@ -35,10 +37,9 @@ namespace BlogMvc.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Login")]
-        public IActionResult Login([FromForm] User user)
+        [HttpPost]
+        public async Task<IActionResult> Login([FromForm] User user)
         {
-            // return NotFound();
             if (!ModelState.IsValid)
                 return NotFound(ModelState);
 
@@ -54,17 +55,17 @@ namespace BlogMvc.Controllers
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, userDb.Id.ToString()));
 
-            var userIdentity = new ClaimsIdentity(userClaims);
+            var userIdentity = new ClaimsIdentity(userClaims, "CookieAuth");
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
 
-            HttpContext.SignInAsync(userPrincipal);
+            await HttpContext.SignInAsync("CookieAuth", userPrincipal);
 
-            return RedirectToAction("GetUser", new { id = HttpContext.User.Identity.Name });
+            return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
 
         [AllowAnonymous]
-        [HttpPost("Register")]
-        public IActionResult Register([FromForm] User user)
+        [HttpPost]
+        public async Task<IActionResult> Register([FromForm] User user)
         {
             if (!ModelState.IsValid)
             {  
@@ -79,7 +80,7 @@ namespace BlogMvc.Controllers
             user.Password = _userService.HashPassword(user.Password);
 
             _blog.Users.Add(user);
-            var in2 = _blog.SaveChanges();
+            var in2 = await _blog.SaveChangesAsync();
             
             if (in2 != 1) {
                 return NotFound("Cannot add user to db");
@@ -87,34 +88,37 @@ namespace BlogMvc.Controllers
 
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            userClaims.Add(new Claim("Email", user.Email));
 
-            var userIdentity = new ClaimsIdentity(userClaims);
+            var userIdentity = new ClaimsIdentity(userClaims, "CookieAuth");
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
 
-            HttpContext.SignInAsync(userPrincipal);
+            await HttpContext.SignInAsync("CookieAuth", userPrincipal);
 
-            return RedirectToAction("GetUser", new { id = HttpContext.User.Identity.Name });
+
+            return NotFound(HttpContext.User.Identity.IsAuthenticated);
+            // return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
 
         [HttpPost("Logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            await HttpContext.SignOutAsync();
+            return await Task.Run(() => RedirectToAction("Index", "Home"));
         }
 
         [HttpGet("Update")]
-        public IActionResult UpdateView()
+        public async Task<IActionResult> UpdateView()
         {
-            return View();
+            return await Task.Run(() => View());
             // return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
         [HttpPut("Update/{id}")]
-        public IActionResult Update(int id, [FromBody] PasswordViewModel password)
+        public async Task<IActionResult> Update(int id, [FromBody] PasswordViewModel password)
         {
-            return View();
-            // return _userController.UpdatePassword(id, password);
+            return await Task.Run(() => View());
+            // return _userController.UpdatePassword(id, password)
         }
 
         //[HttpDelete("{id}")]
