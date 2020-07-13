@@ -1,10 +1,13 @@
 ﻿using System;
-using BlogEntities;
-using BlogContext;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-// using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using BlogEntities;
+using BlogContext;
 
 namespace BlogServices
 {
@@ -12,9 +15,12 @@ namespace BlogServices
     {
         private readonly int SaltSize = 9;
         private readonly Blog _blog;
-        public UserService(Blog blog)
+        private readonly IHttpContextAccessor _accessor;
+
+        public UserService(Blog blog, IHttpContextAccessor accessor)
         {
             _blog = blog;
+            _accessor = accessor;
         }
 
         public string HashPassword(string input)
@@ -29,18 +35,17 @@ namespace BlogServices
             return Convert.ToBase64String(hash);
         }
 
-        public bool Auth(User user)
+        public async Task Auth(User user)
         {
-            var userDb = _blog.Users.FirstOrDefault(x=>x.Email.Equals(user.Email, StringComparison.InvariantCultureIgnoreCase));
+            var userClaims = new List<Claim>();
+            userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
-            if (userDb == null)
-                return false;
+            var userIdentity = new ClaimsIdentity(userClaims, "CookieAuth");
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+            
+            await _accessor.HttpContext.SignInAsync("CookieAuth", userPrincipal);
 
-            var hashedPassword = user.Password.ToString();
-
-            if (!userDb.Password.Equals(hashedPassword)) 
-                return false;
-            return true;
+            _accessor.HttpContext.User = userPrincipal;
         }
     }
 }

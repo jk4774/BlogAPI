@@ -1,13 +1,20 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogMvc.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

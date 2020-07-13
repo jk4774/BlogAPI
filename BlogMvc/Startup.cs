@@ -20,13 +20,17 @@ namespace BlogMvc
 
         public void ConfigureServices(IServiceCollection services)
         {   
+            services.AddHttpContextAccessor();
+
             services.AddCors(o => o.AddPolicy("CorsPolicy", 
                 builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
-            services.AddScoped<UserService>();
-            services.AddScoped<ArticleService>();
-            services.AddScoped<CommentService>();
+
+            services.AddScoped<UserService>()
+                    .AddScoped<ArticleService>()
+                    .AddScoped<CommentService>();
 
             services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
+            
             services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", config => {
                 config.LoginPath = "/home";
                 config.Cookie.Name = "Auth.Cookie";

@@ -54,14 +54,15 @@ namespace BlogMvc.Controllers
 
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, userDb.Id.ToString()));
-            userClaims.Add(new Claim("Id", user.Id.ToString()));
 
             var userIdentity = new ClaimsIdentity(userClaims, "CookieAuth");
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
 
             await HttpContext.SignInAsync("CookieAuth", userPrincipal);
 
-            return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Claims.First(x=>x.Type=="Id").Value)});
+            HttpContext.User = userPrincipal;
+
+            return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
 
         [AllowAnonymous]
@@ -83,21 +84,12 @@ namespace BlogMvc.Controllers
             _blog.Users.Add(user);
             var result = await _blog.SaveChangesAsync();
             
-            if (result != 1) {
+            if (result != 1) 
                 return NotFound("Cannot add user to db");
-            }
 
-            var userClaims = new List<Claim>();
-            userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
-            userClaims.Add(new Claim("Id", user.Id.ToString()));
-
-            var userIdentity = new ClaimsIdentity(userClaims, "CookieAuth");
-            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-
-            await HttpContext.SignInAsync("CookieAuth", userPrincipal);
-
-            // return NotFound(HttpContext.User.Identity.IsAuthenticated);
-            return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Claims.First(x=>x.Type=="Id").Value) });
+            await _userService.Auth(user);
+            
+            return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
 
         [HttpPost("Logout")]
