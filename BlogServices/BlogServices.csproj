@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="../BlogEntities/BlogEntities.csproj" />
     <ProjectReference Include="../BlogContext/BlogContext.csproj" />
-    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.SQLite" Version="3.1.5" /> -->
   </ItemGroup>
 
   <ItemGroup>

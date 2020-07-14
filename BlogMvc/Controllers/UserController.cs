@@ -33,7 +33,7 @@ namespace BlogMvc.Controllers
             if (user == null) 
                 return RedirectToAction("Index", "Home");
 
-            return await Task.Run(() => View ("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles }));
+            return View ("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
 
         [AllowAnonymous]
@@ -43,7 +43,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return NotFound(ModelState);
 
-            var userDb = _blog.Users.FirstOrDefault(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
+            var userDb = await _blog.Users.FirstOrDefaultAsync(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
             if (userDb == null)
                 return NotFound("User does not exist");
 
@@ -52,15 +52,7 @@ namespace BlogMvc.Controllers
             if (userDb.Password != hashedPassword) 
                 return NotFound("Wrong password");
 
-            var userClaims = new List<Claim>();
-            userClaims.Add(new Claim(ClaimTypes.Name, userDb.Id.ToString()));
-
-            var userIdentity = new ClaimsIdentity(userClaims, "CookieAuth");
-            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
-
-            await HttpContext.SignInAsync("CookieAuth", userPrincipal);
-
-            HttpContext.User = userPrincipal;
+            await _userService.Auth(user);
 
             return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
@@ -69,24 +61,19 @@ namespace BlogMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] User user)
         {
+            // var validationErrors = ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
+                
             if (!ModelState.IsValid)
-            {  
-                var validationErrors = 
-                    ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
                 return NotFound(ModelState);
-            }
 
-            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
+            if (await _blog.Users.AnyAsync(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
                 return NotFound("User with this email is existing in db");
 
             user.Password = _userService.HashPassword(user.Password);
 
             _blog.Users.Add(user);
-            var result = await _blog.SaveChangesAsync();
+            _blog.SaveChanges();
             
-            if (result != 1) 
-                return NotFound("Cannot add user to db");
-
             await _userService.Auth(user);
             
             return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
@@ -96,20 +83,21 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return await Task.Run(() => RedirectToAction("Index", "Home"));
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("Update")]
         public async Task<IActionResult> UpdateView()
         {
-            return await Task.Run(() => View());
-            // return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
+            // return await Task.Run(() => View());
+            return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PasswordViewModel password)
         {
-            return await Task.Run(() => View());
+
+            // return await Task.Run(() => View());
             // return _userController.UpdatePassword(id, password)
         }
 
