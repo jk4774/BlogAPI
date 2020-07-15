@@ -7,7 +7,7 @@ namespace BlogMvc.Controllers
         public IActionResult Index() 
         {
             if (HttpContext.User.Identity.IsAuthenticated) 
-                return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
+                return RedirectToAction("GetById", "User", new { id = int.Parse(HttpContext.User.Identity.Name) });
             return View();
         }
     }

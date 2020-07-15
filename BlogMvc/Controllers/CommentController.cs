@@ -13,6 +13,7 @@
 // namespace BlogMvc.Controllers
 // {
 //     [Authorize]
+//     [Route("[controller]")]
 //     public class CommentController : Controller
 //     {
 //         private readonly Blog _blog; 

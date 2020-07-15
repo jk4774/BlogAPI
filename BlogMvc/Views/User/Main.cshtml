@@ -1,4 +1,11 @@
 ﻿@model BlogMvc.Models.UserViewModel
 @{
-    ViewData["Title"] = "";
+    ViewData["Title"] = "User " + Model.User.Id;
 }
+
+<h1>Hello @Model.User.Email</h1>
+
+<form asp-action="Logout"  asp-controller="User" method="POST">
+    <button> lala </button>
+</form>
+
