@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -52,7 +50,7 @@ namespace BlogMvc.Controllers
             if (userDb.Password != hashedPassword) 
                 return NotFound("Wrong password");
 
-            await _userService.Auth(user);
+            await _userService.SignIn(user);
 
             return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
@@ -60,13 +58,11 @@ namespace BlogMvc.Controllers
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] User user)
-        {
-            // var validationErrors = ModelState.Values.SelectMany(x => x.Errors).Select(o => o.ErrorMessage);
-                
+        {    
             if (!ModelState.IsValid)
                 return NotFound(ModelState);
 
-            if (await _blog.Users.AnyAsync(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))) 
+            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
                 return NotFound("User with this email is existing in db");
 
             user.Password = _userService.HashPassword(user.Password);
@@ -74,7 +70,7 @@ namespace BlogMvc.Controllers
             _blog.Users.Add(user);
             _blog.SaveChanges();
             
-            await _userService.Auth(user);
+            await _userService.SignIn(user);
             
             return RedirectToAction("GetUser", new { id = int.Parse(HttpContext.User.Identity.Name) });
         }
@@ -87,28 +83,28 @@ namespace BlogMvc.Controllers
         }
 
         [HttpGet("Update")]
-        public async Task<IActionResult> UpdateView()
+        public IActionResult UpdateView()
         {
-            // return await Task.Run(() => View());
             return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
         }
 
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] PasswordViewModel password)
+        public IActionResult Update(int id, [FromBody] PasswordViewModel password)
         {
-
+            return Ok();
             // return await Task.Run(() => View());
             // return _userController.UpdatePassword(id, password)
         }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            return Ok();
         //    if (id != int.Parse(User.Identity.Name))
         //        return NotFound();
         //    Utils.DeleteCookie(HttpContext);
         //    return _userController.Delete(id);
-        //}
+        }
 
     }
 }

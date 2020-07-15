@@ -35,7 +35,7 @@ namespace BlogServices
             return Convert.ToBase64String(hash);
         }
 
-        public async Task Auth(User user)
+        public async Task SignIn(User user)
         {
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
