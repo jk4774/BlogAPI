@@ -51,13 +51,11 @@ namespace BlogMvc.Controllers
             if (userDb == null)
                 return NotFound("User does not exist");
 
-            var hashedPassword = _userService.HashPassword(user.Password);
-
-            if (userDb.Password != hashedPassword) 
+            if (!_userService.VerifyPassword(user.Password, userDb.Password)) 
                 return NotFound("Wrong password");
 
             await _userService.SignIn(user);
-
+            
             return RedirectToAction("GetById", "User", new { id = int.Parse(User.Identity.Name) });
         }
 

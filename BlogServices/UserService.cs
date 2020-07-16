@@ -29,10 +29,17 @@ namespace BlogServices
             var buffer = new byte[SaltSize];
             rng.GetBytes(buffer);
             var salt = Convert.ToBase64String(buffer);
+
             var bytes = Encoding.UTF8.GetBytes(input + salt);
-            var sHA256ManagedString = new SHA256Managed();
-            var hash = sHA256ManagedString.ComputeHash(bytes);
+            var sha256Managed = new SHA256Managed();
+            var hash = sha256Managed.ComputeHash(bytes);
+            
             return Convert.ToBase64String(hash);
+        }
+
+        public bool VerifyPassword(string input, string hashedPassword)
+        {
+            return HashPassword(input).Equals(hashedPassword);  
         }
 
         public async Task SignIn(User user)
