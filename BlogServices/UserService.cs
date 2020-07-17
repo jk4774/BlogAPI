@@ -29,10 +29,19 @@ namespace BlogServices
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
-            var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var userIdentity = 
+                new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             
-            await _accessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
+            await _accessor.HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme, 
+                userPrincipal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddSeconds(40)
+                });
 
             _accessor.HttpContext.User = userPrincipal;
         }
