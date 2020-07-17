@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BlogContext;
 using BlogServices;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BlogMvc
 {
@@ -31,10 +32,11 @@ namespace BlogMvc
 
             services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
             
-            services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", config => {
-                config.LoginPath = "/home";
-                config.Cookie.Name = "Auth.Cookie";
-            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(config => {
+                    config.LoginPath = "/home";
+                    config.Cookie.Name = "Auth.Cookie";
+                });
 
             services.AddControllersWithViews();
         }

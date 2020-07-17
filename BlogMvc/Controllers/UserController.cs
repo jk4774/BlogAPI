@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using BlogServices;
 using BlogEntities;
@@ -51,11 +50,11 @@ namespace BlogMvc.Controllers
             if (userDb == null)
                 return NotFound("User does not exist");
 
-            if (!_userService.VerifyPassword(user.Password, userDb.Password)) 
+            if (!_userService.Verify(user.Password, userDb.Password)) 
                 return NotFound("Wrong password");
 
             await _userService.SignIn(user);
-            
+
             return RedirectToAction("GetById", "User", new { id = int.Parse(User.Identity.Name) });
         }
 
@@ -70,7 +69,7 @@ namespace BlogMvc.Controllers
                 return NotFound("User with this email is existing in db");
 
             user.Id = new Random().Next(0, int.MaxValue);
-            user.Password = _userService.HashPassword(user.Password);
+            user.Password = _userService.Hash(user.Password);
             
             _blog.Users.Add(user);
             _blog.SaveChanges();
@@ -83,11 +82,11 @@ namespace BlogMvc.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await _userService.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
+        [HttpGet("Update")]
         public IActionResult Update()
         {
             return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
@@ -104,6 +103,5 @@ namespace BlogMvc.Controllers
         {
             return Ok();
         }
-
     }
 }
