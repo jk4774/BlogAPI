@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,24 +22,30 @@ namespace BlogMvc
 
         public void ConfigureServices(IServiceCollection services)
         {   
-            services.AddHttpContextAccessor();
+            services
+                .AddHttpContextAccessor();
 
-            services.AddCors(o => o.AddPolicy("CorsPolicy", 
-                builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+            services.AddCors(opt => 
+                opt.AddPolicy("CorsPolicy", builder => 
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
-            services.AddScoped<UserService>()
-                    .AddScoped<ArticleService>()
-                    .AddScoped<CommentService>();
+            services
+                .AddScoped<UserService>()
+                .AddScoped<ArticleService>()
+                .AddScoped<CommentService>();
 
-            services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
+            services
+                .AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
             
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {
                     config.LoginPath = "/home";
-                    config.Cookie.Name = "Auth.Cookie";
+                    config.Cookie.Name = "auth_cookie";
                 });
 
-            services.AddControllersWithViews();
+            services
+                .AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -62,9 +69,9 @@ namespace BlogMvc
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
-            endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

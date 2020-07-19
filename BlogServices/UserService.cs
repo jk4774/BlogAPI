@@ -26,22 +26,23 @@ namespace BlogServices
 
         public async Task SignIn(User user)
         {
+            var expires = DateTime.UtcNow.AddSeconds(30);
+
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            userClaims.Add(new Claim("Expiration", expires.ToString()));
 
             var userIdentity = 
                 new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             
+            var authProperties = new AuthenticationProperties { ExpiresUtc = expires };
+
             await _accessor.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme, 
                 userPrincipal,
-                new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTime.UtcNow.AddSeconds(40)
-                });
+                authProperties);
 
             _accessor.HttpContext.User = userPrincipal;
         }
@@ -49,7 +50,6 @@ namespace BlogServices
         public async Task SignOut()
         {
             await _accessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            _accessor.HttpContext.Response.Cookies.Delete("Cookie.Auth");
         }
 
         public string Hash(string password)

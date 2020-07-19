@@ -1,28 +1,26 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Web;
-using System;
 using Microsoft.AspNetCore.Http;
-using System.Net;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BlogMvc.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index() 
+        public async Task<IActionResult> Index() 
         {
-            // Request  - GET
-            // Response - SET
-
-            if (Request.Cookies["Cookie.Auth"] != null && DateTime.UtcNow > DateTime.UtcNow.AddSeconds(1))
+            if (Request.Cookies["auth_cookie"] != null)
             {
-                
-                Response.Cookies.Delete("Cookie.Auth");
+                var exp = User.Claims.FirstOrDefault(x=>x.Type.Equals("Expiration"))?.Value;
+                if (DateTime.UtcNow > DateTime.Parse(exp??DateTime.UtcNow.AddSeconds(1).ToString()))
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             }
-                
 
             if (HttpContext.User.Identity.IsAuthenticated) 
-                return RedirectToAction("GetById", "User", new { id = int.Parse(HttpContext.User.Identity.Name) });
+                return RedirectToAction("GetById", "User", new { id = int.Parse(User.Identity.Name) });
             return View();
         }
     }
