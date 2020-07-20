@@ -1,4 +1,4 @@
-using System;
+// using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +22,7 @@ namespace BlogMvc
 
         public void ConfigureServices(IServiceCollection services)
         {   
-            services
-                .AddHttpContextAccessor();
+            services.AddHttpContextAccessor();
 
             services.AddCors(opt => 
                 opt.AddPolicy("CorsPolicy", builder => 
@@ -34,9 +33,8 @@ namespace BlogMvc
                 .AddScoped<ArticleService>()
                 .AddScoped<CommentService>();
 
-            services
-                .AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
-            
+            services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
+
             services
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {
@@ -44,8 +42,7 @@ namespace BlogMvc
                     config.Cookie.Name = "auth_cookie";
                 });
 
-            services
-                .AddControllersWithViews();
+            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -30,8 +30,7 @@ namespace BlogServices
 
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
-            userClaims.Add(new Claim("Expiration", expires.ToString()));
-
+            
             var userIdentity = 
                 new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             

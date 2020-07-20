@@ -55,7 +55,7 @@ namespace BlogMvc.Controllers
 
             await _userService.SignIn(user);
 
-            return RedirectToAction("GetById", "User", new { id = int.Parse(User.Identity.Name) });
+            return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
 
         [AllowAnonymous]
@@ -76,7 +76,7 @@ namespace BlogMvc.Controllers
             
             await _userService.SignIn(user);
             
-            return RedirectToAction("GetById", "User", new { id = int.Parse(User.Identity.Name) });
+            return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
 
         [HttpPost("Logout")]
@@ -89,7 +89,7 @@ namespace BlogMvc.Controllers
         [HttpGet("Update")]
         public IActionResult Update()
         {
-            return View("~/Views/User/Update.cshtml", new User { Id = int.Parse(User.Identity.Name) });
+            return View();
         }
 
         [HttpPut("Update/{id}")]
