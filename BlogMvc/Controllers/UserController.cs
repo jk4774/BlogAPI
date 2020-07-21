@@ -42,10 +42,8 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return NotFound(ModelState);
 
-            var userDb = 
-                await _blog.Users
-                    .FirstOrDefaultAsync(i => 
-                        i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
+            var userDb = await _blog.Users.FirstOrDefaultAsync(i => 
+                i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
             
             if (userDb == null)
                 return NotFound("User does not exist");
@@ -67,8 +65,7 @@ namespace BlogMvc.Controllers
 
             if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
                 return NotFound("User with this email is existing in db");
-
-            user.Id = new Random().Next(0, int.MaxValue);
+            
             user.Password = _userService.Hash(user.Password);
             
             _blog.Users.Add(user);

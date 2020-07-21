@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlogEntities
 {
     public class User
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int Id { get; set; }
         [Required]
         [EmailAddress]
