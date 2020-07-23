@@ -21,5 +21,11 @@ namespace BlogMvc.Controllers
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }

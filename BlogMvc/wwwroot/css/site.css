@@ -61,7 +61,9 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-family: 'Open Sans', sans-serif;
 }
+
 .footer {
   position: absolute;
   bottom: 0;

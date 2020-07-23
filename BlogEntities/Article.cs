@@ -5,6 +5,7 @@ namespace BlogEntities
 {
     public class Article
     {
+        [Key]
         public int Id { get; set; } 
         public int UserId { get; set; }
         public string AuthorEmail { get; set; }

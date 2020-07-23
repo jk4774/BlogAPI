@@ -35,6 +35,20 @@ namespace BlogMvc.Controllers
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
 
+        // [AllowAnonymous]
+        // [HttpGet("Login")]
+        // public IActionResult Login()
+        // {
+        //     return View();
+        // }
+
+        // [AllowAnonymous]
+        // [HttpGet("Register")]
+        // public IActionResult Register()
+        // {
+        //     return View();
+        // }
+
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromForm] User user)
