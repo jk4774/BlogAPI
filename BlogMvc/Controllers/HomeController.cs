@@ -1,21 +1,15 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BlogMvc.Controllers
 {
     public class HomeController : Controller
     {
-        public async Task<IActionResult> Index() 
+        public IActionResult Index() 
         {
-            if (Request.Cookies["auth_cookie"] != null && !User.Identity.IsAuthenticated) 
-            {
+            if (Request.Cookies["auth_cookie"] != null && !User.Identity.IsAuthenticated)
                 Response.Cookies.Delete("auth_cookie");
-            }
-                // await HttpContext.SignOutAsync();
 
-            if (User.Identity.IsAuthenticated) 
+            if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View();
         }

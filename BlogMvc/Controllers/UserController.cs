@@ -34,8 +34,11 @@ namespace BlogMvc.Controllers
 
             var articles = await _blog.Articles.ToListAsync();
             var user = await _blog.Users.FindAsync(id);
-            if (user == null) 
+            if (user == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Index", "Home");
+            }
 
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
