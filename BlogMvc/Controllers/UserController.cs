@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using BlogServices;
 using BlogEntities;
@@ -26,7 +28,10 @@ namespace BlogMvc.Controllers
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetById(int id)
-        {
+        {   
+            if (!User.Identity.Name.Equals(id.ToString())) 
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+
             var articles = await _blog.Articles.ToListAsync();
             var user = await _blog.Users.FindAsync(id);
             if (user == null) 
@@ -34,20 +39,6 @@ namespace BlogMvc.Controllers
 
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
-
-        // [AllowAnonymous]
-        // [HttpGet("Login")]
-        // public IActionResult Login()
-        // {
-        //     return View();
-        // }
-
-        // [AllowAnonymous]
-        // [HttpGet("Register")]
-        // public IActionResult Register()
-        // {
-        //     return View();
-        // }
 
         [AllowAnonymous]
         [HttpPost("Login")]
@@ -65,7 +56,7 @@ namespace BlogMvc.Controllers
             if (!_userService.Verify(user.Password, userDb.Password)) 
                 return NotFound("Wrong password");
 
-            await _userService.SignIn(user);
+            await _userService.SignIn(userDb);
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
@@ -93,7 +84,7 @@ namespace BlogMvc.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await _userService.SignOut();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme); 
             return RedirectToAction("Index", "Home");
         }
 

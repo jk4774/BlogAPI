@@ -3,11 +3,11 @@ using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using BlogEntities;
 using BlogContext;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BlogServices
 {
@@ -16,12 +16,12 @@ namespace BlogServices
         private const int SaltSize = 16;
         private const int HashSize = 20;        
         private readonly Blog _blog;
-        private readonly IHttpContextAccessor _accessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(Blog blog, IHttpContextAccessor accessor)
+        public UserService(Blog blog, IHttpContextAccessor httpContextAccessor)
         {
             _blog = blog;
-            _accessor = accessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task SignIn(User user)
@@ -35,17 +35,12 @@ namespace BlogServices
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             var authProperties = new AuthenticationProperties { ExpiresUtc = expires };
 
-            await _accessor.HttpContext.SignInAsync(
+            await _httpContextAccessor.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme, 
                 userPrincipal,
                 authProperties);
 
-            _accessor.HttpContext.User = userPrincipal;
-        }
-
-        public async Task SignOut()
-        {
-            await _accessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _httpContextAccessor.HttpContext.User = userPrincipal;
         }
 
         public string Hash(string password)

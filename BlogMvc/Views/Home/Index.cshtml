@@ -1,10 +1,10 @@
 ﻿@model BlogEntities.User 
 @{
-    ViewData["Title"] = "Main Page";
+    ViewData["Title"] = "Main";
 }
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <h2 class="text-md-center">Login</h2>
         @using (@Html.BeginForm("Login", "User", FormMethod.Post))
         {
@@ -12,7 +12,17 @@
             @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
             <div class="text-center h2">
                 <input class="mt-2 btn btn-primary btn-lg" type="submit" value="Login" />
-                <a class="align-middle" asp-action="Register" asp-controller="Home"> Create an account </a>
+            </div>
+        }
+    </div>
+    <div class="col-md-6">
+        <h2 class="text-md-center">Register</h2>
+        @using (@Html.BeginForm("Register", "User", FormMethod.Post))
+        {
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
+            <div class="text-center h2"> 
+                <input class="mt-2 btn btn-primary btn-lg" type="submit" value="Register" />
             </div>
         }
     </div>
