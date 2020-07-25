@@ -1,4 +1,4 @@
-﻿@model BlogEntities.User 
+﻿@model BlogEntities.User; 
 @{
     ViewData["Title"] = "Main";
 }
@@ -10,6 +10,10 @@
         {
             @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
             @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
+            @if (TempData["LoginErrors"] != null) 
+            {
+                <div class="alert alert-danger" role="alert">@TempData["LoginErrors"]</div>
+            }
             <div class="text-center h2">
                 <input class="mt-2 btn btn-primary btn-lg" type="submit" value="Login" />
             </div>
@@ -21,6 +25,10 @@
         {
             @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
             @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
+            @if (TempData["RegisterErrors"] != null) 
+            {
+                <div class="alert alert-danger" role="alert">@TempData["RegisterErrors"]</div>
+            }
             <div class="text-center h2"> 
                 <input class="mt-2 btn btn-primary btn-lg" type="submit" value="Register" />
             </div>

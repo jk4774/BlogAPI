@@ -13,18 +13,29 @@
 </head>
 <body>
     <div class="container body-content">
-        <div class="text-center h1">Blog</div>
-        @* @if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        <div class="text-center h1" style="background-color: black;"><h2>Blog</h2></div>
+        @if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
-            <h1>Authenticated</h1>
+            <div class="row" style="background-color: black;">
+                <div class="col-md-3" style="color: white;">
+                    <a>Main Page</a>
+                </div>
+                <div class="col-md-3" style="color: white;">
+                    <a>Edit Profile</a>
+                </div>
+                <div class="col-md-3" style="color: white;">
+                    <a>Add Post</a>
+                </div>
+                <div class="col-md-3" style="color: white;">
+                    <form asp-action="Logout" asp-controller="User" method="POST">
+                        <button style="text-decoration: none; "> Logout </button>
+                    </form>
+                </div>
+            </div>        
         }
-        else
-        {
-            <h1>NotAuthenticated</h1>
-        } *@
         @RenderBody()
-        <footer class="text-center">
-            <p>&copy; Blog - @DateTime.Now.Year <a href="https://github.com/jurczakk/Blog">Github</a></p>            
+        <footer class="text-center" style="background-color: black;">
+            <p><a href="https://github.com/jurczakk/Blog" style="text-decoration: none; color: white;">Github</a></p>            
         </footer>
     </div>
 </body>

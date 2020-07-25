@@ -48,8 +48,11 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Login([FromForm] User user)
         {
             if (!ModelState.IsValid)
-                return NotFound(ModelState);
-
+            {
+                TempData["RegisterErrors"] = string.Join("</br>", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));                
+                return RedirectToAction("Index", "Home");
+            }
+                
             var userDb = await _blog.Users.FirstOrDefaultAsync(i => 
                 i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
             
@@ -69,7 +72,10 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Register([FromForm] User user)
         {    
             if (!ModelState.IsValid)
-                return NotFound(ModelState);
+            {
+                TempData["RegisterErrors"] = string.Join("</br>", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                return RedirectToAction("Index", "Home");
+            }
 
             if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
                 return NotFound("User with this email is existing in db");
