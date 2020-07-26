@@ -13,29 +13,37 @@
 </head>
 <body>
     <div class="container body-content">
-        <div class="text-center h1" style="background-color: black;"><h2>Blog</h2></div>
+        <div class="text-center h1 bg-black">
+            <p class="p-3 text-white">Blog</p>
+        </div>
         @if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
-            <div class="row" style="background-color: black;">
-                <div class="col-md-3" style="color: white;">
-                    <a>Main Page</a>
+            <div class="row bg-black">
+                <div class="col-md-3">
+                    <a class="a-default" asp-action="Index" asp-controller="Home">
+                        Main Page
+                    </a>
                 </div>
-                <div class="col-md-3" style="color: white;">
-                    <a>Edit Profile</a>
+                <div class="col-md-3">
+                    <a class="a-default" asp-action="Index" asp-controller="Home">
+                        Edit Profile
+                    </a>
                 </div>
-                <div class="col-md-3" style="color: white;">
-                    <a>Add Post</a>
+                <div class="col-md-3">
+                    <a class="a-default" asp-action="Index" asp-controller="Home">
+                        Add Post
+                    </a>
                 </div>
-                <div class="col-md-3" style="color: white;">
+                <div class="col-md-3">
                     <form asp-action="Logout" asp-controller="User" method="POST">
-                        <button style="text-decoration: none; "> Logout </button>
+                        <button style="text-decoration: none;">Logout</button>
                     </form>
                 </div>
             </div>        
         }
         @RenderBody()
-        <footer class="text-center" style="background-color: black;">
-            <p><a href="https://github.com/jurczakk/Blog" style="text-decoration: none; color: white;">Github</a></p>            
+        <footer class="text-center bg-black">
+            <a class="a-default" href="https://github.com/jurczakk/Blog">Github</a>   
         </footer>
     </div>
 </body>
