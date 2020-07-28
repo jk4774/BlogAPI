@@ -13,37 +13,33 @@
 </head>
 <body>
     <div class="container body-content">
-        <div class="text-center h1 bg-black">
-            <p class="p-3 text-white">Blog</p>
+        <div class="row text-center h1 bg-black">
+            <div class="col-md-12">
+                <p class="p-3 text-white">Blog</p>            
+            </div>
         </div>
         @if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
             <div class="row bg-black">
-                <div class="col-md-3">
-                    <a class="a-default" asp-action="Index" asp-controller="Home">
-                        Main Page
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a class="a-default" asp-action="Index" asp-controller="Home">
-                        Edit Profile
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a class="a-default" asp-action="Index" asp-controller="Home">
-                        Add Post
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <form asp-action="Logout" asp-controller="User" method="POST">
-                        <button style="text-decoration: none;">Logout</button>
-                    </form>
-                </div>
-            </div>        
+                @using(Html.BeginForm("Index", "Home", FormMethod.Get,   new { @class = "col-md-3" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Main Page" />
+                }
+                @using(Html.BeginForm("Index", "Home", FormMethod.Get,   new { @class = "col-md-3" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Add Post" />
+                }
+                @using(Html.BeginForm("Index", "Home", FormMethod.Get,   new { @class = "col-md-3" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Edit Profile" />
+                }
+                @using(Html.BeginForm("Logout", "User", FormMethod.Post, new { @class = "col-md-3" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Logout" />
+                }
+            </div>
         }
         @RenderBody()
-        <footer class="text-center bg-black">
-            <a class="a-default" href="https://github.com/jurczakk/Blog">Github</a>   
+        <footer class="row text-center bg-black">
+            <div class="col-md-12">
+                <a class="text-decoration-none text-white" href="https://github.com/jurczakk/Blog">Github</a>   
+            </div>
         </footer>
     </div>
 </body>
