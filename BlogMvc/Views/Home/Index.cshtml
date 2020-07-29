@@ -1,4 +1,5 @@
-﻿@model BlogEntities.User; 
+﻿@* @model BlogEntities.User;  *@
+@model BlogMvc.Models.UserHomeViewModel; 
 @{
     ViewData["Title"] = "Main";
 }
@@ -8,12 +9,8 @@
         <h2 class="text-md-center">Login</h2>
         @using (@Html.BeginForm("Login", "User", FormMethod.Post))
         {
-            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
-            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
-            @if (TempData["LoginErrors"] != null) 
-            {
-                <div class="alert alert-danger" role="alert">@TempData["LoginErrors"]</div>
-            }
+            @Html.TextBoxFor(m => m.User.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
+            @Html.PasswordFor(m => m.User.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
             <div class="text-center h2">
                 <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Login" />
             </div>
@@ -23,15 +20,23 @@
         <h2 class="text-md-center">Register</h2>
         @using (@Html.BeginForm("Register", "User", FormMethod.Post))
         {
-            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
-            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
-            @if (TempData["RegisterErrors"] != null) 
-            {
-                <div class="alert alert-danger" role="alert">@TempData["RegisterErrors"]</div>
-            }
+            @Html.TextBoxFor(m => m.User.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
+            @Html.PasswordFor(m => m.User.Password, new { placeholder = "Password", @class = "mt-2 form-control" })    
+            
             <div class="text-center h2"> 
                 <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Register" />
             </div>
         }
     </div>
+    
+    <div>
+        @if(Model.HasErrors)
+        {
+            @foreach(var error in Model?.Errors)
+            {
+                <div class="alert alert-danger" role="alert">@error</div>
+            }
+        }
+    </div>
+
 </div>

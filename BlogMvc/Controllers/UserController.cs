@@ -45,21 +45,22 @@ namespace BlogMvc.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromForm] User user)
+        public async Task<IActionResult> Login([FromForm] UserHomeViewModel userHomeViewModel)
         {
             if (!ModelState.IsValid)
             {
-                TempData["RegisterErrors"] = string.Join("</br>", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));                
+                userHomeViewModel.HasErrors = true;
+                userHomeViewModel.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
                 return RedirectToAction("Index", "Home");
             }
                 
             var userDb = await _blog.Users.FirstOrDefaultAsync(i => 
-                i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
+                i.Email.Equals(userHomeViewModel.User.Email, StringComparison.CurrentCultureIgnoreCase));
             
             if (userDb == null)
                 return NotFound("User does not exist");
 
-            if (!_userService.Verify(user.Password, userDb.Password)) 
+            if (!_userService.Verify(userHomeViewModel.User.Password, userDb.Password)) 
                 return NotFound("Wrong password");
 
             await _userService.SignIn(userDb);
@@ -69,23 +70,24 @@ namespace BlogMvc.Controllers
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromForm] User user)
+        public async Task<IActionResult> Register([FromForm] UserHomeViewModel userHomeViewModel)
         {    
             if (!ModelState.IsValid)
             {
-                TempData["RegisterErrors"] = string.Join("</br>", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                userHomeViewModel.HasErrors = true;
+                userHomeViewModel.Errors = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);                
                 return RedirectToAction("Index", "Home");
             }
 
-            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
+            if (_blog.Users.Any(i => i.Email.Equals(userHomeViewModel.User.Email, StringComparison.OrdinalIgnoreCase)))
                 return NotFound("User with this email is existing in db");
             
-            user.Password = _userService.Hash(user.Password);
+            userHomeViewModel.User.Password = _userService.Hash(userHomeViewModel.User.Password);
             
-            _blog.Users.Add(user);
+            _blog.Users.Add(userHomeViewModel.User);
             _blog.SaveChanges();
             
-            await _userService.SignIn(user);
+            await _userService.SignIn(userHomeViewModel.User);
             
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
