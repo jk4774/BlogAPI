@@ -1,0 +1,52 @@
+﻿@model BlogEntities.User; 
+
+@{
+    ViewData["Title"] = "Main";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="text-md-center">Login</h2>
+        
+        @using (@Html.BeginForm("Login", "User", FormMethod.Post))
+        {
+            @Html.ValidationSummary(false)
+            
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
+            @Html.ValidationMessageFor(m => m.Email, "")
+
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })
+            @Html.ValidationMessageFor(m => m.Password, "")
+            <div class="text-center h2">
+                <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Login" />
+            </div>
+        }
+    </div>
+    <div class="col-md-6">
+        <h2 class="text-md-center">Register</h2>
+        @using (@Html.BeginForm("Register", "User", FormMethod.Post))
+        {
+            @Html.ValidationSummary(false)
+            
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
+            @Html.ValidationMessageFor(m => m.Email, "")
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })    
+            @Html.ValidationMessageFor(m => m.Password, "")
+            <div class="text-center h2"> 
+                <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Register" />
+            </div>
+        }
+    </div>
+
+
+    @* <div>
+        @if(Model.HasErrors)
+        {
+            @foreach(var error in Model?.Errors)
+            {
+                <div class="alert alert-danger" role="alert">@error</div>
+            }
+        }
+    </div> *@
+
+</div>
