@@ -44,12 +44,30 @@ namespace BlogMvc.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Login")]
+        [HttpGet("Login")]
+        public IActionResult Login()
+        {
+            if (User.Identity.IsAuthenticated) 
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+            return View();
+        }
+
+        
+        [AllowAnonymous]
+        [HttpGet("Register")]
+        public IActionResult Register()
+        {
+            if (User.Identity.IsAuthenticated) 
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Login")] 
         public async Task<IActionResult> Login([FromForm] User user)
         {
             if (!ModelState.IsValid)
                 return View();
-                // return RedirectToAction("Index", "Home");
                 
             var userDb = await _blog.Users.FirstOrDefaultAsync(i => 
                 i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));

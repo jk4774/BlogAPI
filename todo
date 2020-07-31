@@ -1,0 +1,34 @@
+
+BlogMvc
+
+[ ] Home
+    [ ] Model	
+    [ ] View
+    [ ] Controller
+
+[ ] User
+	[ ] Model
+    [ ] View
+    [ ] Controller
+
+[ ] Article
+	[ ] Model
+    [ ] View
+    [ ] Controller
+    
+[ ] Comment 
+    [ ] Model
+    [ ] View
+    [ ] Controller
+
+BlogTests
+unit tests for controllers
+
+
+
+
+.travis.yml
+
+
+
+
