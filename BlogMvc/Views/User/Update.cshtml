@@ -1,5 +1,21 @@
 ﻿@model BlogMvc.Models.PasswordViewModel
 @{
-    ViewData["Title"] = "Update User";
+    ViewData["Title"] = "User Update";
 }
 
+<div class="row">
+    <div class="col-md-12">
+        @using (@Html.BeginForm("Update", "User", FormMethod.Post))
+        {
+            @Html.PasswordFor(m => m.Old, new { placeholder = "Old Password", @class = "mt-2 form-control" })
+            @Html.ValidationMessageFor(m => m.Old, "", new { @class = "text-danger" })
+
+            @Html.PasswordFor(m => m.New, new { placeholder = "New Password", @class = "mt-2 form-control" })    
+            @Html.ValidationMessageFor(m => m.New, "", new { @class = "text-danger" })
+
+            <div class="text-center h2"> 
+                <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Change Password" />
+            </div>
+        }
+    </div>
+</div>

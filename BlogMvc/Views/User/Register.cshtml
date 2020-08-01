@@ -3,13 +3,20 @@
     ViewData["Title"] = "Register";
 }
 
+<div class="row bg-black">
+    <div class="col-md-10">
+        <h3 class="text-white text-left m-2 align-middle">Register</h3>
+    </div>
+    <div class="col-md-2">
+          @using(Html.BeginForm("Index", "Home", FormMethod.Get,  new { @class = "text-right align-middle" })) {
+            <input class="m-2 btn btn-outline-light border-0" type="submit" value="Back" />
+        }
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
-        <p class="bg-black p-3 text-white">Register</p>               
         @using (@Html.BeginForm("Register", "User", FormMethod.Post))
         {
-            @Html.ValidationSummary()
-            
             @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
 
@@ -17,7 +24,6 @@
             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
 
             <div class="text-center h2"> 
-                <a class="align-middle" asp-action="Index" asp-controller="Home">Back</a>
                 <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Register" />
             </div>
         }

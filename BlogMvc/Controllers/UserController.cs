@@ -43,19 +43,10 @@ namespace BlogMvc.Controllers
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
 
+
         [AllowAnonymous]
         [HttpGet("Login")]
         public IActionResult Login()
-        {
-            if (User.Identity.IsAuthenticated) 
-                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
-            return View();
-        }
-
-        
-        [AllowAnonymous]
-        [HttpGet("Register")]
-        public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated) 
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
@@ -84,9 +75,18 @@ namespace BlogMvc.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("Register")]
+        public IActionResult Register()
+        {
+            if (User.Identity.IsAuthenticated) 
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+            return View();
+        }
+
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromForm] User user)
-        {    
+        {
             if (!ModelState.IsValid)
                 return View();
 
@@ -117,9 +117,25 @@ namespace BlogMvc.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        public IActionResult Update(int id, [FromBody] PasswordViewModel password)
+        public async Task<IActionResult> Update(int id, [FromBody] PasswordViewModel password)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return View();
+
+            var userDb = await _blog.Users.FirstOrDefaultAsync(x=> x.Id.ToString() == User.Identity.Name);
+            if (userDb == null) 
+                return NotFound("Unexpected error, user with this id does not exist");
+
+            var hashedOldPassword = _userService.Hash(password.Old);
+            if (userDb.Equals(hashedOldPassword))
+                return NotFound("");
+            
+            userDb.Password = _userService.Hash(password.New);
+
+            _blog.Users.Update(userDb);
+            _blog.SaveChanges();
+
+            return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
 
         [HttpDelete("{id}")]
