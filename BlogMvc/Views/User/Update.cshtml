@@ -2,11 +2,13 @@
 @{
     ViewData["Title"] = "User Update";
 }
+@using System.Web
 
 <div class="row">
     <div class="col-md-12">
-        @using (@Html.BeginForm("Update", "User", FormMethod.Post))
-        {
+        @* @using (@Html.BeginForm("Update", "User", new { id = User.Identity.Name }, FormMethod.Post)) *@
+        @* { *@
+        <form>
             @Html.PasswordFor(m => m.Old, new { placeholder = "Old Password", @class = "mt-2 form-control" })
             @Html.ValidationMessageFor(m => m.Old, "", new { @class = "text-danger" })
 
@@ -16,6 +18,24 @@
             <div class="text-center h2"> 
                 <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Change Password" />
             </div>
-        }
+        </form>
+            
+        @* } *@
     </div>
 </div>
+<script>
+    $(() => {
+        $('form').submit(() => {
+            $.ajax({
+                url: '/user/update/1',
+                type: 'PUT',
+                data: $('form').serialize(),
+                success: (data) => {
+                    alert('good');
+                } 
+            });
+            return false;
+        });
+    });
+</script>
+

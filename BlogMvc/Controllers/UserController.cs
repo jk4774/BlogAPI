@@ -122,7 +122,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            var userDb = await _blog.Users.FirstOrDefaultAsync(x=> x.Id.ToString() == User.Identity.Name);
+            var userDb = await _blog.Users.FirstOrDefaultAsync(x => x.Id.ToString() == User.Identity.Name);
             if (userDb == null) 
                 return NotFound("Unexpected error, user with this id does not exist");
 
