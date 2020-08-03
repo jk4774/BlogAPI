@@ -23,8 +23,8 @@ namespace BlogMvc
         {   
             services.AddHttpContextAccessor();
 
-            services.AddCors(opt => 
-                opt.AddPolicy("CorsPolicy", builder => 
+            services.AddCors(o => 
+                o.AddPolicy("CorsPolicy", builder => 
                     builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
             services
@@ -37,7 +37,7 @@ namespace BlogMvc
             services
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {
-                    config.LoginPath = "/home";
+                    config.LoginPath = "/user/login";
                     config.Cookie.Name = "auth_cookie";
                 });
 
@@ -46,15 +46,8 @@ namespace BlogMvc
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();

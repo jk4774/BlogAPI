@@ -1,43 +1,5 @@
-BlogMvc
-
-[ ] Home
-    [ ] Model	
-    [ ] View
-    [ ] Controller
-
-[ ] User
-	[ ] Model
-    [ ] View
-    [ ] Controller
-
-[ ] Article
-	[ ] Model
-    [ ] View
-    [ ] Controller
-    
-[ ] Comment 
-    [ ] Model
-    [ ] View
-    [ ] Controller
-
-BlogTests
-unit tests for controllers
-
-.travis.yml
-
-
-
-
-Home - Login (sing up -> a href => user/register)
-
-
-
-routing 
-
-HomeController
-/ -> (index/home) -> log in
-
-UserController
-
-
-
+[ ] Update
+    [ ] figure out the isseu with logout on /user/update view 
+[ ] Delete
+    [ ] add a button on nav bar (near logout i suppose is the best place for it)
+test everything 

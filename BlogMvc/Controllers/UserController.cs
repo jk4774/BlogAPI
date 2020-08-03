@@ -43,7 +43,6 @@ namespace BlogMvc.Controllers
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
 
-
         [AllowAnonymous]
         [HttpGet("Login")]
         public IActionResult Login()
@@ -64,10 +63,16 @@ namespace BlogMvc.Controllers
                 i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
             
             if (userDb == null)
-                return NotFound("User does not exist");
+            {
+                ModelState.AddModelError("error", "User does not exist");
+                return View();
+            }
 
             if (!_userService.Verify(user.Password, userDb.Password)) 
-                return NotFound("Wrong password");
+            {
+                ModelState.AddModelError("error", "Wrong Password");
+                return View();
+            }
 
             await _userService.SignIn(userDb);
 
@@ -91,8 +96,11 @@ namespace BlogMvc.Controllers
                 return View();
 
             if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
-                return NotFound("User with this email is existing in db");
-            
+            {
+                ModelState.AddModelError("error", "User with this email is existing in db");
+                return View();
+            }
+
             user.Password = _userService.Hash(user.Password);
             
             _blog.Users.Add(user);
@@ -103,8 +111,8 @@ namespace BlogMvc.Controllers
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
 
-        [HttpPost("Logout")]
-        public async Task<IActionResult> Logout()
+        [HttpPost("LogOut")]
+        public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme); 
             return RedirectToAction("Index", "Home");
@@ -139,9 +147,19 @@ namespace BlogMvc.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return Ok();
+            var userDb = await _blog.Users.FindAsync(id);
+            if (userDb == null)
+            {
+                ModelState.AddModelError("error", "Cannot remove user, unexpected error");
+                return View("~/Views/User/Main.cshtml");
+            }
+
+            _blog.Users.Remove(userDb);
+            _blog.SaveChanges();
+
+            return await LogOut();
         }
     }
 }

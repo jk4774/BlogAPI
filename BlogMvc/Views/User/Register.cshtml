@@ -26,6 +26,10 @@
             <div class="text-center h2"> 
                 <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Register" />
             </div>
+
+            <div class="text-center align-middle mb-2">
+                @Html.ValidationMessage("error", new { @class = "text-danger" })
+            </div>
         }
     </div>
 </div>

@@ -13,5 +13,10 @@ namespace BlogMvc.Controllers
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View();
         }
+
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }
