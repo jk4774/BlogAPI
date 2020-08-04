@@ -2,35 +2,41 @@
 @{
     ViewData["Title"] = "User Update";
 }
+@Html.Hidden("userId", User.Identity.Name)
 
 <div class="row">
     <div class="col-md-12">
-        <form>
-            @Html.PasswordFor(m => m.Old, new { placeholder = "Old Password", @class = "mt-2 form-control" })
-            @Html.ValidationMessageFor(m => m.Old, "", new { @class = "text-danger" })
+        @* @using(Html.BeginForm("Update", "User", FormMethod.Post)) { *@
+            <form id="updateUser">
+                @Html.PasswordFor(m => m.Old, new { placeholder = "Old Password", @class = "mt-2 form-control" })
+                @Html.ValidationMessageFor(m => m.Old, "", new { @class = "text-danger" })
 
-            @Html.PasswordFor(m => m.New, new { placeholder = "New Password", @class = "mt-2 form-control" })    
-            @Html.ValidationMessageFor(m => m.New, "", new { @class = "text-danger" })
+                @Html.PasswordFor(m => m.New, new { placeholder = "New Password", @class = "mt-2 form-control" })    
+                @Html.ValidationMessageFor(m => m.New, "", new { @class = "text-danger" })
 
-            <div class="text-center h2"> 
-                <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Change Password" />
-            </div>
-        </form>
+                <div class="text-center h2"> 
+                    <input class="mt-2 btn btn-outline-lg bg-black text-white" name="update" type="submit" value="Change Password" />
+                </div>
+            </form>
+            
+        @* } *@
     </div>
 </div>
-<script>
-    $(() => {
-        $('form').submit(() => {
-            $.ajax({
-                url: '/user/update/1',
-                type: 'PUT',
-                data: $('form').serialize(),
-                success: (data) => {
-                    alert('good');
-                } 
-            });
-            return false;
-        });
-    });
-</script>
+<script>        
+    var passwordViewModelData = {
+        Old: $('#Old').val(),
+        New: $('#New').val()
+    };
+    
 
+
+    //JSON.stringify(updatedData)
+    
+$('updateUser').submit(() => {
+    alert('asdf');
+    console.log(passwordViewModelData.New)
+    console.log(passwordViewModelData.Old)
+    console.log($('#userId'));
+});
+    
+</script>

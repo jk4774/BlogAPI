@@ -21,16 +21,16 @@
         @if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
             <div class="row bg-black">
-                @using(Html.BeginForm("Index", "Home", FormMethod.Get,   new { @class = "col-md-3" })) {
+                @using(Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "col-md-3 text-center" })) {
                     <input class="m-2 btn btn-outline-light border-0" type="submit" value="Main Page" />
                 }
-                @using(Html.BeginForm("Add", "Article", FormMethod.Get,   new { @class = "col-md-3" })) {
+                @using(Html.BeginForm("Add", "Article", FormMethod.Get, new { @class = "col-md-3 text-center" })) {
                     <input class="m-2 btn btn-outline-light border-0" type="submit" value="Add Post" />
                 }
-                @using(Html.BeginForm("Update", "User", FormMethod.Get,   new { @class = "col-md-3" })) {
+                @using(Html.BeginForm("Update", "User", FormMethod.Get, new { @class = "col-md-3 text-center" })) {
                     <input class="m-2 btn btn-outline-light border-0" type="submit" value="Edit Profile" />
                 }
-                @using(Html.BeginForm("Logout", "User", FormMethod.Post, new { @class = "col-md-3" })) {
+                @using(Html.BeginForm("Logout", "User", FormMethod.Post, new { @class = "col-md-3 text-center" })) {
                     <input class="m-2 btn btn-outline-light border-0" type="submit" value="Logout" />
                 }
             </div>

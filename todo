@@ -1,5 +1,6 @@
 [ ] Update
-    [ ] figure out the isseu with logout on /user/update view 
+    [ ] figure out the isseu with logout on /user/update view
+    [ ] PUT Request
 [ ] Delete
     [ ] add a button on nav bar (near logout i suppose is the best place for it)
 test everything 
