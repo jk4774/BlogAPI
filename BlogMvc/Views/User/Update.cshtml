@@ -3,40 +3,51 @@
     ViewData["Title"] = "User Update";
 }
 @Html.Hidden("userId", User.Identity.Name)
-
 <div class="row">
     <div class="col-md-12">
         @* @using(Html.BeginForm("Update", "User", FormMethod.Post)) { *@
-            <form id="updateUser">
+            @* <form id="updateUser"> *@
                 @Html.PasswordFor(m => m.Old, new { placeholder = "Old Password", @class = "mt-2 form-control" })
                 @Html.ValidationMessageFor(m => m.Old, "", new { @class = "text-danger" })
-
                 @Html.PasswordFor(m => m.New, new { placeholder = "New Password", @class = "mt-2 form-control" })    
                 @Html.ValidationMessageFor(m => m.New, "", new { @class = "text-danger" })
-
                 <div class="text-center h2"> 
                     <input class="mt-2 btn btn-outline-lg bg-black text-white" name="update" type="submit" value="Change Password" />
                 </div>
-            </form>
-            
+            @* </form> *@
         @* } *@
     </div>
 </div>
 <script>        
-    var passwordViewModelData = {
-        Old: $('#Old').val(),
-        New: $('#New').val()
-    };
-    
+    $('input[name$="update"]').click(() => {
+        let route = '/user/update/' + $('#userId').val();
+        console.log(route);
+        
+        
+        $.ajax({
+            url: route,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ Old: $('#Old').val(), New: $('#New').val() })            
+        }).done((d) => {
+            console.log(d);
+        });
 
-
-    //JSON.stringify(updatedData)
-    
-$('updateUser').submit(() => {
-    alert('asdf');
-    console.log(passwordViewModelData.New)
-    console.log(passwordViewModelData.Old)
-    console.log($('#userId'));
-});
-    
+        //success: function (data) {
+          //      alert("asdc");
+            //} 
+        
+        
+        /*fetch(route, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Old: $('#Old').val(), New: $('#New').val() })
+        }).then((response) => {
+            if (response.status != '204') {
+                return alert('Something went wrong cannot update the password, try again');
+            }
+            alert('Password has been updated correctly.');
+            window.location.href = '/';
+        });*/
+    });
 </script>

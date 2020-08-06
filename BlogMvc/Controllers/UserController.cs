@@ -132,12 +132,16 @@ namespace BlogMvc.Controllers
 
             var userDb = await _blog.Users.FirstOrDefaultAsync(x => x.Id.ToString() == User.Identity.Name);
             if (userDb == null) 
+            {
                 return NotFound("Unexpected error, user with this id does not exist");
-
+            }
+                
             var hashedOldPassword = _userService.Hash(password.Old);
             if (userDb.Equals(hashedOldPassword))
-                return NotFound("");
-            
+            {
+                return NotFound("Password is not equal");
+            }
+                
             userDb.Password = _userService.Hash(password.New);
 
             _blog.Users.Update(userDb);

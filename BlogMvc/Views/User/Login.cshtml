@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Login";
 }
-
 <div class="row bg-black">
     <div class="col-md-10">
         <h3 class="text-white text-left m-2 align-middle">Login</h3>
@@ -19,16 +18,16 @@
         {
             @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "mt-2 form-control" })
             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-
             @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "mt-2 form-control" })    
             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-
-            <div class="text-center h2"> 
-                <input class="mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Login" />
-            </div>
-            
             <div class="text-center align-middle mb-2">
                 @Html.ValidationMessage("error", new { @class = "text-danger" })
+            </div>
+            <div class="text-center"> 
+                <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Login" />
+            </div>
+            <div class="text-center">
+                <a asp-action="Register" asp-controller="User">Click here to register!</a>
             </div>
         }
     </div>

@@ -23,19 +23,16 @@ namespace BlogMvc
         {   
             services.AddHttpContextAccessor();
 
-            services.AddCors(o => 
-                o.AddPolicy("CorsPolicy", builder => 
-                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
-            services
-                .AddScoped<UserService>()
-                .AddScoped<ArticleService>()
-                .AddScoped<CommentService>();
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder => 
+                builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+
+            services.AddScoped<UserService>().AddScoped<ArticleService>().AddScoped<CommentService>();
 
             services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
 
-            services
-                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {
                     config.LoginPath = "/user/login";
                     config.Cookie.Name = "auth_cookie";
