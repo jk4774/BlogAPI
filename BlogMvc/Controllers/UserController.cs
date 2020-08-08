@@ -128,24 +128,28 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] PasswordViewModel password)
         {
             if (!ModelState.IsValid)
+            {
                 return View();
-
+            }
+                
             var userDb = await _blog.Users.FirstOrDefaultAsync(x => x.Id.ToString() == User.Identity.Name);
             if (userDb == null) 
             {
-                return NotFound("Unexpected error, user with this id does not exist");
+                ModelState.AddModelError("error", "Unexpected error, user with this id does not exist");
+                return View(); 
             }
                 
             var hashedOldPassword = _userService.Hash(password.Old);
             if (userDb.Equals(hashedOldPassword))
             {
-                return NotFound("Password is not equal");
+                ModelState.AddModelError("error", "Old password is not equal");
+                return View();
             }
                 
             userDb.Password = _userService.Hash(password.New);
 
             _blog.Users.Update(userDb);
-            _blog.SaveChanges();
+            await _blog.SaveChangesAsync();
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
@@ -161,7 +165,7 @@ namespace BlogMvc.Controllers
             }
 
             _blog.Users.Remove(userDb);
-            _blog.SaveChanges();
+            await _blog.SaveChangesAsync();
 
             return await LogOut();
         }

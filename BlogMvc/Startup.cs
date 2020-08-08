@@ -23,7 +23,7 @@ namespace BlogMvc
         {   
             services.AddHttpContextAccessor();
 
-            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+            // services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder => 
                 builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
@@ -43,22 +43,22 @@ namespace BlogMvc
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+            
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors("CorsPolicy");
             
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints => 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+                    pattern: "{controller=Home}/{action=Index}/{id?}"));
         }
     }
 }
