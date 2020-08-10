@@ -3,4 +3,36 @@
     [ ] PUT Request
 [ ] Delete
     [ ] add a button on nav bar (near logout i suppose is the best place for it)
-test everything 
+    [ ] Alert if you are sure to do it 
+
+[ ] unit tests for all controllers
+
+
+add an article
+
+
+ADD
+
+[ ] input type subject
+[ ] textarea to input a content
+
+
+Remove
+delete from the db
+
+
+Update
+only if an Id is equal id of the creator
+
+
+delete
+
+delete the article with all the coments
+
+
+
+add comment for the 
+
+
+
+

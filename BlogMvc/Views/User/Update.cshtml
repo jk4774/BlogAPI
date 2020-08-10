@@ -17,16 +17,21 @@
         </div>
     </div>
 </div>
-<script>        
+<script>
     $('input[name$="update"]').click(() => {
         fetch('/user/update/' + $('#userId').val(), {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Old: $('#Old').val(), New: $('#New').val() })
         }).then((response) => {
-            return response.text();
-        }).then((html) => {
-            document.body.innerHTML = html;
+            if (response.status == '204') 
+                return window.location.href = '/user/' + $('#userId').val();
+            response.text().then(html => {
+                document.body.innerHTML = html;
+                document.querySelectorAll('script').forEach(x => eval(x.text));
+            });
+        }).catch((err) => {
+            throw err;
         });
     });
 </script>

@@ -26,7 +26,7 @@ namespace BlogServices
 
         public async Task SignIn(User user)
         {
-            var expires = DateTime.UtcNow.AddSeconds(30);
+            var expires = DateTime.UtcNow.AddMinutes(60);
 
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));

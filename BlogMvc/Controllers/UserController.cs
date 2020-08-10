@@ -95,6 +95,8 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
 
+            user.Email = user.Email.Trim();
+
             if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
             {
                 ModelState.AddModelError("error", "User with this email is existing in db");
@@ -127,20 +129,20 @@ namespace BlogMvc.Controllers
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PasswordViewModel password)
         {
+            if (!User.Identity.Name.Equals(id.ToString()))
+                return NotFound();
+
             if (!ModelState.IsValid)
-            {
                 return View();
-            }
                 
-            var userDb = await _blog.Users.FirstOrDefaultAsync(x => x.Id.ToString() == User.Identity.Name);
-            if (userDb == null) 
+            var userDb = await _blog.Users.FindAsync(id);
+            if (userDb == null)
             {
                 ModelState.AddModelError("error", "Unexpected error, user with this id does not exist");
                 return View(); 
             }
                 
-            var hashedOldPassword = _userService.Hash(password.Old);
-            if (userDb.Equals(hashedOldPassword))
+            if (!_userService.Verify(password.Old, userDb.Password))
             {
                 ModelState.AddModelError("error", "Old password is not equal");
                 return View();
@@ -151,23 +153,26 @@ namespace BlogMvc.Controllers
             _blog.Users.Update(userDb);
             await _blog.SaveChangesAsync();
 
-            return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+            return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.Name.Equals(id.ToString()))
+                return NotFound();
+
             var userDb = await _blog.Users.FindAsync(id);
             if (userDb == null)
-            {
-                ModelState.AddModelError("error", "Cannot remove user, unexpected error");
-                return View("~/Views/User/Main.cshtml");
-            }
+                return NotFound();
 
             _blog.Users.Remove(userDb);
             await _blog.SaveChangesAsync();
-
-            return await LogOut();
+            
+            await LogOut();
+            
+            return NoContent();
         }
+
     }
 }
