@@ -6,6 +6,6 @@ namespace BlogMvc.Models
     public class UserViewModel 
     {
         public User User { get; set; }
-        public IList<Article> Articles { get; set; }
+        public IEnumerable<ArticleViewModel> Articles { get; set; }
     }
 }

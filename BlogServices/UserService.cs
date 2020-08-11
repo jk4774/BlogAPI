@@ -30,6 +30,7 @@ namespace BlogServices
 
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            userClaims.Add(new Claim(ClaimTypes.Email, user.Email));
             
             var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });

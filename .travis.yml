@@ -1,0 +1,10 @@
+# language: csharp
+# mono: none
+# dotnet: 
+
+# script:
+#   # - dotnet restore
+#   # - dotnet build
+#   # - dotnet test
+#   # - dotnet publish -c release
+  

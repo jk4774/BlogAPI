@@ -1,7 +1,4 @@
-﻿using System;
-using BlogEntities;
-using BlogContext;
-// using Microsoft.AspNetCore.Authentication;
+﻿using BlogContext;
 
 namespace BlogServices
 {
@@ -12,7 +9,5 @@ namespace BlogServices
         {
             _blog = blog;
         }
-
-        
     }
 }

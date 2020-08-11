@@ -1,38 +1,11 @@
-[ ] Update
-    [ ] figure out the isseu with logout on /user/update view
-    [ ] PUT Request
-[ ] Delete
-    [ ] add a button on nav bar (near logout i suppose is the best place for it)
-    [ ] Alert if you are sure to do it 
+    [x] ArticleController
+        [ ] Add POST
+        [ ] Update PUT
+        [ ] Delete DELETE
+    [ ] Integrate with View
+    [ ] Testing
 
-[ ] unit tests for all controllers
-
-
-add an article
-
-
-ADD
-
-[ ] input type subject
-[ ] textarea to input a content
-
-
-Remove
-delete from the db
-
-
-Update
-only if an Id is equal id of the creator
-
-
-delete
-
-delete the article with all the coments
-
-
-
-add comment for the 
-
-
-
-
+    [ ] Comment
+        [ ] Add POST
+        [ ] Update PUT
+        [ ] Delete DELETE

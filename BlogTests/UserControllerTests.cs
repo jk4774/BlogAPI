@@ -3,10 +3,11 @@ using NUnit.Framework;
 namespace BlogTests
 {
     public class UserControllerTests
-    {
+    { 
         [SetUp]
         public void Setup()
         {
+
         }
 
         [Test]

@@ -3,6 +3,20 @@
     ViewData["Title"] = "User";
 }
 
+@if(Model.Articles != null) 
+{
+    @foreach (var item in Model.Articles.OrderByDescending(x=>x))
+    {
+        <h1>@item.Article.Title</h1>
+        <p>@item.Article.Content</p>
+        
+        @foreach (var item2 in @item.Comments)
+        {
+            <h1>@item2.Author</h1>
+        }        
+    }
+}
+
 <h1>Hello @Model.User.Email</h1>
 
 

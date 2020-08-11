@@ -1,0 +1,23 @@
+﻿@model BlogEntities.Article
+@{
+    ViewData["Title"] = "Add an article";
+}
+<div class="row">
+    <div class="col-md-12">
+        @using (@Html.BeginForm("Add", "Article", FormMethod.Post))
+        {
+            @Html.TextBoxFor(m => m.Title, new { placeholder = "Title", @class = "mt-2 form-control" })
+            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+
+            @Html.TextAreaFor(m => m.Content, new { placeholder = "Content", @class = "mt-2 form-control", rows = "10" })
+            @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+
+            <div class="text-center h2"> 
+                <input class="mt-2 btn btn-outline-lg bg-black text-white" name="update" type="submit" value="Add Article" />
+            </div>
+            <div class="text-center align-middle mb-2">
+                @Html.ValidationMessage("error", new { @class = "text-danger" })
+            </div>
+        }  
+    </div>
+</div>

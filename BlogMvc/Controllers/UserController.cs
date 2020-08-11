@@ -32,13 +32,18 @@ namespace BlogMvc.Controllers
             if (!User.Identity.Name.Equals(id.ToString())) 
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
-            var articles = await _blog.Articles.ToListAsync();
             var user = await _blog.Users.FindAsync(id);
             if (user == null)
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Index", "Home");
             }
+
+            var articles = _blog.Articles.ToList().Select(article => new ArticleViewModel 
+            {
+                Article = article,
+                Comments = _blog.Comments.Where(x => x.ArticleId == article.Id).ToList()
+            });
 
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
         }
@@ -155,24 +160,5 @@ namespace BlogMvc.Controllers
 
             return NoContent();
         }
-
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            if (!User.Identity.Name.Equals(id.ToString()))
-                return NotFound();
-
-            var userDb = await _blog.Users.FindAsync(id);
-            if (userDb == null)
-                return NotFound();
-
-            _blog.Users.Remove(userDb);
-            await _blog.SaveChangesAsync();
-            
-            await LogOut();
-            
-            return NoContent();
-        }
-
     }
 }
