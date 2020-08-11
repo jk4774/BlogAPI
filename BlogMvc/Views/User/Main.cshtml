@@ -5,19 +5,36 @@
 
 @if(Model.Articles != null) 
 {
-    @foreach (var item in Model.Articles.OrderByDescending(x=>x))
+    @foreach (var item in Model.Articles.OrderByDescending(x => x))
     {
-        <h1>@item.Article.Title</h1>
-        <p>@item.Article.Content</p>
-        
+        <div class="row">
+            <div class="col-md-12">
+                <h3>@item.Article.Title</h3>
+            </div>
+            <div class="col-md-12">
+                <p>@item.Article.Content</p>
+            </div>
+            <div class="col-md-12 text-right">
+                <p>@item.Article.Date</p>
+            </div>
+                <div class="row bg-black">
+                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-4 text-center" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Add Comment" />
+                }
+                @using(Html.BeginForm("Update", "Article", FormMethod.Get, new { @class = "col-md-4 text-center" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Edit Article" />
+                }
+                @using(Html.BeginForm("Delete", "Article", FormMethod.Post, new { @class = "col-md-4 text-center" })) {
+                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Delete Article" />
+                }
+            </div>
+        </div>
         @foreach (var item2 in @item.Comments)
         {
+            <h1>@item2.Content</h1>
             <h1>@item2.Author</h1>
         }        
     }
 }
-
-<h1>Hello @Model.User.Email</h1>
-
 
 
