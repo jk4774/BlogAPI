@@ -34,9 +34,9 @@ namespace BlogMvc.Controllers
                 return View();
 
             article.UserId = int.Parse(User.Identity.Name);
-            article.AuthorEmail = User.FindFirst(ClaimTypes.Email).Value;
+            article.Author = User.FindFirst(ClaimTypes.Email).Value;
 
-            await _blog.Articles.AddAsync(article);
+            _blog.Articles.Add(article);
             await _blog.SaveChangesAsync();
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
@@ -61,6 +61,9 @@ namespace BlogMvc.Controllers
             if (article == null)
                 return NotFound();
 
+            if (!article.UserId.ToString().Equals(User.Identity.Name))
+                return NotFound();
+
             article.Title = updatedArticle.Title;
             article.Content = updatedArticle.Content;
             article.Date = updatedArticle.Date;
@@ -76,6 +79,9 @@ namespace BlogMvc.Controllers
         {
             var article = await _blog.Articles.FindAsync(id);
             if (article == null)
+                return NotFound();
+            
+            if (!article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
             
             _blog.Articles.Remove(article);

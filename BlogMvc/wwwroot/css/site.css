@@ -81,3 +81,8 @@ footer a:hover {
   background-color: white;
   color: black !important;
 }
+
+
+.btn-outline-dark {
+  background-color: black;
+}

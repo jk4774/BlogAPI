@@ -1,40 +1,69 @@
 ﻿@model BlogMvc.Models.UserViewModel
 @{
-    ViewData["Title"] = "User";
+    ViewData["Title"] = "User Main";
 }
-
-@if(Model.Articles != null) 
-{
-    @foreach (var item in Model.Articles.OrderByDescending(x => x))
-    {
+@Html.Hidden("userId", @Model.User.Id)
+@if(Model.ArticleViewModel.Count() > 0)
+{   
+    @foreach (var articleVM in Model.ArticleViewModel.OrderByDescending(x => x.Article.Date)) {
         <div class="row">
-            <div class="col-md-12">
-                <h3>@item.Article.Title</h3>
+            <div class="col-md-12 text-center">
+                <p class="h4 text-justify">@articleVM.Article.Title</p>
             </div>
             <div class="col-md-12">
-                <p>@item.Article.Content</p>
+                <p class="text-justify">@articleVM.Article.Content</p>
             </div>
             <div class="col-md-12 text-right">
-                <p>@item.Article.Date</p>
+                <p class="font-weight-bold">@articleVM.Article.Author @articleVM.Article.Date</p>
             </div>
-                <div class="row bg-black">
+
+            @if(articleVM.Article.UserId == @Model.User.Id)
+            {
                 @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-4 text-center" })) {
-                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Add Comment" />
+                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
                 @using(Html.BeginForm("Update", "Article", FormMethod.Get, new { @class = "col-md-4 text-center" })) {
-                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Edit Article" />
+                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Edit Article" />
                 }
-                @using(Html.BeginForm("Delete", "Article", FormMethod.Post, new { @class = "col-md-4 text-center" })) {
-                    <input class="m-2 btn btn-outline-light border-0" type="submit" value="Delete Article" />
+                <div class="text-center">
+                    <input
+                        class="h2 mt-2 btn btn-outline-lg bg-black text-white" 
+                        onclick="deleteArticle('@articleVM.Article.Id')" 
+                        type="submit" 
+                        value="Delete Article" />                     
+                </div>
+            }
+            else
+            {
+                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-12 text-center" })) {
+                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
-            </div>
+            }
         </div>
-        @foreach (var item2 in @item.Comments)
+        @foreach (var comment in @articleVM.Comments)
         {
-            <h1>@item2.Content</h1>
-            <h1>@item2.Author</h1>
+            <h1>@comment.Content</h1>
+            <h1>@comment.Author</h1>
         }        
     }
 }
-
-
+else 
+{
+    <div class="row">
+        <div class="col-md-12">
+            <p>No articles</p>
+        </div>
+    </div>
+}
+<script>
+    function deleteArticle(id) {
+        fetch('/article/delete/' + id, {
+            method: 'DELETE'
+        }).then((response) => {
+            if (response.status == '204') 
+                return window.location.href = '/user/' + $('#userId').val();
+        }).catch((err) => {
+            throw err;
+        });
+    }
+</script>

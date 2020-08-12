@@ -45,7 +45,7 @@ namespace BlogMvc.Controllers
                 Comments = _blog.Comments.Where(x => x.ArticleId == article.Id).ToList()
             });
 
-            return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, Articles = articles });
+            return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, ArticleViewModel = articles });
         }
 
         [AllowAnonymous]
@@ -102,7 +102,7 @@ namespace BlogMvc.Controllers
 
             user.Email = user.Email.Trim();
 
-            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
+            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase)))
             {
                 ModelState.AddModelError("error", "User with this email is existing in db");
                 return View();

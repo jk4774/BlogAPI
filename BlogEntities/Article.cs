@@ -8,7 +8,7 @@ namespace BlogEntities
         [Key]
         public int Id { get; set; } 
         public int UserId { get; set; }
-        public string AuthorEmail { get; set; }
+        public string Author { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
