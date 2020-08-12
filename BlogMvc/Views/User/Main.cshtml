@@ -16,16 +16,17 @@
             <div class="col-md-12 text-right">
                 <p class="font-weight-bold">@articleVM.Article.Author @articleVM.Article.Date</p>
             </div>
-
             @if(articleVM.Article.UserId == @Model.User.Id)
             {
-                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-4 text-center" })) {
+                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-4 text-center" })) 
+                {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
-                @using(Html.BeginForm("Update", "Article", FormMethod.Get, new { @class = "col-md-4 text-center" })) {
-                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Edit Article" />
+                @using(Html.BeginForm("Update", "Article", FormMethod.Get, new { @class = "col-md-4 text-center", @id = articleVM.Article.Id })) 
+                {
+                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Update Article" />
                 }
-                <div class="text-center">
+                <div class="col-md-4 text-center">
                     <input
                         class="h2 mt-2 btn btn-outline-lg bg-black text-white" 
                         onclick="deleteArticle('@articleVM.Article.Id')" 
@@ -35,7 +36,8 @@
             }
             else
             {
-                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-12 text-center" })) {
+                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-12 text-left" })) 
+                {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
             }

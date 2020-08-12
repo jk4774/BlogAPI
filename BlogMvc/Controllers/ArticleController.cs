@@ -48,7 +48,7 @@ namespace BlogMvc.Controllers
             var article = await _blog.Articles.FindAsync(id);
             if (article == null) 
                 return NotFound();
-            return View();
+            return View(article);
         }
 
         [HttpPut("Update/{id}")]
