@@ -6,6 +6,7 @@ using BlogContext;
 using BlogEntities;
 using BlogServices;
 using System.Security.Claims;
+using System;
 
 namespace BlogMvc.Controllers
 {
@@ -46,8 +47,14 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Update(int id)
         {
             var article = await _blog.Articles.FindAsync(id);
-            if (article == null) 
+            if (article == null)
                 return NotFound();
+
+            if (!article.UserId.ToString().Equals(User.Identity.Name))
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+            
+            if (ModelState.ErrorCount > 0)
+                return View();
             return View(article);
         }
 
@@ -56,17 +63,23 @@ namespace BlogMvc.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-
+            
             var article = await _blog.Articles.FindAsync(id);
-            if (article == null)
-                return NotFound();
+            if (article == null) 
+            {
+                ModelState.AddModelError("error", "Unexpected error, the article is null");
+                return View(); 
+            }
 
             if (!article.UserId.ToString().Equals(User.Identity.Name))
-                return NotFound();
-
+            {
+                ModelState.AddModelError("error", "You are not able to ");
+                return View(); 
+            }
+                
             article.Title = updatedArticle.Title;
             article.Content = updatedArticle.Content;
-            article.Date = updatedArticle.Date;
+            article.Date = DateTime.Now;
 
             _blog.Articles.Update(article);
             await _blog.SaveChangesAsync();

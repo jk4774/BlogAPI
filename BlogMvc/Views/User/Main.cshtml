@@ -18,14 +18,16 @@
             </div>
             @if(articleVM.Article.UserId == @Model.User.Id)
             {
-                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-4 text-center" })) 
+                @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-center" })) 
                 {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
-                @using(Html.BeginForm("Update", "Article", FormMethod.Get, new { @class = "col-md-4 text-center", @id = articleVM.Article.Id })) 
+
+                @using(Html.BeginForm("Update", "Article", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-center" })) 
                 {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Update Article" />
                 }
+
                 <div class="col-md-4 text-center">
                     <input
                         class="h2 mt-2 btn btn-outline-lg bg-black text-white" 

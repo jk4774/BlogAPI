@@ -2,7 +2,12 @@
 @{
     ViewData["Title"] = "Update article";
 }
+<p>@Model.Id</p>
+<p>@Model.UserId</p>
+<p>@Model.Content</p>
+<p>@Model.Title</p>
 @Html.Hidden("articleId", Model.Id)
+@Html.Hidden("userId", Model.UserId)
 <div class="row">
     <div class="col-md-12">
         @Html.TextBoxFor(m => m.Title, new { placeholder = "Title", @class = "mt-2 form-control" })
@@ -24,6 +29,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Title: $('#Title').val(), Content: $('#Content').val() })
         }).then((response) => {
+            console.log(response);
             if (response.status == '204') 
                 return window.location.href = '/user/' + $('#userId').val();
             response.text().then(html => {
