@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "User Update";
 }
-@Html.Hidden("userId", User.Identity.Name)
 <div class="row">
     <div class="col-md-12">
         @Html.PasswordFor(m => m.Old, new { placeholder = "Old Password", @class = "mt-2 form-control" })
@@ -19,13 +18,13 @@
 </div>
 <script>    
     $('input[name$="update"]').click(() => {
-        fetch('/user/update/' + $('#userId').val(), {
+        fetch('/user/update/' + @User.Identity.Name, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Old: $('#Old').val(), New: $('#New').val() })
         }).then((response) => {
             if (response.status == '204') 
-                return window.location.href = '/user/' + $('#userId').val();
+                return window.location.href = '/user/' + @User.Identity.Name;
             response.text().then(html => {
                 document.body.innerHTML = html;
                 document.querySelectorAll('script').forEach(x => eval(x.text));

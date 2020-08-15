@@ -49,32 +49,36 @@ namespace BlogMvc.Controllers
             var article = await _blog.Articles.FindAsync(id);
             if (article == null)
                 return NotFound();
-
-            if (!article.UserId.ToString().Equals(User.Identity.Name))
-                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             
-            if (ModelState.ErrorCount > 0)
-                return View();
             return View(article);
+
+            // var article = await _blog.Articles.FindAsync(id);
+            // if (article == null)
+            //     return NotFound();
+
+            // if (!article.UserId.ToString().Equals(User.Identity.Name))
+            //     return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+
+            // return View(article);
         }
 
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update(int id, [FromForm] Article updatedArticle)
         {
             if (!ModelState.IsValid)
-                return View();
-            
+                return View(updatedArticle);
+                
             var article = await _blog.Articles.FindAsync(id);
             if (article == null) 
             {
-                ModelState.AddModelError("error", "Unexpected error, the article is null");
-                return View(); 
+                ModelState.AddModelError("error", "An article with given id is null");
+                return View(article); 
             }
 
             if (!article.UserId.ToString().Equals(User.Identity.Name))
             {
-                ModelState.AddModelError("error", "You are not able to ");
-                return View(); 
+                ModelState.AddModelError("error", "You are not authorize to update the article");
+                return View(article); 
             }
                 
             article.Title = updatedArticle.Title;
