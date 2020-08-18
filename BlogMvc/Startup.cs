@@ -39,7 +39,8 @@ namespace BlogMvc
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("CorsPolicy");
-            
+        
+            app.UseStatusCodePagesWithRedirects("/Home/Error");
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
             

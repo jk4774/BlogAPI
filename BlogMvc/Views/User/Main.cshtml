@@ -7,28 +7,28 @@
 {   
     @foreach (var articleVM in Model.ArticleViewModel.OrderByDescending(x => x.Article.Date)) {
         <div class="row">
-            <div class="col-md-12 text-center">
-                <p class="h4 text-justify">@articleVM.Article.Title</p>
+            <div class="col-md-12 text-justify">
+                <p class="font-weight-bold h4">@articleVM.Article.Title</p>
             </div>
-            <div class="col-md-12">
-                <p class="text-justify">@articleVM.Article.Content</p>
+            <div class="col-md-12 text-justify">
+                <p>@articleVM.Article.Content</p>
             </div>
             <div class="col-md-12 text-right">
                 <p class="font-weight-bold">@articleVM.Article.Author @articleVM.Article.Date</p>
             </div>
             @if(articleVM.Article.UserId == @Model.User.Id)
             {
-                @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-center" })) 
+                @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-left" })) 
                 {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
 
-                @using(Html.BeginForm("Update", "Article", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-center" })) 
+                @using(Html.BeginForm("Update", "Article", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-left" })) 
                 {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Update Article" />
                 }
 
-                <div class="col-md-4 text-center">
+                <div class="col-md-4 text-left">
                     <input
                         class="h2 mt-2 btn btn-outline-lg bg-black text-white" 
                         onclick="deleteArticle('@articleVM.Article.Id')" 
