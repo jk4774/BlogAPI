@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BlogContext;
 using BlogEntities;
 using BlogServices;
-using System.Security.Claims;
-using System;
 
 namespace BlogMvc.Controllers
 {
@@ -47,7 +47,7 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Update(int id)
         {
             var article = await _blog.Articles.FindAsync(id);
-            if (article == null)
+            if (article == null || !article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
             
             return View(article);

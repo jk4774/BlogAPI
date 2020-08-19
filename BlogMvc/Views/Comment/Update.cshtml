@@ -2,3 +2,35 @@
 @{
     ViewData["Title"] = "Update Comment";
 }
+<div class="row">
+    <div class="col-md-12">
+        @Html.TextBoxFor(m => m.Content, new { placeholder = "Title", @class = "mt-2 form-control" })
+        @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+        
+        <div class="text-center h2"> 
+            <input class="mt-2 btn btn-outline-lg bg-black text-white" name="update" type="submit" value="Update Comment" />
+        </div>
+        <div class="text-center align-middle mb-2">
+            @Html.ValidationMessage("error", new { @class = "text-danger" })
+        </div>    
+    </div>
+</div>
+<script>    
+    $('input[name$="update"]').click(() => {
+        fetch('/comment/update/' + @Model.Id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Id: @Model.Id, Content: $('#Content').val() })
+        }).then((response) => {
+            console.log(response);
+            if (response.status == '204') 
+                return window.location.href = '/user/' + @User.Identity.Name;
+            response.text().then(html => {
+                document.body.innerHTML = html;
+                document.querySelectorAll('script').forEach(x => eval(x.text));
+            });
+        }).catch((err) => {
+            throw err;
+        });
+    });
+</script>

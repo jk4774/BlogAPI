@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using BlogContext;
 using BlogServices;
@@ -41,7 +40,6 @@ namespace BlogMvc
             app.UseCors("CorsPolicy");
         
             app.UseStatusCodePagesWithRedirects("/Home/Error");
-            app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
             
             app.UseHttpsRedirection();
