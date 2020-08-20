@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "User Main";
 }
-@Html.Hidden("userId", @Model.User.Id)
+@* @Html.Hidden("userId", @Model.User.Id) *@
 @if(Model.ArticleViewModel.Count() > 0)
 {   
     @foreach (var articleVM in Model.ArticleViewModel.OrderByDescending(x => x.Article.Date)) {
@@ -65,7 +65,7 @@ else
             method: 'DELETE'
         }).then((response) => {
             if (response.status == '204') 
-                return window.location.href = '/user/' + $('#userId').val();
+                return window.location.href = '/user/' + @User.Identity.Name;
         }).catch((err) => {
             throw err;
         });

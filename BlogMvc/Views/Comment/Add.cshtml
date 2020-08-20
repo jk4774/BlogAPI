@@ -4,7 +4,8 @@
 }
 <div class="row">
     <div class="col-md-12">
-        @using (@Html.BeginForm("Add", "Comment", FormMethod.Post))
+        @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-left" })) 
+        @* @using (@Html.BeginForm("Add", "Comment", FormMethod.Post)) *@
         {
             @Html.TextBoxFor(m => m.Content, new { placeholder = "Title", @class = "mt-2 form-control" })
             @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })

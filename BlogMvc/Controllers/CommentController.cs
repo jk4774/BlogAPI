@@ -5,6 +5,8 @@ using BlogEntities;
 using BlogServices;
 using System.Threading.Tasks;
 using System;
+using System.Security.Claims;
+using System.Linq;
 
 namespace BlogMvc.Controllers
 {
@@ -12,6 +14,7 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class CommentController : Controller
     {
+        private int? _articleId;
         private readonly Blog _blog; 
         private readonly CommentService _commentService;  
         public CommentController(Blog blog, CommentService commentService)
@@ -20,9 +23,10 @@ namespace BlogMvc.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("Add")]
-        public IActionResult Add()
+        [HttpGet("Add/{id}")]
+        public IActionResult Add(int id)
         {
+            _articleId = id;
             return View();
         }
 
@@ -32,17 +36,12 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            var article = await _blog.Articles.FindAsync(id);
-            if (article == null || !article.UserId.ToString().Equals(User.Identity.Name))
+            if (_articleId != id || !_blog.Articles.Any(x => x.Id == _articleId))
                 return NotFound();
 
-            var user = await _blog.Users.FindAsync(int.Parse(User.Identity.Name));
-            if (user == null)
-                return NotFound();
-
-            comment.ArticleId = article.Id;
-            comment.UserId = article.UserId;
-            comment.Author = user.Email;
+            comment.ArticleId = _articleId.Value;
+            comment.UserId = int.Parse(User.Identity.Name);
+            comment.Author = User.FindFirst(ClaimTypes.Email).Value;
             comment.Date = DateTime.Now;
 
             _blog.Comments.Add(comment);
