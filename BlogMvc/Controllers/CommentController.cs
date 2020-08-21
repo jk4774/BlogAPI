@@ -14,7 +14,6 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class CommentController : Controller
     {
-        private int? _articleId;
         private readonly Blog _blog; 
         private readonly CommentService _commentService;  
         public CommentController(Blog blog, CommentService commentService)
@@ -26,28 +25,31 @@ namespace BlogMvc.Controllers
         [HttpGet("Add/{id}")]
         public IActionResult Add(int id)
         {
-            _articleId = id;
-            return View();
+            var comment = new Comment { ArticleId = id };
+            if (!_blog.Articles.Any(x=>x.Id == comment.ArticleId))
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+            return View(comment);
         }
 
         [HttpPost("Add/{id}")]
-        public async Task<IActionResult> Add(int id, [FromBody] Comment comment)
+        public async Task<IActionResult> Add(int id, [FromForm] Comment comment)
         {
-            if (!ModelState.IsValid)
-                return View();
+            comment.ArticleId = id;
 
-            if (_articleId != id || !_blog.Articles.Any(x => x.Id == _articleId))
+            if (!ModelState.IsValid)
+                return View("~/Views/Comment/Add.cshtml", comment);
+
+            if (!_blog.Articles.Any(x => x.Id == id))
                 return NotFound();
 
-            comment.ArticleId = _articleId.Value;
+            comment.ArticleId = id;
             comment.UserId = int.Parse(User.Identity.Name);
             comment.Author = User.FindFirst(ClaimTypes.Email).Value;
-            comment.Date = DateTime.Now;
-
+         
             _blog.Comments.Add(comment);
             await _blog.SaveChangesAsync();
 
-            return RedirectToAction("GetById", new { id = User.Identity.Name });
+            return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
 
         [HttpGet("Update/{id}")]
@@ -63,7 +65,7 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Update(int id, [FromForm] Comment updatedComment)
         {
             if (!ModelState.IsValid)
-                return View(updatedComment);
+                return View("~/Views/Comment/Update.cshtml", updatedComment);
 
             var comment = await _blog.Comments.FindAsync(id);
             if (comment == null || comment.UserId.ToString().Equals(User.Identity.Name))
