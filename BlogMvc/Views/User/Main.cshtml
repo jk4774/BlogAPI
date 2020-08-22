@@ -2,11 +2,10 @@
 @{
     ViewData["Title"] = "User Main";
 }
-@* @Html.Hidden("userId", @Model.User.Id) *@
 @if(Model.ArticleViewModel.Count() > 0)
 {   
     @foreach (var articleVM in Model.ArticleViewModel.OrderByDescending(x => x.Article.Date)) {
-        <div class="row">
+        <div class="row border">
             <div class="col-md-12 text-justify">
                 <p class="font-weight-bold h4">@articleVM.Article.Title</p>
             </div>
@@ -38,16 +37,22 @@
             }
             else
             {
-                @using(Html.BeginForm("Add", "Comment", FormMethod.Get, new { @class = "col-md-12 text-left" })) 
+                @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-12 text-left" })) 
                 {
                     <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
                 }
             }
         </div>
-        @foreach (var comment in @articleVM.Comments)
+        @foreach (var comment in @articleVM.Comments.OrderByDescending(r => r.Date))
         {
-            <h1>@comment.Content</h1>
-            <h1>@comment.Author</h1>
+            <div class="row border">
+                <div class="col-md-12 text-justify">
+                    <p>@comment.Content</p>
+                </div>
+                <div class="col-md-12 text-right">
+                    <p class="font-weight-bold">@comment.Author @comment.Date</p>
+                </div>
+            </div>
         }        
     }
 }

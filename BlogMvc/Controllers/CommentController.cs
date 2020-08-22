@@ -42,7 +42,6 @@ namespace BlogMvc.Controllers
             if (!_blog.Articles.Any(x => x.Id == id))
                 return NotFound();
 
-            comment.ArticleId = id;
             comment.UserId = int.Parse(User.Identity.Name);
             comment.Author = User.FindFirst(ClaimTypes.Email).Value;
          
