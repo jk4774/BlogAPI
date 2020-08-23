@@ -4,13 +4,14 @@
 }
 @if(Model.ArticleViewModel.Count() > 0)
 {   
-    @foreach (var articleVM in Model.ArticleViewModel.OrderByDescending(x => x.Article.Date)) {
-        <div class="row border">
+    @foreach (var articleVM in Model.ArticleViewModel.OrderByDescending(x => x.Article.Date))
+    {
+        <div class="row border mt-2">
             <div class="col-md-12 text-justify">
                 <p class="font-weight-bold h4">@articleVM.Article.Title</p>
             </div>
             <div class="col-md-12 text-justify">
-                <p>@articleVM.Article.Content</p>
+                <p class="text-justify">@articleVM.Article.Content</p>
             </div>
             <div class="col-md-12 text-right">
                 <p class="font-weight-bold">@articleVM.Article.Author @articleVM.Article.Date</p>
@@ -19,18 +20,18 @@
             {
                 @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-left" })) 
                 {
-                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
+                    <input class="h2 mt-2 btn btn-sm bg-black text-white" type="submit" value="Add Comment" />
                 }
 
                 @using(Html.BeginForm("Update", "Article", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-4 text-left" })) 
                 {
-                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Update Article" />
+                    <input class="h2 mt-2 btn btn-sm bg-black text-white" type="submit" value="Update Article" />
                 }
 
                 <div class="col-md-4 text-left">
                     <input
-                        class="h2 mt-2 btn btn-outline-lg bg-black text-white" 
-                        onclick="deleteArticle('@articleVM.Article.Id')" 
+                        class="h2 mt-2 btn btn-sm bg-black text-white" 
+                        onclick="deleteRequest('/article/delete/@articleVM.Article.Id')" 
                         type="submit" 
                         value="Delete Article" />                     
                 </div>
@@ -39,7 +40,7 @@
             {
                 @using(Html.BeginForm("Add", "Comment", new { id = articleVM.Article.Id }, FormMethod.Get, false, new { @class = "col-md-12 text-left" })) 
                 {
-                    <input class="h2 mt-2 btn btn-outline-lg bg-black text-white" type="submit" value="Add Comment" />
+                    <input class="h2 mt-2 btn btn-sm bg-black text-white" type="submit" value="Add Comment" />
                 }
             }
         </div>
@@ -47,11 +48,26 @@
         {
             <div class="row border">
                 <div class="col-md-12 text-justify">
-                    <p>@comment.Content</p>
+                    <p class="text-justify">@comment.Content</p>
                 </div>
                 <div class="col-md-12 text-right">
                     <p class="font-weight-bold">@comment.Author @comment.Date</p>
                 </div>
+                @if (comment.UserId == @Model.User.Id)
+                {
+                    @using(Html.BeginForm("Update", "Comment", new { id = comment.Id }, FormMethod.Get, false, new { @class = "col-md-6 text-left" })) 
+                    {
+                        <input class="h2 mt-2 btn btn-sm bg-black text-white" type="submit" value="Update Comment" />
+                    }
+
+                    <div class="col-md-4 text-left">
+                        <input
+                            class="h2 mt-2 btn btn-sm bg-black text-white" 
+                            onclick="deleteRequest('/comment/delete/@comment.Id')" 
+                            type="submit" 
+                            value="Delete Comment" />                     
+                    </div>
+                }
             </div>
         }        
     }
@@ -65,11 +81,11 @@ else
     </div>
 }
 <script>
-    function deleteArticle(id) {
-        fetch('/article/delete/' + id, {
+    function deleteRequest(requestInfo) {
+        fetch(requestInfo, {
             method: 'DELETE'
         }).then((response) => {
-            if (response.status == '204') 
+            if (response.status == '204')
                 return window.location.href = '/user/' + @User.Identity.Name;
         }).catch((err) => {
             throw err;

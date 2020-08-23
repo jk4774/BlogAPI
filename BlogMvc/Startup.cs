@@ -24,7 +24,7 @@ namespace BlogMvc
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder => 
                 builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
-            services.AddScoped<UserService>().AddScoped<ArticleService>().AddScoped<CommentService>();
+            services.AddScoped<UserService>();
             services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {

@@ -6,7 +6,7 @@
     <div class="col-md-12">
         @using(Html.BeginForm("Add", "Comment", new { id = Model.ArticleId }, FormMethod.Post, true, new { @class = "col-md-12 text-left" })) 
         {
-            @Html.TextBoxFor(m => m.Content, new { placeholder = "Title", @class = "mt-2 form-control" })
+            @Html.TextAreaFor(m => m.Content, new { placeholder = "Content", @class = "mt-2 form-control", rows = "10" })
             @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
 
             <div class="text-center h2"> 

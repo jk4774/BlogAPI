@@ -1,4 +1,7 @@
 using NUnit.Framework;
+using BlogMvc.Controllers;
+using BlogServices;
+using BlogContext;
 
 namespace BlogTests
 {
@@ -7,7 +10,6 @@ namespace BlogTests
         [SetUp]
         public void Setup()
         {
-
         }
 
         [Test]

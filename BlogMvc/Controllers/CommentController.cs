@@ -4,7 +4,6 @@ using BlogContext;
 using BlogEntities;
 using BlogServices;
 using System.Threading.Tasks;
-using System;
 using System.Security.Claims;
 using System.Linq;
 
@@ -15,18 +14,16 @@ namespace BlogMvc.Controllers
     public class CommentController : Controller
     {
         private readonly Blog _blog; 
-        private readonly CommentService _commentService;  
-        public CommentController(Blog blog, CommentService commentService)
+        public CommentController(Blog blog)
         {
             _blog = blog;
-            _commentService = commentService;
         }
 
         [HttpGet("Add/{id}")]
         public IActionResult Add(int id)
         {
             var comment = new Comment { ArticleId = id };
-            if (!_blog.Articles.Any(x=>x.Id == comment.ArticleId))
+            if (!_blog.Articles.Any(x => x.Id == comment.ArticleId))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View(comment);
         }
@@ -55,23 +52,22 @@ namespace BlogMvc.Controllers
         public async Task<IActionResult> Update(int id)
         {
             var comment = await _blog.Comments.FindAsync(id);
-            if (comment == null || comment.UserId.ToString().Equals(User.Identity.Name))
-                return NotFound();
+            if (comment == null || !comment.UserId.ToString().Equals(User.Identity.Name))
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View(comment);
         }
 
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] Comment updatedComment)
+        public async Task<IActionResult> Update(int id, [FromBody] Comment updatedComment)
         {
             if (!ModelState.IsValid)
                 return View("~/Views/Comment/Update.cshtml", updatedComment);
 
             var comment = await _blog.Comments.FindAsync(id);
-            if (comment == null || comment.UserId.ToString().Equals(User.Identity.Name))
-                return NotFound();
+            if (comment == null || !comment.UserId.ToString().Equals(User.Identity.Name))
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
             comment.Content = updatedComment.Content;
-            comment.Date = DateTime.Now;
 
             _blog.Comments.Update(comment);
             await _blog.SaveChangesAsync();
@@ -79,12 +75,12 @@ namespace BlogMvc.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var comment = await _blog.Comments.FindAsync(id);
             if (comment == null || !comment.UserId.ToString().Equals(User.Identity.Name))
-                return NotFound();
+                return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
             _blog.Comments.Remove(comment);
             await _blog.SaveChangesAsync();

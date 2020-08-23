@@ -15,11 +15,9 @@ namespace BlogMvc.Controllers
     public class ArticleController : Controller
     {
         private readonly Blog _blog;
-        private readonly ArticleService _articleService;
-        public ArticleController(Blog blog, ArticleService articleService)
+        public ArticleController(Blog blog)
         {
             _blog = blog;
-            _articleService = articleService;
         }
 
         [HttpGet("Add")]
