@@ -85,7 +85,7 @@ namespace BlogMvc.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Register")]
+        [HttpGet("Register")] 
         public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated) 
