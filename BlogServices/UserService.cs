@@ -15,12 +15,10 @@ namespace BlogServices
     {
         private const int SaltSize = 16;
         private const int HashSize = 20;        
-        private readonly Blog _blog;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(Blog blog, IHttpContextAccessor httpContextAccessor)
+        public UserService(IHttpContextAccessor httpContextAccessor)
         {
-            _blog = blog;
             _httpContextAccessor = httpContextAccessor;
         }
 

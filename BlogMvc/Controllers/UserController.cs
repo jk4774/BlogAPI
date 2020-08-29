@@ -27,17 +27,14 @@ namespace BlogMvc.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {   
             if (!User.Identity.Name.Equals(id.ToString())) 
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
             var user = await _blog.Users.FindAsync(id);
             if (user == null)
-            {
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Index", "Home");
-            }
 
             var articles = _blog.Articles.ToList().Select(article => new ArticleViewModel 
             {

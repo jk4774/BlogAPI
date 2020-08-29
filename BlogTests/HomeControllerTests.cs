@@ -1,61 +1,76 @@
+using System.Security.Principal;
 using Microsoft.AspNetCore.Mvc;
-using BlogMvc.Controllers;
-using NUnit.Framework;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using BlogMvc.Controllers;
 using FakeItEasy;
+using NUnit.Framework;
 
 namespace BlogTests
 {
     public class HomeControllerTests
     {
-        private HomeController _homeController;
-
-        [SetUp]
-        public void Setup()
+        [Test]
+        public void Index_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
-            _homeController =  new HomeController();
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(true);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var homeController = new HomeController
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = httpContextAccessor.HttpContext,
+                }
+            };
+
+            var result = homeController.Index() as RedirectToActionResult;
+
+            Assert.IsInstanceOf<RedirectToActionResult>(result);
         }
 
         [Test]
-        public void GET_Index_ReturnsRedirectToAction()
+        public void Index_UserIsNotAuthenticated_ShouldReturnView()
         {
-            var result = _homeController.Index() as RedirectToActionResult;
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var homeController = new HomeController
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = httpContextAccessor.HttpContext,
+                }
+            };
+
+            var result = homeController.Index() as ViewResult;
 
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
         [Test]
-        public void GET_Index_ReturnsView()
+        public void Error_ErrorViewShouldBeReturned_ShouldReturnView()
         {
-            // var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-            // {
-            //     new Claim(ClaimTypes.Name, "example name"),
-            //     new Claim(ClaimTypes.NameIdentifier, "1"),
-            //     new Claim("custom-claim", "example claim value"),
-            // }, "mock"));
-            
-            // var homeController = new HomeController() { HttpContext = null } ;
-            // homeController.HttpContext = new ControllerContext()
-            // {
-            //     HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal() }
-            // }
-            // var controller = new SomeController(dependencies…);
-            // controller.ControllerContext = new ControllerContext()
-            // {
-            //     HttpContext = new DefaultHttpContext() { User = user }
-            // };
-            
-            // var result = _homeController.Index() as ViewResult;
+            var homeController = new HomeController();
 
-            // Assert.IsInstanceOf<ViewResult>(result);
-        }
 
-        [Test]
-        public void GET_Error_WhetherResultView_ReturnsView()
-        {       
-            var result = _homeController.Error() as ViewResult;   
-            
+            var ll = homeController.Error();
+
+            var result = homeController.Error() as ViewResult;
+
             Assert.IsInstanceOf<ViewResult>(result);
         }
     }
