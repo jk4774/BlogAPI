@@ -10,7 +10,7 @@ namespace BlogTests
     public class HomeControllerTests
     {
         [Test]
-        public void Index_UserIsAuthenticated_ShouldReturnRedirectToAction()
+        public void GET_Index_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
             var httpContextAccessor = A.Fake<IHttpContextAccessor>();
             var context = new DefaultHttpContext();
@@ -36,7 +36,7 @@ namespace BlogTests
         }
 
         [Test]
-        public void Index_UserIsNotAuthenticated_ShouldReturnView()
+        public void GET_Index_UserIsNotAuthenticated_ShouldReturnView()
         {
             var httpContextAccessor = A.Fake<IHttpContextAccessor>();
             var context = new DefaultHttpContext();
@@ -62,12 +62,9 @@ namespace BlogTests
         }
 
         [Test]
-        public void Error_ErrorViewShouldBeReturned_ShouldReturnView()
+        public void GET_Error_ErrorViewShouldBeReturned_ShouldReturnView()
         {
             var homeController = new HomeController();
-
-
-            var ll = homeController.Error();
 
             var result = homeController.Error() as ViewResult;
 

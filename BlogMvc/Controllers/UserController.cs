@@ -118,7 +118,7 @@ namespace BlogMvc.Controllers
         [HttpPost("LogOut")]
         public async Task<IActionResult> LogOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme); 
+            await _userService.SingOut();
             return RedirectToAction("Index", "Home");
         }
 

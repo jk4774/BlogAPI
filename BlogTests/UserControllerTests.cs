@@ -1,47 +1,60 @@
+using System;
 using System.Threading.Tasks;
+using System.Security.Principal;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BlogMvc.Models;
 using BlogMvc.Controllers;
 using BlogEntities;
 using BlogServices;
 using BlogContext;
 using FakeItEasy;
 using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using System.Security.Principal;
-using System;
-using BlogMvc.Models;
 
 namespace BlogTests
 {
     public class UserControllerTests
     {
         private Blog blog;
-        
-        [SetUp]
-        public void Setup()
+        private IHttpContextAccessor httpContextAccessor; 
+        private DefaultHttpContext context;
+        private GenericIdentity fakeIdentity;
+        private GenericPrincipal principal;
+        private UserService fakeUserService;
+
+        private void SetupDb()
         {
             var guid = new Guid().ToString().Substring(0, 8).ToString();
-            var options = new DbContextOptionsBuilder<Blog>().UseInMemoryDatabase(guid);
-            blog = new Blog(options.Options);
+            blog = new Blog(new DbContextOptionsBuilder<Blog>().UseInMemoryDatabase(guid).Options);
             blog.Users.Add(new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" });
         }
 
-        [Test]
-        public async Task GetById_IncorrectId_ShouldReturnRedirectToAction()
+        [SetUp]
+        public void Setup()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
+            SetupDb();
+
+            httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            context = new DefaultHttpContext();
+            fakeIdentity = A.Fake<GenericIdentity>();
+            principal = A.Fake<GenericPrincipal>();
+            fakeUserService = A.Fake<UserService>();
 
             A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+        }
+
+        [Test]
+        public async Task GET_GetById_IncorrectId_ShouldReturnRedirectToAction()
+        {
             A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
             
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -54,20 +67,13 @@ namespace BlogTests
         }
 
         [Test]
-        public async Task GetById_CorrectIdUserDoesNotExistInDb_ShouldReturnRedirectToAction()
+        public async Task GET_GetById_CorrectIdUserDoesNotExistInDb_ShouldReturnRedirectToAction()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
-
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeIdentity.Name).Returns("2");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -81,20 +87,13 @@ namespace BlogTests
 
 
         [Test]
-        public async Task GetById_CorrectIdUserDoesExist_ShouldReturnView()
+        public async Task GET_GetById_CorrectIdUserDoesExist_ShouldReturnView()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
-
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -106,20 +105,13 @@ namespace BlogTests
         }
 
         [Test]
-        public void Login_UserIsAuthenticated_ShouldReturnRedirectToAction()
+        public void GET_Login_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
-
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(true);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
             
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -132,20 +124,13 @@ namespace BlogTests
         }
 
         [Test]
-        public void Login_UserIsNotAuthenticated_ShouldReturnView()
+        public void GET_Login_UserIsNotAuthenticated_ShouldReturnView()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
-
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -158,20 +143,13 @@ namespace BlogTests
         //TODO POST Login
 
         [Test]
-        public void Register_UserIsAuthenticated_ShouldReturnRedirectToAction()
+        public void GET_Register_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
-
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(true);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -184,20 +162,13 @@ namespace BlogTests
         }
 
         [Test]
-        public void Register_UserIsNotAuthenticated_ShouldReturnView()
+        public void GET_Register_UserIsNotAuthenticated_ShouldReturnView()
         {
-            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            var context = new DefaultHttpContext();
-            var fakeIdentity = A.Fake<GenericIdentity>();
-            var principal = A.Fake<GenericPrincipal>();
-
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userService = new UserService(httpContextAccessor);
-            var userController = new UserController(blog, userService)
+            var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using BlogEntities;
 using BlogContext;
+using System.Reflection.PortableExecutable;
 
 namespace BlogServices
 {
@@ -22,14 +23,16 @@ namespace BlogServices
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task SignIn(User user)
+        public virtual async Task SignIn(User user)
         {
             var expires = DateTime.UtcNow.AddMinutes(60);
 
-            var userClaims = new List<Claim>();
-            userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
-            userClaims.Add(new Claim(ClaimTypes.Email, user.Email));
-            
+            var userClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
             var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             var authProperties = new AuthenticationProperties { ExpiresUtc = expires };
@@ -42,7 +45,12 @@ namespace BlogServices
             _httpContextAccessor.HttpContext.User = userPrincipal;
         }
 
-        public string Hash(string password)
+        public virtual async Task SingOut()
+        {
+            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
+        public virtual string Hash(string password)
         {
             var iterations = 10000;
             byte[] salt;
@@ -60,7 +68,7 @@ namespace BlogServices
             return string.Format("$MYHASH$V1${0}${1}", iterations, base64Hash);
         }
 
-        public bool Verify(string password, string hashedPassword)
+        public virtual bool Verify(string password, string hashedPassword)
         {
             if (!hashedPassword.Contains("$MYHASH$V1$"))
                 throw new NotSupportedException("The hashtype is not supported");
