@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BlogContext;
 using BlogEntities;
-using BlogServices;
 
 namespace BlogMvc.Controllers
 {
@@ -14,10 +13,10 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class ArticleController : Controller
     {
-        private readonly Blog _blog;
-        public ArticleController(Blog blog)
+        private readonly BlogDbContext _blogDbContext;
+        public ArticleController(BlogDbContext blogDbContext)
         {
-            _blog = blog;
+            _blogDbContext = blogDbContext;
         }
 
         [HttpGet("Add")]
@@ -35,8 +34,8 @@ namespace BlogMvc.Controllers
             article.UserId = int.Parse(User.Identity.Name);
             article.Author = User.FindFirst(ClaimTypes.Email).Value;
 
-            _blog.Articles.Add(article);
-            await _blog.SaveChangesAsync();
+            _blogDbContext.Articles.Add(article);
+            await _blogDbContext.SaveChangesAsync();
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
@@ -44,7 +43,7 @@ namespace BlogMvc.Controllers
         [HttpGet("Update/{id}")]
         public async Task<IActionResult> Update(int id)
         {
-            var article = await _blog.Articles.FindAsync(id);
+            var article = await _blogDbContext.Articles.FindAsync(id);
             if (article == null || !article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
             
@@ -57,7 +56,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View("~/Views/Article/Update.cshtml", updatedArticle);
                 
-            var article = await _blog.Articles.FindAsync(id);
+            var article = await _blogDbContext.Articles.FindAsync(id);
             if (article == null || !article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
                 
@@ -65,8 +64,8 @@ namespace BlogMvc.Controllers
             article.Content = updatedArticle.Content;
             article.Date = DateTime.Now;
 
-            _blog.Articles.Update(article);
-            await _blog.SaveChangesAsync();
+            _blogDbContext.Articles.Update(article);
+            await _blogDbContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -74,19 +73,19 @@ namespace BlogMvc.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var article = await _blog.Articles.FindAsync(id);
+            var article = await _blogDbContext.Articles.FindAsync(id);
             if (article == null)
                 return NotFound();
             
             if (!article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
             
-            _blog.Articles.Remove(article);
-            var comments = _blog.Comments.Where(x => x.ArticleId == article.Id).ToList();
+            _blogDbContext.Articles.Remove(article);
+            var comments = _blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList();
             if (comments.Count > 0)
-                _blog.Comments.RemoveRange(comments);
+                _blogDbContext.Comments.RemoveRange(comments);
 
-            await _blog.SaveChangesAsync();
+            await _blogDbContext.SaveChangesAsync();
 
             return NoContent();
         }        

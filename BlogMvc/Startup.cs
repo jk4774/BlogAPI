@@ -25,7 +25,7 @@ namespace BlogMvc
                 builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
             services.AddScoped<UserService>();
-            services.AddDbContext<Blog>(o => o.UseInMemoryDatabase("BlogDb"));
+            services.AddDbContext<BlogDbContext>(o => o.UseInMemoryDatabase("BlogDb"));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {
                     config.LoginPath = "/user/login";

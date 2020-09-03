@@ -7,14 +7,14 @@ namespace BlogTests
 {
     public class CommentControllerTests
     {
-        private Blog _blog;
+        private BlogDbContext _blogDbContext;
         private CommentController _commentController;
         [SetUp]
         public void Setup()
         {
-            _blog = A.Fake<Blog>();
+            _blogDbContext = A.Fake<BlogDbContext>();
             _commentController = A.Fake<CommentController>();
-            _commentController = new CommentController(_blog);
+            //_commentController = new CommentController(_blogDbContext);
         }
     }
 }

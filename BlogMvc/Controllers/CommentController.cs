@@ -13,17 +13,17 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class CommentController : Controller
     {
-        private readonly Blog _blog; 
-        public CommentController(Blog blog)
+        private readonly BlogDbContext _blogDbContext; 
+        public CommentController(BlogDbContext blogDbContext)
         {
-            _blog = blog;
+            _blogDbContext = blogDbContext;
         }
 
         [HttpGet("Add/{id}")]
         public IActionResult Add(int id)
         {
             var comment = new Comment { ArticleId = id };
-            if (!_blog.Articles.Any(x => x.Id == comment.ArticleId))
+            if (!_blogDbContext.Articles.Any(x => x.Id == comment.ArticleId))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View(comment);
         }
@@ -36,14 +36,14 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View("~/Views/Comment/Add.cshtml", comment);
 
-            if (!_blog.Articles.Any(x => x.Id == id))
+            if (!_blogDbContext.Articles.Any(x => x.Id == id))
                 return NotFound();
 
             comment.UserId = int.Parse(User.Identity.Name);
             comment.Author = User.FindFirst(ClaimTypes.Email).Value;
          
-            _blog.Comments.Add(comment);
-            await _blog.SaveChangesAsync();
+            _blogDbContext.Comments.Add(comment);
+            await _blogDbContext.SaveChangesAsync();
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
@@ -51,7 +51,7 @@ namespace BlogMvc.Controllers
         [HttpGet("Update/{id}")]
         public async Task<IActionResult> Update(int id)
         {
-            var comment = await _blog.Comments.FindAsync(id);
+            var comment = await _blogDbContext.Comments.FindAsync(id);
             if (comment == null || !comment.UserId.ToString().Equals(User.Identity.Name))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View(comment);
@@ -63,14 +63,14 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View("~/Views/Comment/Update.cshtml", updatedComment);
 
-            var comment = await _blog.Comments.FindAsync(id);
+            var comment = await _blogDbContext.Comments.FindAsync(id);
             if (comment == null || !comment.UserId.ToString().Equals(User.Identity.Name))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
             comment.Content = updatedComment.Content;
 
-            _blog.Comments.Update(comment);
-            await _blog.SaveChangesAsync();
+            _blogDbContext.Comments.Update(comment);
+            await _blogDbContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -78,12 +78,12 @@ namespace BlogMvc.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var comment = await _blog.Comments.FindAsync(id);
+            var comment = await _blogDbContext.Comments.FindAsync(id);
             if (comment == null || !comment.UserId.ToString().Equals(User.Identity.Name))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
-            _blog.Comments.Remove(comment);
-            await _blog.SaveChangesAsync();
+            _blogDbContext.Comments.Remove(comment);
+            await _blogDbContext.SaveChangesAsync();
 
             return NoContent();
         }

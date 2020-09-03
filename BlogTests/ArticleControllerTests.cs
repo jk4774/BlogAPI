@@ -7,12 +7,12 @@ namespace BlogTests
 {
     public class ArticleControllerTests
     {
-        private Blog _blog;
+        private BlogDbContext _blogDbContext;
         private ArticleController _articleController;
         [SetUp]
         public void Setup()
         {
-            _blog = A.Fake<Blog>();
+            _blogDbContext = A.Fake<BlogDbContext>();
             _articleController = A.Fake<ArticleController>();
         }
     }

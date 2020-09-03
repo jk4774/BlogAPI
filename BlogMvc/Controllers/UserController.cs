@@ -17,12 +17,12 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly Blog _blog;
+        private readonly IBlogDbContext _blogDbContext;
         private readonly UserService _userService;
 
-        public UserController(Blog blog, UserService userService)
+        public UserController(IBlogDbContext blogDbContext, UserService userService)
         {
-            _blog = blog;
+            _blogDbContext = blogDbContext;
             _userService = userService;
         }
 
@@ -32,14 +32,14 @@ namespace BlogMvc.Controllers
             if (!User.Identity.Name.Equals(id.ToString())) 
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
-            var user = await _blog.Users.FindAsync(id);
+            var user = await _blogDbContext.Users.FindAsync(id);
             if (user == null)
                 return RedirectToAction("Index", "Home");
 
-            var articles = _blog.Articles.ToList().Select(article => new ArticleViewModel 
+            var articles = _blogDbContext.Articles.ToList().Select(article => new ArticleViewModel 
             {
                 Article = article,
-                Comments = _blog.Comments.Where(x => x.ArticleId == article.Id).ToList()
+                Comments = _blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList()
             });
 
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, ArticleViewModel = articles });
@@ -61,7 +61,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
                 
-            var userDb = await _blog.Users.FirstOrDefaultAsync(i => 
+            var userDb = await _blogDbContext.Users.FirstOrDefaultAsync(i => 
                 i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
             
             if (userDb == null)
@@ -99,7 +99,7 @@ namespace BlogMvc.Controllers
 
             user.Email = user.Email.Trim();
 
-            if (_blog.Users.Any(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase)))
+            if (_blogDbContext.Users.Any(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase)))
             {
                 ModelState.AddModelError("error", "User with this email is existing in db");
                 return View();
@@ -107,8 +107,8 @@ namespace BlogMvc.Controllers
 
             user.Password = _userService.Hash(user.Password);
             
-            _blog.Users.Add(user);
-            _blog.SaveChanges();
+            _blogDbContext.Users.Add(user);
+            _blogDbContext.SaveChanges();
             
             await _userService.SignIn(user);
             
@@ -137,7 +137,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
                 
-            var userDb = await _blog.Users.FindAsync(id);
+            var userDb = await _blogDbContext.Users.FindAsync(id);
             if (userDb == null)
             {
                 ModelState.AddModelError("error", "Unexpected error, user with this id does not exist");
@@ -152,8 +152,8 @@ namespace BlogMvc.Controllers
                 
             userDb.Password = _userService.Hash(password.New);
 
-            _blog.Users.Update(userDb);
-            await _blog.SaveChangesAsync();
+            _blogDbContext.Users.Update(userDb);
+            await _blogDbContext.SaveChangesAsync();
 
             return NoContent();
         }

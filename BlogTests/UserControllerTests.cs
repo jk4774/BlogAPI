@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using System.Security.Principal;
 using Microsoft.EntityFrameworkCore;
@@ -11,49 +10,45 @@ using BlogServices;
 using BlogContext;
 using FakeItEasy;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data.Entity.Infrastructure;
 
 namespace BlogTests
 {
     public class UserControllerTests
     {
-        private Blog blog;
-        private IHttpContextAccessor httpContextAccessor; 
-        private DefaultHttpContext context;
-        private GenericIdentity fakeIdentity;
-        private GenericPrincipal principal;
-        private UserService fakeUserService;
-
-        private void SetupDb()
-        {
-            var guid = new Guid().ToString().Substring(0, 8).ToString();
-            blog = new Blog(new DbContextOptionsBuilder<Blog>().UseInMemoryDatabase(guid).Options);
-            blog.Users.Add(new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" });
-        }
+        private IBlogDbContext blog;
 
         [SetUp]
         public void Setup()
         {
-            SetupDb();
+            var fakeUserList = new List<User> { new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" } };
+            var dbSet = Utils.CreateDbSetFake<User>(fakeUserList);
 
-            httpContextAccessor = A.Fake<IHttpContextAccessor>();
-            context = new DefaultHttpContext();
-            fakeIdentity = A.Fake<GenericIdentity>();
-            principal = A.Fake<GenericPrincipal>();
-            fakeUserService = A.Fake<UserService>();
+            blog = A.Fake<IBlogDbContext>();
+            
+            A.CallTo(() => blog.Users).Returns(dbSet);
 
-            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
-
-            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
-            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+            // A.Fake<DbSet<Request>>(builder =>builder.Implements(typeof(IQueryable<Result>)));
         }
 
         [Test]
         public async Task GET_GetById_IncorrectId_ShouldReturnRedirectToAction()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
-            
+
             var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
@@ -69,6 +64,15 @@ namespace BlogTests
         [Test]
         public async Task GET_GetById_CorrectIdUserDoesNotExistInDb_ShouldReturnRedirectToAction()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.Name).Returns("2");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
@@ -85,10 +89,18 @@ namespace BlogTests
             Assert.IsInstanceOf<RedirectToActionResult>(result);
         }
 
-
         [Test]
         public async Task GET_GetById_CorrectIdUserDoesExist_ShouldReturnView()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
@@ -107,10 +119,19 @@ namespace BlogTests
         [Test]
         public void GET_Login_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(true);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
-            
+
             var userController = new UserController(blog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
@@ -126,6 +147,15 @@ namespace BlogTests
         [Test]
         public void GET_Login_UserIsNotAuthenticated_ShouldReturnView()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
@@ -140,11 +170,158 @@ namespace BlogTests
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
-        //TODO POST Login
+        [TestCase("", "")]
+        [TestCase(null, null)]
+        public async Task POST_Login_UserEmailAndPasswordIsNullorWhitespace_ShouldReturnView(string email, string password)
+        {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(blog, fakeUserService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var user = new User { Email = email, Password = password };
+
+            var result = await userController.Login(user) as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public async Task POST_Login_UserDoesNotExist_ShouldReturnView()
+        {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(blog, fakeUserService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var user = new User { Email = "zxcv@zxcv.com", Password = "asdfasdf9(" };
+
+            var result = await userController.Login(user) as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public async Task POST_Login_UserPasswordIsNotEqualThePasswordFromDb_ShouldReturnView()
+        {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(blog, fakeUserService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            //blog.Users.Add(new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" });
+
+            var user = new User { Email = "q@q.com", Password = "asdfasdf9(" };
+
+            var result = await userController.Login(user) as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public async Task POST_Login_UserExists_ShouldRedirectToAction()
+        {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(blog, fakeUserService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var user = new User { Email = "q@q.com", Password = "lalalala1!" };
+
+            var result = await userController.Login(user) as RedirectToActionResult;
+
+            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual("GetById", result.ActionName);
+            Assert.AreEqual("User", result.ControllerName);
+        }
+
+        //         if (!ModelState.IsValid)
+        //                return View();
+
+        //        var userDb = await _blogDbContext.Users.FirstOrDefaultAsync(i =>
+        //            i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
+
+        //            if (userDb == null)
+        //            {
+        //                ModelState.AddModelError("error", "User does not exist");
+        //                return View();
+        //    }
+
+        //            if (!_userService.Verify(user.Password, userDb.Password)) 
+        //            {
+        //                ModelState.AddModelError("error", "Wrong Password");
+        //                return View();
+        //}
+
+        //await _userService.SignIn(userDb);
+
+        //return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
+
 
         [Test]
         public void GET_Register_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(true);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
@@ -164,6 +341,15 @@ namespace BlogTests
         [Test]
         public void GET_Register_UserIsNotAuthenticated_ShouldReturnView()
         {
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+            var context = new DefaultHttpContext();
+            var fakeIdentity = A.Fake<GenericIdentity>();
+            var principal = A.Fake<GenericPrincipal>();
+            var fakeUserService = A.Fake<UserService>();
+
+            A.CallTo(() => principal.Identity).Returns(fakeIdentity);
+            A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
+            A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
