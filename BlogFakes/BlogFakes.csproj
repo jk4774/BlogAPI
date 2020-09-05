@@ -9,16 +9,11 @@
     <ProjectReference Include="../BlogEntities/BlogEntities.csproj" />
     <ProjectReference Include="../BlogContext/BlogContext.csproj" />
     <ProjectReference Include="../BlogServices/BlogServices.csproj" />
-    <ProjectReference Include="../BlogMvc/BlogMvc.csproj" />
-    <ProjectReference Include="../BlogFakes/BlogFakes.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="FakeItEasy" Version="6.2.1" />
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
   </ItemGroup>
 
 </Project>

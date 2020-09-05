@@ -13,8 +13,8 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class CommentController : Controller
     {
-        private readonly BlogDbContext _blogDbContext; 
-        public CommentController(BlogDbContext blogDbContext)
+        private readonly IBlogDbContext _blogDbContext; 
+        public CommentController(IBlogDbContext blogDbContext)
         {
             _blogDbContext = blogDbContext;
         }
@@ -29,7 +29,7 @@ namespace BlogMvc.Controllers
         }
 
         [HttpPost("Add/{id}")]
-        public async Task<IActionResult> Add(int id, [FromForm] Comment comment)
+        public IActionResult Add(int id, [FromForm] Comment comment)
         {
             comment.ArticleId = id;
 
@@ -43,7 +43,7 @@ namespace BlogMvc.Controllers
             comment.Author = User.FindFirst(ClaimTypes.Email).Value;
          
             _blogDbContext.Comments.Add(comment);
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
@@ -70,7 +70,7 @@ namespace BlogMvc.Controllers
             comment.Content = updatedComment.Content;
 
             _blogDbContext.Comments.Update(comment);
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return NoContent();
         }
@@ -83,7 +83,7 @@ namespace BlogMvc.Controllers
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
             _blogDbContext.Comments.Remove(comment);
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return NoContent();
         }

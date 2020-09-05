@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using System.Security.Principal;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BlogMvc.Models;
@@ -10,27 +10,32 @@ using BlogServices;
 using BlogContext;
 using FakeItEasy;
 using NUnit.Framework;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Data.Entity.Infrastructure;
+using BlogFakes;
 
 namespace BlogTests
 {
     public class UserControllerTests
     {
-        private IBlogDbContext blog;
+        private IBlogDbContext fakeBlog;
 
         [SetUp]
         public void Setup()
         {
-            var fakeUserList = new List<User> { new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" } };
-            var dbSet = Utils.CreateDbSetFake<User>(fakeUserList);
+            var fakeUsers = new List<User> { new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" } };
+            var fakeArticles = new List<Article> { new Article { Id = 1, UserId = 1, Author = "q@q.com", Content = "test-article-content", Date = DateTime.Now, Title = "test-article-title" } };
+            var fakeComments = new List<Comment> { new Comment { Id = 1, ArticleId = 1, UserId = 1, Date = DateTime.Now, Content = "test-comment-content", Author = "q@q.com" } };
 
-            blog = A.Fake<IBlogDbContext>();
-            
-            A.CallTo(() => blog.Users).Returns(dbSet);
+            var userDbSet = BlogFakes.Utils.CreateFakeDbSet<User>(fakeUsers);
+            var articleDbSet = BlogFakes.Utils.CreateFakeDbSet<Article>(fakeArticles);
+            var commentDbSet = BlogFakes.Utils.CreateFakeDbSet<Comment>(fakeComments);
 
-            // A.Fake<DbSet<Request>>(builder =>builder.Implements(typeof(IQueryable<Result>)));
+            fakeBlog = A.Fake<IBlogDbContext>();
+
+            A.CallTo(() => fakeBlog.Users).Returns(userDbSet);
+            A.CallTo(() => fakeBlog.Articles).Returns(articleDbSet);
+            A.CallTo(() => fakeBlog.Comments).Returns(commentDbSet);
         }
 
         [Test]
@@ -49,7 +54,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -73,16 +78,16 @@ namespace BlogTests
             A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
             A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
-            A.CallTo(() => fakeIdentity.Name).Returns("2");
+            A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
 
-            var result = await userController.GetById(2) as RedirectToActionResult;
+            var result = await userController.GetById(1) as RedirectToActionResult;
 
             Assert.AreEqual("Index", result.ActionName);
             Assert.AreEqual("Home", result.ControllerName);
@@ -105,7 +110,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -132,7 +137,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -160,7 +165,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -187,7 +192,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -215,7 +220,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -243,7 +248,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -273,7 +278,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -326,7 +331,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -354,7 +359,7 @@ namespace BlogTests
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var userController = new UserController(blog, fakeUserService)
+            var userController = new UserController(fakeBlog, fakeUserService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };

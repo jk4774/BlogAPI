@@ -13,8 +13,8 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class ArticleController : Controller
     {
-        private readonly BlogDbContext _blogDbContext;
-        public ArticleController(BlogDbContext blogDbContext)
+        private readonly IBlogDbContext _blogDbContext;
+        public ArticleController(IBlogDbContext blogDbContext)
         {
             _blogDbContext = blogDbContext;
         }
@@ -26,7 +26,7 @@ namespace BlogMvc.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromForm] Article article)
+        public IActionResult Add([FromForm] Article article)
         {
             if (!ModelState.IsValid)
                 return View();
@@ -35,7 +35,7 @@ namespace BlogMvc.Controllers
             article.Author = User.FindFirst(ClaimTypes.Email).Value;
 
             _blogDbContext.Articles.Add(article);
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
@@ -65,7 +65,7 @@ namespace BlogMvc.Controllers
             article.Date = DateTime.Now;
 
             _blogDbContext.Articles.Update(article);
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return NoContent();
         }
@@ -85,7 +85,7 @@ namespace BlogMvc.Controllers
             if (comments.Count > 0)
                 _blogDbContext.Comments.RemoveRange(comments);
 
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return NoContent();
         }        

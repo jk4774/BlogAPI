@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using BlogServices;
 using BlogEntities;
@@ -29,7 +27,7 @@ namespace BlogMvc.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {   
-            if (!User.Identity.Name.Equals(id.ToString())) 
+            if (!User.Identity.Name.Equals(id.ToString()))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
             var user = await _blogDbContext.Users.FindAsync(id);
@@ -153,7 +151,7 @@ namespace BlogMvc.Controllers
             userDb.Password = _userService.Hash(password.New);
 
             _blogDbContext.Users.Update(userDb);
-            await _blogDbContext.SaveChangesAsync();
+            _blogDbContext.SaveChanges();
 
             return NoContent();
         }
