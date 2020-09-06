@@ -41,9 +41,9 @@ namespace BlogMvc.Controllers
         }
 
         [HttpGet("Update/{id}")]
-        public async Task<IActionResult> Update(int id)
+        public IActionResult Update(int id)
         {
-            var article = await _blogDbContext.Articles.FindAsync(id);
+            var article = _blogDbContext.Articles.Find(id);
             if (article == null || !article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
             
@@ -65,6 +65,7 @@ namespace BlogMvc.Controllers
             article.Date = DateTime.Now;
 
             _blogDbContext.Articles.Update(article);
+            // _blogDbContext.Articles.(article);
             _blogDbContext.SaveChanges();
 
             return NoContent();

@@ -1,3 +1,4 @@
+using System.Data.Entity;
 using BlogEntities;
 
 namespace BlogFakes

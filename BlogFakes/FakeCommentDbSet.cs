@@ -4,7 +4,6 @@ namespace BlogFakes
 {
     public class FakeCommentDbSet : FakeDbSet<Comment>
     {
-
-
+        
     }
 }

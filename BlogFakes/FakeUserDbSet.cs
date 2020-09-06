@@ -6,6 +6,6 @@ namespace BlogFakes
 {
     public class FakeUserDbSet : FakeDbSet<User>
     {
-
+        
     }
 }
