@@ -65,7 +65,6 @@ namespace BlogMvc.Controllers
             article.Date = DateTime.Now;
 
             _blogDbContext.Articles.Update(article);
-            // _blogDbContext.Articles.(article);
             _blogDbContext.SaveChanges();
 
             return NoContent();

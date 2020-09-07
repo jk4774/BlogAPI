@@ -1,6 +1,4 @@
-using BlogContext;
 using BlogEntities;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlogFakes
 {

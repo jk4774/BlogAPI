@@ -2,60 +2,87 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogFakes
 {
-    public class FakeDbSet<T> : IDbSet<T> where T : class
+    public class FakeDbSet<T> : DbSet<T> where T : class
     {
-        public ObservableCollection<T> Local => throw new NotImplementedException();
+        public ObservableCollection<T> data { get; set; }
+        public IQueryable queryable { get { return data == null ? new ObservableCollection<T> { }.AsQueryable() : data.AsQueryable(); } }
 
-        public Type ElementType => throw new NotImplementedException();
+        //public virtual T Find(params object[] keyValues)
+        //{
+        //    throw new NotImplementedException("Derive from FakeDbSet<T> and override Find");
+        //}
 
-        public Expression Expression => throw new NotImplementedException();
+        //public virtual ValueTask<T> FindAsync(object[] keyValues, CancellationToken cancellationToken)
+        //{
+        //    return base.FindAsync(keyValues, cancellationToken);
+        //}
 
-        public IQueryProvider Provider => throw new NotImplementedException();
+        //public override T Add(T item)
+        //{
+        //    _data.Add(item);
+        //    return item;
+        //}
 
-        public T Add(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        //public override T Remove(T item)
+        //{
+        //    _data.Remove(item);
+        //    return item;
+        //}
 
-        public T Attach(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        //public T Attach(T item)
+        //{
+        //    _data.Add(item);
+        //    return item;
+        //}
 
-        public T Create()
-        {
-            throw new NotImplementedException();
-        }
+        //public T Detach(T item)
+        //{
+        //    _data.Remove(item);
+        //    return item;
+        //}
 
-        public TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, T
-        {
-            throw new NotImplementedException();
-        }
+        //public T Create()
+        //{
+        //    return Activator.CreateInstance<T>();
+        //}
 
-        public T Find(params object[] keyValues)
-        {
-            throw new NotImplementedException();
-        }
+        //public TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, T
+        //{
+        //    return Activator.CreateInstance<TDerivedEntity>();
+        //}
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        //public ObservableCollection<T> Local
+        //{
+        //    get { return _data; }
+        //}
 
-        public T Remove(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        //Type IQueryable.ElementType
+        //{
+        //    get { return _query.ElementType; }
+        //}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        //System.Linq.Expressions.Expression IQueryable.Expression
+        //{
+        //    get { return _query.Expression; }
+        //}
+
+        //IQueryProvider IQueryable.Provider
+        //{
+        //    get { return _query.Provider; }
+        //}
+
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return _data.GetEnumerator();
+        //}
+
+
     }
 }

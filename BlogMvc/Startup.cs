@@ -7,9 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using BlogContext;
 using BlogServices;
 using BlogEntities;
-using System.Reflection.Metadata;
-using System.Data.Entity;
-using System;
 
 namespace BlogMvc
 {
@@ -53,24 +50,6 @@ namespace BlogMvc
 
             services.AddScoped<UserService>();
             services.AddScoped<IBlogDbContext, BlogDbContext>();
-
-            // services.AddScoped<IDbSetExtended<BlogEntities.User>>
-
-            //services.AddScoped<IDbSetExtended<User>, IDbSet<User>>();
-            //services.AddScoped<IDbSetExtended<Article>, IDbSet<Article>>();
-            //services.AddScoped<IDbSetExtended<Comment>, IDbSet<Comment>>();
-
-            //services.AddScoped<IDbSetExtended<User>, System.Data.Entity.DbSet<User>>();
-            //services.AddScoped<IDbSetExtended<Article>, System.Data.Entity.DbSet<Article>>();
-            //services.AddScoped<IDbSetExtended<Comment>, System.Data.Entity.DbSet<Comment>>();
-
-            //services.AddScoped<IDbSet<User>, System.Data.Entity.DbSet<User>>();
-            //services.AddScoped<IDbSet<Article>, System.Data.Entity.DbSet<Article>>();
-            //services.AddScoped<IDbSet<Comment>, System.Data.Entity.DbSet<Comment>>();
-
-            // services.AddScoped<IDbSetExtended<BlogEntities.User>, System.Data.Entity.DbSet<BlogEntities.User>>();
-            // services.AddScoped<IDbSetExtended<BlogEntities.Article>, System.Data.Entity.DbSet<BlogEntities.Article>>();
-            // services.AddScoped<IDbSetExtended<BlogEntities.Comment>, System.Data.Entity.DbSet<BlogEntities.Comment>>();
 
             services.AddDbContext<BlogDbContext>(o => o.UseInMemoryDatabase("BlogDb"));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

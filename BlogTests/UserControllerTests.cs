@@ -11,8 +11,8 @@ using BlogContext;
 using FakeItEasy;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using BlogFakes;
+using System.Collections.ObjectModel;
 
 namespace BlogTests
 {
@@ -23,19 +23,24 @@ namespace BlogTests
         [SetUp]
         public void Setup()
         {
-            // var fakeUsers = new List<User> { new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" } };
-            // var fakeArticles = new List<Article> { new Article { Id = 1, UserId = 1, Author = "q@q.com", Content = "test-article-content", Date = DateTime.Now, Title = "test-article-title" } };
-            // var fakeComments = new List<Comment> { new Comment { Id = 1, ArticleId = 1, UserId = 1, Date = DateTime.Now, Content = "test-comment-content", Author = "q@q.com" } };
+            var fakeUsers = new List<User> { new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" } };
+            var fakeArticles = new List<Article> { new Article { Id = 1, UserId = 1, Author = "q@q.com", Content = "test-article-content", Date = DateTime.Now, Title = "test-article-title" } };
+            var fakeComments = new List<Comment> { new Comment { Id = 1, ArticleId = 1, UserId = 1, Date = DateTime.Now, Content = "test-comment-content", Author = "q@q.com" } };
 
-            // var userDbSet = BlogFakes.Utils.CreateFakeDbSet<User>(fakeUsers);
-            // var articleDbSet = BlogFakes.Utils.CreateFakeDbSet<Article>(fakeArticles);
-            // var commentDbSet = BlogFakes.Utils.CreateFakeDbSet<Comment>(fakeComments);
+            var fakeUserDbSet = new FakeUserDbSet() { data = new ObservableCollection<User>(fakeUsers) };
+            var fakeArticleDbSet = new FakeArticleDbSet() { data = new ObservableCollection<Article>(fakeArticles) };
+            var fakeCommentDbSet = new FakeCommentDbSet() { data = new ObservableCollection<Comment>(fakeComments) };
 
-            // fakeBlog = A.Fake<IBlogDbContext>();
+            fakeBlog = A.Fake<IBlogDbContext>();
 
-            // A.CallTo(() => fakeBlog.Users).Returns(userDbSet);
-            // A.CallTo(() => fakeBlog.Articles).Returns(articleDbSet);
-            // A.CallTo(() => fakeBlog.Comments).Returns(commentDbSet);
+            var context = new FakeBlogDbContext()
+            { 
+                Users = fakeUserDbSet,
+                Articles = fakeArticleDbSet,
+                Comments = fakeCommentDbSet
+            };
+
+            A.CallTo(() => fakeBlog).Returns(context);
         }
 
         [Test]

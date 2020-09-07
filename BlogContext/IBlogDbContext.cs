@@ -1,13 +1,13 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using BlogEntities;
 
 namespace BlogContext
 {
     public interface IBlogDbContext 
     {
-        IDbSetExtended<Article> Articles { get; set; }
-        IDbSetExtended<Comment> Comments { get; set; }
-        IDbSetExtended<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         int SaveChanges();
     }
 }

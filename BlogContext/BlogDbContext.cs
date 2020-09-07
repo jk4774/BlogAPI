@@ -7,8 +7,8 @@ namespace BlogContext
     {
         public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options) { }
 
-        public IDbSetExtended<User> Users  { get; set; }
-        public IDbSetExtended<Article> Articles { get; set; }
-        public IDbSetExtended<Comment> Comments { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }
