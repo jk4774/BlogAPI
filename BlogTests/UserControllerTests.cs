@@ -13,6 +13,7 @@ using NUnit.Framework;
 using System;
 using BlogFakes;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 
 namespace BlogTests
 {
