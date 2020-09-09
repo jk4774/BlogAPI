@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using BlogContext;
 using BlogServices;
-using BlogEntities;
+using BlogData.Entities;
 
 namespace BlogMvc
 {

@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../BlogEntities/BlogEntities.csproj" />
-    <ProjectReference Include="../BlogContext/BlogContext.csproj" />
+	  <ProjectReference Include="../BlogData/BlogData.csproj" />
+	  <ProjectReference Include="../BlogContext/BlogContext.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
   </ItemGroup>
-
+    
 </Project>

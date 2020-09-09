@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using BlogServices;
-using BlogEntities;
 using BlogContext;
-using BlogMvc.Models;
+using BlogData.Entities;
+using BlogData.ViewModels;
 
 namespace BlogMvc.Controllers
 {
@@ -17,11 +17,13 @@ namespace BlogMvc.Controllers
     {
         private readonly IBlogDbContext _blogDbContext;
         private readonly UserService _userService;
+        private readonly ArticleService _articleService;
 
-        public UserController(IBlogDbContext blogDbContext, UserService userService)
+        public UserController(IBlogDbContext blogDbContext, UserService userService, ArticleService articleService)
         {
             _blogDbContext = blogDbContext;
             _userService = userService;
+            _articleService = articleService;
         }
 
         [HttpGet("{id}")]
@@ -34,11 +36,7 @@ namespace BlogMvc.Controllers
             if (user == null)
                 return RedirectToAction("Index", "Home");
 
-            var articles = _blogDbContext.Articles.ToList().Select(article => new ArticleViewModel 
-            {
-                Article = article,
-                Comments = _blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList()
-            });
+            var articles = _articleService.GetArticleViewModels(_blogDbContext);
 
             return View("~/Views/User/Main.cshtml", new UserViewModel { User = user, ArticleViewModel = articles });
         }

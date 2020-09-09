@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BlogEntities;
+using BlogData.Entities;
 
 namespace BlogContext
 {

@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../BlogEntities/BlogEntities.csproj" />
-    <ProjectReference Include="../BlogContext/BlogContext.csproj" />
+	  <ProjectReference Include="../BlogData/BlogData.csproj" />
+	  <ProjectReference Include="../BlogContext/BlogContext.csproj" />
     <ProjectReference Include="../BlogServices/BlogServices.csproj" />
   </ItemGroup>
 

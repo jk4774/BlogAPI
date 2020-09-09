@@ -1,4 +1,4 @@
-using BlogEntities;
+using BlogData.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq;
 using System.Threading.Tasks;

@@ -5,7 +5,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BlogContext;
-using BlogEntities;
+using BlogData.Entities;
+using BlogData.ViewModels;
 
 namespace BlogMvc.Controllers
 {

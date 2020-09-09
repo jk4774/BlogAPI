@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BlogContext;
-using BlogEntities;
 using BlogServices;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Linq;
+using BlogData.Entities;
+using BlogData.ViewModels;
 
 namespace BlogMvc.Controllers
 {

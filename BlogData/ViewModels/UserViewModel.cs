@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using BlogEntities;
+using BlogData.Entities;
 
-namespace BlogMvc.Models
+namespace BlogData.ViewModels
 {
     public class UserViewModel 
     {
