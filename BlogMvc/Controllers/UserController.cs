@@ -56,10 +56,9 @@ namespace BlogMvc.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-                
-            var userDb = await _blogDbContext.Users.FirstOrDefaultAsync(i => 
-                i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
-            
+
+            var userDb = await _blogDbContext.Users
+                .FirstOrDefaultAsync(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
             if (userDb == null)
             {
                 ModelState.AddModelError("error", "User does not exist");

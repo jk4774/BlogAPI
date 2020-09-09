@@ -9,12 +9,12 @@ namespace BlogFakes
     {
         public override Article Find(params object[] keyValues)
         {
-            return data.First(x => x.Id == (int)keyValues.First());
+            return data.FirstOrDefault(x => x.Id == (int)keyValues.First());
         }
 
         public override ValueTask<Article> FindAsync(params object[] keyValues)
         {
-            var article = data.First(x => x.Id == (int)keyValues.First());
+            var article = data.FirstOrDefault(x => x.Id == (int)keyValues.First());
             return new ValueTask<Article>(article);
         }
 
