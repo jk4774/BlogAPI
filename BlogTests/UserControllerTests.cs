@@ -49,7 +49,6 @@ namespace BlogTests
             fakeIdentity = A.Fake<GenericIdentity>();
             principal = A.Fake<GenericPrincipal>();
 
-
             A.CallTo(() => fakeBlog.Users).Returns(fakeUserDbSet);
             A.CallTo(() => fakeBlog.Articles).Returns(fakeArticleDbSet);
             A.CallTo(() => fakeBlog.Comments).Returns(fakeCommentDbSet);
@@ -213,8 +212,6 @@ namespace BlogTests
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
-
-            //blog.Users.Add(new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" });
 
             var user = new User { Email = "q@q.com", Password = "asdfasdf9(" };
 

@@ -1,6 +1,7 @@
 using BlogData.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace BlogFakes
@@ -9,23 +10,30 @@ namespace BlogFakes
     {
         public override User Find(params object[] keyValues)
         {
-            return data.FirstOrDefault(x => x.Id == (int)keyValues.First());
+            if (int.TryParse(keyValues[0].ToString(), out int a))
+                return data.FirstOrDefault(x => x.Id == (int)keyValues[0]);
+            return data.FirstOrDefault(x => x.Email == (string)keyValues[0]);
         }
 
         public override ValueTask<User> FindAsync(params object[] keyValues)
         {
-            var article = data.FirstOrDefault(x => x.Id == (int)keyValues.First());
-            return new ValueTask<User>(article);
+            if (int.TryParse(keyValues[0].ToString(), out int a))
+                return new ValueTask<User>(data.FirstOrDefault(x => x.Id == (int)keyValues[0]));
+            return new ValueTask<User>(data.FirstOrDefault(x => x.Email == (string)keyValues[0]));
         }
 
         public override EntityEntry<User> Update(User entity)
         {
             var item = data.FirstOrDefault(t => t.Id == entity.Id);
+            if (item == null)
+                return null;
             var index = data.IndexOf(item);
 
             data[index] = entity;
-
             return null;
+            //return new EntityEntry<User>(data[index]);
+
+            //return new ValueTask<User>(data[index]);
         }
     }
 }
