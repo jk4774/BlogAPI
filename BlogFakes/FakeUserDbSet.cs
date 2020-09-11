@@ -10,6 +10,8 @@ namespace BlogFakes
     {
         public override User Find(params object[] keyValues)
         {
+            if (keyValues[0] == null)
+                return null;
             if (int.TryParse(keyValues[0].ToString(), out int a))
                 return data.FirstOrDefault(x => x.Id == (int)keyValues[0]);
             return data.FirstOrDefault(x => x.Email == (string)keyValues[0]);
@@ -17,6 +19,8 @@ namespace BlogFakes
 
         public override ValueTask<User> FindAsync(params object[] keyValues)
         {
+            if (keyValues[0] == null)
+                return new ValueTask<User>();
             if (int.TryParse(keyValues[0].ToString(), out int a))
                 return new ValueTask<User>(data.FirstOrDefault(x => x.Id == (int)keyValues[0]));
             return new ValueTask<User>(data.FirstOrDefault(x => x.Email == (string)keyValues[0]));

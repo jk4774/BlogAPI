@@ -6,33 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using BlogContext;
 using BlogServices;
-using BlogData.Entities;
 
 namespace BlogMvc
 {
-    //class ContractServiceFactory
-    //{
-    //    private readonly IServiceProvider _serviceProvider;
-
-    //    public ContractServiceFactory(IServiceProvider serviceProvider)
-    //    {
-    //        _serviceProvider = serviceProvider;
-    //    }
-
-    //    public IDbSetExtended<T> GetContractService(string standard)
-    //    {
-    //        switch (standard)
-    //        {
-    //            case "user":
-    //                return _serviceProvider.GetRequiredService<IDbSetExtended<User>>();
-    //            case "article":
-    //                return _serviceProvider.GetRequiredService<IDbSetExtended<Article>>();
-    //            case "comment":
-    //                return _serviceProvider.GetRequiredService<IDbSetExtended<Comment>>();
-    //        }
-    //    }
-    //}
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -48,6 +24,7 @@ namespace BlogMvc
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder => 
                 builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
+            services.AddScoped<ArticleService>();
             services.AddScoped<UserService>();
             services.AddScoped<IBlogDbContext, BlogDbContext>();
 

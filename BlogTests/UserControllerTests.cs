@@ -13,6 +13,8 @@ using NUnit.Framework;
 using System;
 using BlogFakes;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BlogTests
 {
@@ -65,6 +67,12 @@ namespace BlogTests
             A.CallTo(() => principal.Identity).Returns(fakeIdentity);
             A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
             A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
+            A.CallTo(() => fakeUserService.Verify(
+                  A<string>.That.Matches(x => x == "lalalala1!"),
+                  A<string>.That.Matches(x => x == "lalalala1!"))).Returns(true);
+            A.CallTo(() => fakeUserService.Verify(
+                A<string>.That.Matches(x => x != "lalalala1!"),
+                A<string>.That.Matches(x => x != "lalalala1!"))).Returns(false);
         }
 
         [Test]
@@ -241,29 +249,6 @@ namespace BlogTests
             Assert.AreEqual("User", result.ControllerName);
         }
 
-        //         if (!ModelState.IsValid)
-        //                return View();
-
-        //        var userDb = await _blogDbContext.Users.FirstOrDefaultAsync(i =>
-        //            i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase));
-
-        //            if (userDb == null)
-        //            {
-        //                ModelState.AddModelError("error", "User does not exist");
-        //                return View();
-        //    }
-
-        //            if (!_userService.Verify(user.Password, userDb.Password)) 
-        //            {
-        //                ModelState.AddModelError("error", "Wrong Password");
-        //                return View();
-        //}
-
-        //await _userService.SignIn(userDb);
-
-        //return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
-
-
         [Test]
         public void GET_Register_UserIsAuthenticated_ShouldReturnRedirectToAction()
         {
@@ -296,6 +281,26 @@ namespace BlogTests
             };
 
             var result = userController.Register() as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [TestCase("", "")]
+        [TestCase(null, null)]
+        public async Task POST_Register_EmailOrPasswordIsNullOrWhitespace_ShouldReturnView(string email, string password)
+        {
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var user = new User { Id = 5, Email = email, Password = password };
+
+            var result = await userController.Register(user) as ViewResult;
 
             Assert.IsInstanceOf<ViewResult>(result);
         }
