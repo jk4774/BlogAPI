@@ -1,25 +1,30 @@
+using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Security.Principal;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BlogMvc.Controllers;
 using BlogData.Entities;
 using BlogData.ViewModels;
-using BlogServices;
 using BlogContext;
+using BlogServices;
+using BlogMvc.Controllers;
+using BlogFakes;
 using FakeItEasy;
 using NUnit.Framework;
-using System;
-using BlogFakes;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlogTests
 {
     public class UserControllerTests
     {
+        private User user = new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" };
+        private Article article = new Article { Id = 1, UserId = 1, Author = "q@q.com", Content = "test-article-content", Date = DateTime.Now, Title = "test-article-title" };
+        private Comment comment = new Comment { Id = 1, ArticleId = 1, UserId = 1, Date = DateTime.Now, Content = "test-comment-content", Author = "q@q.com" };
+        private List<User> users => new List<User> { user };
+        private List<Article> articles => new List<Article> { article };
+        private List<Comment> comments => new List<Comment> { comment };
         private IBlogDbContext fakeBlog;
         private UserService fakeUserService;
         private ArticleService fakeArticleService;
@@ -31,14 +36,6 @@ namespace BlogTests
         [SetUp]
         public void Setup()
         {
-            var user = new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" };
-            var article = new Article { Id = 1, UserId = 1, Author = "q@q.com", Content = "test-article-content", Date = DateTime.Now, Title = "test-article-title" };
-            var comment = new Comment { Id = 1, ArticleId = 1, UserId = 1, Date = DateTime.Now, Content = "test-comment-content", Author = "q@q.com" };
-
-            var users = new List<User> { user };
-            var articles = new List<Article> { article };
-            var comments = new List<Comment> { comment };
-
             var fakeUserDbSet = new FakeUserDbSet() { data = new ObservableCollection<User>(users) };
             var fakeArticleDbSet = new FakeArticleDbSet() { data = new ObservableCollection<Article>(articles) };
             var fakeCommentDbSet = new FakeCommentDbSet() { data = new ObservableCollection<Comment>(comments) };
@@ -170,26 +167,6 @@ namespace BlogTests
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
-        [TestCase("", "")]
-        [TestCase(null, null)]
-        public async Task POST_Login_UserEmailAndPasswordIsNullorWhitespace_ShouldReturnView(string email, string password)
-        {
-            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
-            context.User = principal;
-            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
-
-            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
-            {
-                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
-            };
-
-            var user = new User { Email = email, Password = password };
-
-            var result = await userController.Login(user) as ViewResult;
-
-            Assert.IsInstanceOf<ViewResult>(result);
-        }
-
         [Test]
         public async Task POST_Login_UserDoesNotExist_ShouldReturnView()
         {
@@ -285,25 +262,10 @@ namespace BlogTests
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
-        [TestCase("", "")]
-        [TestCase(null, null)]
-        public async Task POST_Register_EmailOrPasswordIsNullOrWhitespace_ShouldReturnView(string email, string password)
-        {
-            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
-            context.User = principal;
-            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+        //register
 
-            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
-            {
-                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
-            };
+     
 
-            var user = new User { Id = 5, Email = email, Password = password };
-
-            var result = await userController.Register(user) as ViewResult;
-
-            Assert.IsInstanceOf<ViewResult>(result);
-        }
 
 
         //TODO POST REGISTER
