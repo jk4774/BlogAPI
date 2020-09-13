@@ -28,7 +28,7 @@ namespace BlogMvc.Controllers
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
-        {   
+        {
             if (!User.Identity.Name.Equals(id.ToString()))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
 
@@ -45,13 +45,13 @@ namespace BlogMvc.Controllers
         [HttpGet("Login")]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) 
+            if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View();
         }
 
         [AllowAnonymous]
-        [HttpPost("Login")] 
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromForm] User user)
         {
             if (!ModelState.IsValid)
@@ -64,7 +64,7 @@ namespace BlogMvc.Controllers
                 return View();
             }
 
-            if (!_userService.Verify(user.Password, userDb.Password)) 
+            if (!_userService.Verify(user.Password, userDb.Password))
             {
                 ModelState.AddModelError("error", "Wrong Password");
                 return View();
@@ -76,10 +76,10 @@ namespace BlogMvc.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Register")] 
+        [HttpGet("Register")]
         public IActionResult Register()
         {
-            if (User.Identity.IsAuthenticated) 
+            if (User.Identity.IsAuthenticated)
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View();
         }
@@ -91,19 +91,19 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            if (_blogDbContext.Users.Any(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase)))
+            if (_blogDbContext.Users.Any(x => x.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
             {
                 ModelState.AddModelError("error", "User with this email exists in db");
                 return View();
             }
 
             user.Password = _userService.Hash(user.Password);
-            
+
             _blogDbContext.Users.Add(user);
             _blogDbContext.SaveChanges();
-            
+
             await _userService.SignIn(user);
-            
+
             return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
         }
 
@@ -128,20 +128,20 @@ namespace BlogMvc.Controllers
 
             if (!ModelState.IsValid)
                 return View();
-                
+
             var userDb = await _blogDbContext.Users.FindAsync(id);
             if (userDb == null)
             {
                 ModelState.AddModelError("error", "Unexpected error, user with this id does not exist");
-                return View(); 
+                return View();
             }
-                
+
             if (!_userService.Verify(password.Old, userDb.Password))
             {
                 ModelState.AddModelError("error", "Old password is not equal");
                 return View();
             }
-                
+
             userDb.Password = _userService.Hash(password.New);
 
             _blogDbContext.Users.Update(userDb);

@@ -3,7 +3,7 @@ using BlogMvc.Controllers;
 using FakeItEasy;
 using NUnit.Framework;
 
-namespace BlogTests
+namespace BlogTests.Controllers
 {
     public class ArticleControllerTests
     {

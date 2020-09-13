@@ -1,8 +1,7 @@
+using System.Linq;
+using System.Threading.Tasks;
 using BlogData.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace BlogFakes
 {
@@ -31,9 +30,10 @@ namespace BlogFakes
             var item = data.FirstOrDefault(t => t.Id == entity.Id);
             if (item == null)
                 return null;
-            var index = data.IndexOf(item);
 
+            var index = data.IndexOf(item);
             data[index] = entity;
+            
             return null;
             //return new EntityEntry<User>(data[index]);
 

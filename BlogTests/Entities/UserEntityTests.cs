@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using BlogData.Entities;
 using NUnit.Framework;
 
-namespace BlogTests
+namespace BlogTests.Entities
 {
     public class UserEntityTests
     {

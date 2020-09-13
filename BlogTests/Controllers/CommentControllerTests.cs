@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace BlogTests
+namespace BlogTests.Controllers
 {
     public class CommentControllerTests
     {
