@@ -13,9 +13,7 @@ using BlogMvc.Controllers;
 using BlogFakes;
 using FakeItEasy;
 using NUnit.Framework;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace BlogTests.Controllers
 {
@@ -67,7 +65,7 @@ namespace BlogTests.Controllers
             });
 
             A.CallTo(() => principal.Identity).Returns(fakeIdentity);
-            //A.CallTo(() => fakeBlog.Users.Any(x => x.))
+            
             A.CallTo(() => fakeUserService.SignIn(A.Fake<User>())).DoesNothing();
             A.CallTo(() => fakeUserService.SingOut()).DoesNothing();
             A.CallTo(() => fakeUserService.Verify(
@@ -77,7 +75,6 @@ namespace BlogTests.Controllers
             A.CallTo(() => fakeUserService.Verify(
                 A<string>.That.Matches(x => x != testPassword),
                 A<string>.That.Matches(x => x != testPassword))).Returns(false);
-
             A.CallTo(() => fakeUserService.Hash(A<string>.That.Matches(x => x == testPassword))).Returns(testPassword);
         }
 
@@ -277,6 +274,7 @@ namespace BlogTests.Controllers
             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+            A.CallTo(() => fakeUserService.IsEmailAvailable(fakeBlog, A<string>.That.Matches(x => x.Equals("q@q.com")))).Returns(true);
 
             var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
             {
@@ -288,29 +286,61 @@ namespace BlogTests.Controllers
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
-        //register
+        [Test]
+        public async Task POST_Register_CreateANewUser_ShouldReturnRedirectToAction()
+        {
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+            A.CallTo(() => fakeUserService.IsEmailAvailable(fakeBlog, A<string>.That.Matches(x => !x.Equals("q@q.com")))).Returns(false);
 
-//        if (_blogDbContext.Users.Any(i => i.Email.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase)))
-//            {
-//                ModelState.AddModelError("error", "User with this email exists in db");
-//                return View();
-//    }
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
 
-//    user.Password = _userService.Hash(user.Password);
-            
-//            _blogDbContext.Users.Add(user);
-//            _blogDbContext.SaveChanges();
-            
-//            await _userService.SignIn(user);
-            
-//            return RedirectToAction("GetById", "User", new { id = User.Identity.Name
-//});
-     
+            var result = await userController.Register(new User { Id = 4, Email = "w@w.com", Password = "lalalala1!" }) as RedirectToActionResult;
 
+            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual("GetById", result.ActionName);
+            Assert.AreEqual("User", result.ControllerName);
+        }
 
+        [Test]
+        public async Task POST_LogOut_UserLogOut_ShouldReturnRedirectToAction()
+        {
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-        //TODO POST REGISTER
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
 
+            var result = await userController.LogOut() as RedirectToActionResult;
+
+            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual("Index", result.ActionName);
+            Assert.AreEqual("Home", result.ControllerName);
+        }
+
+        [Test]
+        public void GET_Update_UpdateViewShouldBeReturned_ShouldReturnView()
+        {
+             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var result = userController.Update() as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
 
         //TODO LOgout
 

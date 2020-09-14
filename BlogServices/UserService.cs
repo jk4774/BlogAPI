@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using BlogData.Entities;
+using BlogContext;
+using System.Linq;
 
 namespace BlogServices
 {
@@ -88,6 +90,11 @@ namespace BlogServices
                     return false;
             
             return true;
+        }
+
+        public virtual bool IsEmailAvailable(IBlogDbContext blogDbContext, string emailToCheck)
+        {
+            return blogDbContext.Users.Any(x => x.Email.Equals(emailToCheck, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

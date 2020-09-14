@@ -91,7 +91,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            if (_blogDbContext.Users.Any(x => x.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
+            if (_userService.IsEmailAvailable(_blogDbContext, user.Email))
             {
                 ModelState.AddModelError("error", "User with this email exists in db");
                 return View();
