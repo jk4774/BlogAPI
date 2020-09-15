@@ -13,7 +13,6 @@ using BlogMvc.Controllers;
 using BlogFakes;
 using FakeItEasy;
 using NUnit.Framework;
-using System.Linq;
 
 namespace BlogTests.Controllers
 {
@@ -328,7 +327,7 @@ namespace BlogTests.Controllers
         [Test]
         public void GET_Update_UpdateViewShouldBeReturned_ShouldReturnView()
         {
-             A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
+            A.CallTo(() => fakeIdentity.IsAuthenticated).Returns(false);
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
@@ -342,11 +341,72 @@ namespace BlogTests.Controllers
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
-        //TODO LOgout
+        [Test]
+        public async Task PUT_Update_IncorrectId_ShouldReturnNotFound()
+        {
+            A.CallTo(() => fakeIdentity.Name).Returns("1");
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-        //TODO UPDATE GET
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
 
-        //TODO UPDATE PUT
+            var result = await userController.Update(2, new PasswordViewModel { Old = "lalalala1!", New = "lalalala2!" }) as NotFoundResult;
 
+            Assert.IsInstanceOf<NotFoundResult>(result);
+        }
+
+        [Test]
+        public async Task PUT_Update_UserWithThisIdDoesNotExistInDb_ShouldReturnView()
+        {
+            A.CallTo(() => fakeIdentity.Name).Returns("4");
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var result = await userController.Update(4, new PasswordViewModel { Old = "lalalala1!", New = "lalalala2!" }) as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public async Task PUT_Update_OldPasswordIsNotMatchingTheOldPasswordFromDb_ShouldReturnView()
+        {
+            A.CallTo(() => fakeIdentity.Name).Returns("1");
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var result = await userController.Update(1, new PasswordViewModel { Old = "lalalala2!", New = "lalalala3!" }) as ViewResult;
+
+            Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public async Task PUT_Update_UserExistsAndPasswordViewModelIsCorrect_ShouldReturnNoContent()
+        {
+            A.CallTo(() => fakeIdentity.Name).Returns("1");
+            context.User = principal;
+            A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
+
+            var userController = new UserController(fakeBlog, fakeUserService, fakeArticleService)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
+            };
+
+            var result = await userController.Update(1, new PasswordViewModel { Old = "lalalala1!", New = "lalalala3!" }) as NoContentResult;
+
+            Assert.IsInstanceOf<NoContentResult>(result);
+        }
     }
 }
