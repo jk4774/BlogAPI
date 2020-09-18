@@ -17,7 +17,6 @@ namespace BlogTests.Controllers
 {
     public class ArticleControllerTests
     {
-        private readonly string testPassword = "lalalala1!";
         private readonly User user = new User { Id = 1, Email = "q@q.com", Password = "lalalala1!" };
         private readonly Article article = new Article { Id = 1, UserId = 1, Author = "q@q.com", Content = "test-article-content", Date = DateTime.Now, Title = "test-article-title" };
         private readonly Comment comment = new Comment { Id = 1, ArticleId = 1, UserId = 1, Date = DateTime.Now, Content = "test-comment-content", Author = "q@q.com" };
@@ -32,6 +31,9 @@ namespace BlogTests.Controllers
         private GenericIdentity fakeIdentity;
         private GenericPrincipal principal;
 
+        private ArticleController articleController;
+
+        [SetUp]
         public void Setup()
         {  
             var fakeUserDbSet = new FakeUserDbSet() { data = new ObservableCollection<User>(Users) };
@@ -49,34 +51,55 @@ namespace BlogTests.Controllers
             A.CallTo(() => fakeBlog.Comments).Returns(fakeCommentDbSet);
 
             A.CallTo(() => principal.Identity).Returns(fakeIdentity);
-            // A.CallTo(() => fakeIdentity.Name).Returns("1");
-            // A.CallTo(() => context.User).Returns(principal);
-            // A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
-        }
 
-        [Test]
-        public void Get_()
-        {
+            // test something
+
             A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            var articleController = new ArticleController(fakeBlog)
+            articleController = new ArticleController(fakeBlog)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
+        }
 
+        [Test]
+        public void GET_Add_GetArticleView_ShouldReturnView()
+        {
             var result = articleController.Add() as ViewResult;
 
             Assert.IsInstanceOf<ViewResult>(result);
         }
 
+        [Test]
+        public void POST_Add_AddValidArticle_ShouldReturnRedirectToAction()
+        {
+            var article = new Article { Id = 2, UserId = 2, Author = "q2@q.com", Content = "test-article-content2", Date = DateTime.Now, Title = "test-article-title2" };
 
-//   [HttpGet("Add")]
-//         public IActionResult Add()
-//         {
-//             return View();
-//         }
+            var result = articleController.Add(article) as RedirectToActionResult;
+
+            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual("GetById", result.ActionName);
+            Assert.AreEqual("User", result.ControllerName);
+        }
+
+        [Test]
+        public void GET_Update_ArticleDoesNotExistInDb_ShouldReturnNotFound()
+        {
+            var result = articleController.Update(11) as NotFoundResult;
+
+            Assert.IsInstanceOf<NotFoundResult>(result);
+        }
+
+        // public IActionResult Update(int id)
+        // {
+        //     var article = _blogDbContext.Articles.Find(id);
+        //     if (article == null || !article.UserId.ToString().Equals(User.Identity.Name))
+        //         return NotFound();
+            
+        //     return View(article);
+        // }
 
     }
 }
