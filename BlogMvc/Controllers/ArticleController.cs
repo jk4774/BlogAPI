@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BlogContext;
 using BlogData.Entities;
+using BlogServices;
 
 namespace BlogMvc.Controllers
 {
@@ -14,9 +15,11 @@ namespace BlogMvc.Controllers
     public class ArticleController : Controller
     {
         private readonly IBlogDbContext _blogDbContext;
-        public ArticleController(IBlogDbContext blogDbContext)
-        {
+        private readonly ArticleService _articleService;
+        public ArticleController(IBlogDbContext blogDbContext, ArticleService articleService)
+        {   
             _blogDbContext = blogDbContext;
+            _articleService = articleService;
         }
 
         [HttpGet("Add")]
@@ -80,12 +83,7 @@ namespace BlogMvc.Controllers
             if (!article.UserId.ToString().Equals(User.Identity.Name))
                 return NotFound();
             
-            _blogDbContext.Articles.Remove(article);
-            var comments = _blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList();
-            if (comments.Count > 0)
-                _blogDbContext.Comments.RemoveRange(comments);
-
-            _blogDbContext.SaveChanges();
+            _articleService.RemoveArticle(_blogDbContext, article);
 
             return NoContent();
         }        

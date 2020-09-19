@@ -10,7 +10,6 @@ namespace BlogServices
     {
         public ArticleService()
         {
-            
         }
 
         public virtual IEnumerable<ArticleViewModel> GetArticleViewModels(IBlogDbContext blogDbContext)
@@ -20,6 +19,16 @@ namespace BlogServices
                 Article = article,
                 Comments = blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList()
             });
+        }
+
+        public virtual void RemoveArticle(IBlogDbContext blogDbContext, Article article)
+        {
+            blogDbContext.Articles.Remove(article);
+            var comments = blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList();
+            if (comments.Count > 0)
+                blogDbContext.Comments.RemoveRange(comments);
+            
+            blogDbContext.SaveChanges();
         }
     }
 }

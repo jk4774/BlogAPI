@@ -5,7 +5,6 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using BlogContext;
 using BlogData.Entities;
-using BlogData.ViewModels;
 using BlogFakes;
 using BlogMvc.Controllers;
 using BlogServices;
@@ -33,6 +32,7 @@ namespace BlogTests.Controllers
         private GenericPrincipal principal;
 
         private ArticleController articleController;
+        private ArticleService fakeArticleService;
 
         [SetUp]
         public void Setup()
@@ -46,6 +46,7 @@ namespace BlogTests.Controllers
             context = new DefaultHttpContext();
             fakeIdentity = A.Fake<GenericIdentity>();
             principal = A.Fake<GenericPrincipal>();
+            fakeArticleService = A.Fake<ArticleService>();
 
             A.CallTo(() => fakeBlog.Users).Returns(fakeUserDbSet);
             A.CallTo(() => fakeBlog.Articles).Returns(fakeArticleDbSet);
@@ -53,13 +54,13 @@ namespace BlogTests.Controllers
 
             A.CallTo(() => principal.Identity).Returns(fakeIdentity);
 
-            // test something
+            A.CallTo(() => fakeArticleService.RemoveArticle(fakeBlog, article)).DoesNothing();
 
             A.CallTo(() => fakeIdentity.Name).Returns("1");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            articleController = new ArticleController(fakeBlog)
+            articleController = new ArticleController(fakeBlog, fakeArticleService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -94,13 +95,13 @@ namespace BlogTests.Controllers
         }
 
         [Test]
-        public void GET_Update_ArticleUserIdIsDoesNotEqualUserId_ShouldReturnNotFound()
+        public void GET_Update_ArticleUserIdIsNotMatchingIdentityName_ShouldReturnNotFound()
         {
             A.CallTo(() => fakeIdentity.Name).Returns("3");
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            articleController = new ArticleController(fakeBlog)
+            articleController = new ArticleController(fakeBlog, fakeArticleService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -133,7 +134,7 @@ namespace BlogTests.Controllers
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            articleController = new ArticleController(fakeBlog)
+            articleController = new ArticleController(fakeBlog, fakeArticleService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -166,7 +167,7 @@ namespace BlogTests.Controllers
             context.User = principal;
             A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
-            articleController = new ArticleController(fakeBlog)
+            articleController = new ArticleController(fakeBlog, fakeArticleService)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContextAccessor.HttpContext }
             };
@@ -182,16 +183,6 @@ namespace BlogTests.Controllers
             var result = await articleController.Delete(1) as NoContentResult;
 
             Assert.IsInstanceOf<NoContentResult>(result);
-        }
-            
-//             _blogDbContext.Articles.Remove(article);
-//             var comments = _blogDbContext.Comments.Where(x => x.ArticleId == article.Id).ToList();
-//             if (comments.Count > 0)
-//                 _blogDbContext.Comments.RemoveRange(comments);
-
-//             _blogDbContext.SaveChanges();
-
-//             return NoContent();
-        
+        }        
     }
 }

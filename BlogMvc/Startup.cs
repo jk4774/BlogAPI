@@ -23,11 +23,12 @@ namespace BlogMvc
             services.AddHttpContextAccessor();            
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder => 
                 builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
-
-            services.AddScoped<ArticleService>();
+            
             services.AddScoped<UserService>();
+            services.AddScoped<ArticleService>();
+            services.AddScoped<CommentService>();
             services.AddScoped<IBlogDbContext, BlogDbContext>();
-
+            
             services.AddDbContext<BlogDbContext>(o => o.UseInMemoryDatabase("BlogDb"));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(config => {

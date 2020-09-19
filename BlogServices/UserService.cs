@@ -96,5 +96,10 @@ namespace BlogServices
         {
             return blogDbContext.Users.Any(x => x.Email.Equals(emailToCheck, StringComparison.CurrentCultureIgnoreCase));
         }
+
+        public virtual User GetUserByEmail(IBlogDbContext blogDbContext, string email)
+        {
+            return blogDbContext.Users.FirstOrDefault(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

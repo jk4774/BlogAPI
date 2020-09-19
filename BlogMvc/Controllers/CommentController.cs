@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using BlogContext;
-using BlogServices;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using BlogContext;
 using BlogData.Entities;
-using BlogData.ViewModels;
+using BlogServices;
 
 namespace BlogMvc.Controllers
 {
@@ -14,17 +13,19 @@ namespace BlogMvc.Controllers
     [Route("[controller]")]
     public class CommentController : Controller
     {
-        private readonly IBlogDbContext _blogDbContext; 
-        public CommentController(IBlogDbContext blogDbContext)
+        private readonly IBlogDbContext _blogDbContext;
+        private readonly CommentService _commentService;
+        public CommentController(IBlogDbContext blogDbContext, CommentService commentService)
         {
             _blogDbContext = blogDbContext;
+            _commentService = commentService;
         }
 
         [HttpGet("Add/{id}")]
         public IActionResult Add(int id)
         {
             var comment = new Comment { ArticleId = id };
-            if (!_blogDbContext.Articles.Any(x => x.Id == comment.ArticleId))
+            if (!_commentService.AnyArticleById(_blogDbContext, comment.ArticleId))
                 return RedirectToAction("GetById", "User", new { id = User.Identity.Name });
             return View(comment);
         }
@@ -37,7 +38,7 @@ namespace BlogMvc.Controllers
             if (!ModelState.IsValid)
                 return View("~/Views/Comment/Add.cshtml", comment);
 
-            if (!_blogDbContext.Articles.Any(x => x.Id == id))
+            if (!_commentService.AnyArticleById(_blogDbContext, id))
                 return NotFound();
 
             comment.UserId = int.Parse(User.Identity.Name);

@@ -75,6 +75,8 @@ namespace BlogTests.Controllers
                 A<string>.That.Matches(x => x != testPassword),
                 A<string>.That.Matches(x => x != testPassword))).Returns(false);
             A.CallTo(() => fakeUserService.Hash(A<string>.That.Matches(x => x == testPassword))).Returns(testPassword);
+
+            A.CallTo(() => fakeUserService.GetUserByEmail(fakeBlog, A<string>.That.Matches(x => x == user.Email))).Returns(user);
         }
 
         [Test]
@@ -171,7 +173,7 @@ namespace BlogTests.Controllers
 
             Assert.IsInstanceOf<ViewResult>(result);
         }
-
+ 
         [Test]
         public async Task POST_Login_UserDoesNotExist_ShouldReturnView()
         {
