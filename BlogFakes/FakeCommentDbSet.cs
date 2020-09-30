@@ -1,7 +1,7 @@
-using BlogData.Entities;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using BlogData.Entities;
 
 namespace BlogFakes
 {

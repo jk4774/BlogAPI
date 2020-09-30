@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using BlogContext;
 using BlogData.Entities;
 using BlogFakes;
 using BlogMvc.Controllers;
 using BlogServices;
 using FakeItEasy;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
 namespace BlogTests.Controllers
