@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -52,49 +53,31 @@ namespace BlogServices
 
         public virtual string Hash(string password)
         {
-            var iterations = 10000;
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltSize]);
-
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
-            var hash = pbkdf2.GetBytes(HashSize);
-
-            var hashBytes = new byte[SaltSize + HashSize];
-            Array.Copy(salt, 0, hashBytes, 0, SaltSize);
-            Array.Copy(hash, 0, hashBytes, SaltSize, HashSize);
-
-            var base64Hash = Convert.ToBase64String(hashBytes);
-
-            return string.Format("$MYHASH$V1${0}${1}", iterations, base64Hash);
+            using (var sha256 = SHA256.Create())
+            {
+                var data = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var stringBuilder = new StringBuilder();
+                for (int i = 0; i < data.Length; i++)
+                    stringBuilder.Append(data[i].ToString("x2"));
+        
+                return stringBuilder.ToString();
+            }
         }
 
         public virtual bool Verify(string password, string hashedPassword)
         {
-            if (!hashedPassword.Contains("$MYHASH$V1$"))
-                throw new NotSupportedException("The hashtype is not supported");
+            using (var sha256 = SHA256.Create()) 
+            {
+                var hash = Hash(password);
+                var stringComparer = StringComparer.OrdinalIgnoreCase;
 
-            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Split('$');
-            var iterations = int.Parse(splittedHashString[0]);
-            var base64Hash = splittedHashString[1];
-
-            var hashBytes = Convert.FromBase64String(base64Hash);
-
-            var salt = new byte[SaltSize];
-            Array.Copy(hashBytes, 0, salt, 0, SaltSize);
-
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
-            var hash = pbkdf2.GetBytes(HashSize);
-
-            for (var i = 0; i < HashSize; i++)
-                if (hashBytes[i + SaltSize] != hash[i])
-                    return false;
-            
-            return true;
+                return stringComparer.Compare(hash, hashedPassword) == 0;
+            }
         }
 
-        public virtual bool IsEmailAvailable(IBlogDbContext blogDbContext, string emailToCheck)
+        public virtual bool IsEmailAvailable(IBlogDbContext blogDbContext, string email)
         {
-            return blogDbContext.Users.Any(x => x.Email.Equals(emailToCheck, StringComparison.CurrentCultureIgnoreCase));
+            return blogDbContext.Users.Any(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public virtual User GetUserByEmail(IBlogDbContext blogDbContext, string email)
